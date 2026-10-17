@@ -2,23 +2,24 @@
 
 | Field | Value |
 | --- | --- |
-| Project name | <fill via /sdlc-init> |
-| Description | <fill via /sdlc-init> |
-| Created | <fill via /sdlc-init> |
-| Project manager | <fill via /sdlc-init> |
-| Tech lead | <fill via /sdlc-init> |
+| Project name | APLX AMS |
+| Description | An Application Management Services Solution |
+| Created | 2026-10-17 |
+| Project manager | Mohanasunder |
+| Tech lead | Mohanasunder |
 
 ## Approvers (named humans per role)
 
 | Role | Name |
 | --- | --- |
-| Business owner / BA | |
-| Product owner | |
-| Architect / tech lead | |
-| UX | |
-| Human developer reviewers | |
-| QA lead | |
-| Release manager / DevOps | |
+| Business owner / BA | Mohanasunder |
+| Product owner | Mohanasunder |
+| Architect / tech lead | Mohanasunder |
+| UX | Mohanasunder |
+| Human developer reviewers | Mohanasunder |
+| QA lead | Mohanasunder |
+| Release manager / DevOps | Mohanasunder |
+| Backup approvers | None |
 
 ## Capacity and settings (read by the Dependency Sequencer, branch script, feature size check, context pack check, learned rules, spikes, and pilot metrics)
 
@@ -47,8 +48,8 @@ pilot_target_rules_per_week:
 
 | Phase | Name | Status | Approved on | Approver |
 | --- | --- | --- | --- | --- |
-| 0 | Methodology setup | Not started | | |
-| 1 | Business discovery | Not started | | |
+| 0 | Methodology setup | Approved | 2026-10-17 | Mohanasunder |
+| 1 | Business discovery | Approved | 2026-10-17 | Mohanasunder |
 | 2 | Requirements | Not started | | |
 | 3 | Solution architecture | Not started | | |
 | 4 | Solution design | Not started | | |

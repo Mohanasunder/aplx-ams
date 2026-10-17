@@ -81,6 +81,11 @@ def validate(path, known_ids, check_links):
 
     required = [h for h, _ in sections(tbody)]
     found = sections(body)
+    # Collection templates use headings like "Persona P-1: <fill: name>"; a filled heading matches by its prefix.
+    for t in required:
+        if FILL.search(t):
+            prefix = FILL.split(t)[0].rstrip()
+            found = [(t if h.startswith(prefix) and not FILL.search(h) else h, c) for h, c in found]
     found_map = {h: c for h, c in found}
     order = [h for h, _ in found if h in required]
     for h in required:
