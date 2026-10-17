@@ -2,10 +2,10 @@
 id: API-001
 title: APLX AMS: API Specification
 phase: 4
-version: 0.1
+version: 0.2
 template: api-spec
 template_version: 2.0
-status: Approved
+status: In review
 author_agent: api-designer
 approver: Mohanasunder
 date: 2026-10-17
@@ -29,6 +29,7 @@ validation: Pass
 - PER-001 v0.2 — APLX AMS: Personas, P-1 to P-4 (Approved 2026-10-17).
 - SCR S-3 (Approved 2026-10-17): password management endpoints S-30, S-31.
 - SCR S-4 (Approved 2026-10-17): security events in audit trail, S-32, S-33.
+- SCR S-6 (2026-10-18): AssignTicketRequest request-body field rename → engineer_id for glossary compliance (ADR A-18).
 
 ## Purpose And Scope
 
@@ -260,7 +261,7 @@ None raised by this artifact. Inherited open assumptions A-008, A-026 to A-029, 
 
 ## Traceability Links
 
-- Upstream: PIB-004 v0.1; SUM-003 v0.2; REQ-001 v0.3 (S-1 to S-33); BR-001 v0.3 (B-1 to B-24); NFR-001 v0.3 (N-1 to N-9); GLO-001 v0.3; PRS-001 v0.3 (F-1 to F-8); ADR-001 v0.3 (A-3, A-6, A-7, A-11, A-12, A-13); THR-001 v0.2; PER-001 v0.2 (P-1 to P-4); SCR S-3; SCR S-4.
+- Upstream: PIB-004 v0.1; SUM-003 v0.2; REQ-001 v0.3 (S-1 to S-33); BR-001 v0.3 (B-1 to B-24); NFR-001 v0.3 (N-1 to N-9); GLO-001 v0.3; PRS-001 v0.3 (F-1 to F-8); ADR-001 v0.3 (A-3, A-6, A-7, A-11, A-12, A-13, A-18); THR-001 v0.2; PER-001 v0.2 (P-1 to P-4); SCR S-3; SCR S-4; SCR S-6.
 - Downstream: docs/04-design/openapi.yaml; Phase 4 backend design (BED); Phase 4 database design (DBD); Phase 5 feature breakdown; Phase 6 feature builder context packs.
 
 ## Quality Checklist
@@ -286,3 +287,13 @@ None raised by this artifact. Inherited open assumptions A-008, A-026 to A-029, 
 | Conditions | None |
 | Comments | Phase 4 design package approved. |
 | Timestamp | 2026-10-17 14:04 UTC |
+
+| Field | Value |
+| --- | --- |
+| Decision | Pending |
+| Approver | Mohanasunder |
+| Role | Architect / tech lead |
+| Version | 0.2 |
+| Conditions | None |
+| Comments | v0.2: AssignTicketRequest request-body field renamed to engineer_id per SCR S-6 / ADR A-18. |
+| Timestamp | Pending |

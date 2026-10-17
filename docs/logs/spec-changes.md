@@ -454,3 +454,104 @@ Not applicable — no architecture or contract artifact changes. DEC-056 and DEC
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-6: Glossary terminology violations in Phase 4/5 design artifacts
+
+<!-- scr_status: Open -->
+<!-- scr_date: 2026-10-18 -->
+<!-- scr_approver: -->
+
+### Input References
+- GLO-001 v0.3 — APLX AMS: Domain Glossary (Approved 2026-10-17) § Terms: 'Priority' (avoid: severity); 'Assigned support engineer' (avoid: assignee).
+- API-001 v0.1 — APLX AMS: API Specification (Approved 2026-10-17) and companion docs/04-design/openapi.yaml.
+- UIS-001 v0.1 — APLX AMS: UI Specification (Approved 2026-10-17).
+- STD-001 v0.1 — APLX AMS: Coding Standards (Approved 2026-10-17).
+- TST-001 v0.1 — APLX AMS: Test Strategy (Approved 2026-10-17).
+- DOD-001 v0.1 — Definition of Done (Approved 2026-10-17).
+- FEAT-000-ACC v0.1 — FEAT-000 Acceptance Criteria (Approved 2026-10-17).
+- FEAT-001 gate run 2026-10-18: `python scripts/glossary_check.py check` exits 1 with 35 violations.
+
+### Purpose And Scope
+Covers: (1) renaming the `AssignTicketRequest.assignee_id` field to `engineer_id` in docs/04-design/openapi.yaml, consistent with EffortRecord.engineer_id naming, to resolve three 'assignee' violations; (2) in-place terminology corrections in five design artifacts replacing 'severity' references with equivalent precise descriptions. This removes all 35 violations flagged by `scripts/glossary_check.py check`.
+
+Does not cover: any change to endpoint behavior, response structure, business rules, acceptance criteria, or NFRs. The five in-place patches carry no version bump per DEC-060.
+
+### Changed Artifact
+- API-001 v0.1 -> v0.2 (docs/04-design/api-spec.md) — ADR A-18 field rename in companion openapi.yaml
+
+In-place patches (no version bump; authorized by DEC-060):
+- UIS-001 v0.1 (docs/04-design/ui-spec.md) — 27 MUI Alert severity prop references reworded to descriptive form
+- STD-001 v0.1 (docs/04-design/coding-standards.md) — 1 occurrence corrected
+- TST-001 v0.1 (docs/04-design/test-strategy.md) — 2 occurrences corrected
+- DOD-001 v0.1 (docs/05-build-plan/definition-of-done.md) — 1 occurrence corrected
+- FEAT-000-ACC v0.1 (docs/05-build-plan/feature-000-walking-skeleton/acceptance.md) — 1 occurrence corrected
+
+### Trigger
+FEAT-001 Phase 6 gate run 2026-10-18: `scripts/glossary_check.py check` (non-overridable) exits 1 with 35 violations across 6 files. All are pre-existing (on main before FEAT-001 was branched).
+
+### Change
+**API-001 companion openapi.yaml (3 changes):** `AssignTicketRequest` schema `assignee_id` → `engineer_id` (required list and property key); POST /api/tickets/{id}/assign/ 400 description updated. api-spec.md version 0.1 → 0.2.
+
+**UIS-001 (27 in-place changes):** `<MuiAlert severity="error|warning|info|success">` variants reworded (e.g. → `<MuiAlert>` (error-level)); accessibility parentheticals `(MUI default for severity="error")` → `(MUI default for error-level alerts)`. No change to component type, placement, or message.
+
+**STD-001 line 282:** "high-severity CVE" → "Critical or High CVE".
+
+**TST-001 lines 114, 118:** "high-severity findings" → "high-level findings"; "high severity" → "high level".
+
+**DOD-001 line 46:** "high-severity findings" → "high-level security findings".
+
+**FEAT-000-ACC line 32:** "high-severity findings" → "medium or high level security findings".
+
+### Reason
+GLO-001 v0.3 flags 'assignee' and 'severity' as avoided terms. Phase 4/5 artifacts were approved before the glossary gate was wired. 'severity' in these artifacts refers to MUI Alert prop names and bandit/CVE severity ratings (technical industry terms), not ticket priority; however the gate is non-overridable and flags all occurrences.
+
+### Decision Record
+ADR A-18 (docs/03-architecture/adrs.md § ADR A-18) — rename `AssignTicketRequest.assignee_id` to `engineer_id`. Approved together with this SCR by Mohanasunder (Architect / tech lead).
+
+Not applicable for the five in-place patches — descriptions-only corrections, no architecture or contract changes.
+
+### Impact
+For API-001 v0.1 → v0.2 (AssignTicketRequest.assignee_id → engineer_id):
+
+| Artifact | State | Action |
+| --- | --- | --- |
+| API-001 | Approved v0.1 | Revise to v0.2; re-approve |
+| BED-001 | Approved v0.1 | No change — update citation API-001 v0.1 → v0.2 before branching |
+| FBD-001 | Approved v0.1 | No change — update citation before building |
+| UIS-001 | Approved v0.1 | No change — does not reference AssignTicketRequest fields |
+| PRM-001 | Approved v0.1 | No change — update citation before building |
+| SUM-004 | Approved v0.2 | No change — update citation before Phase 7 |
+| PIB-005 | Approved v0.1 | No change — update citation when relevant |
+| FEAT-002 to FEAT-034 | Not started | Update Input References API-001 v0.1 → v0.2 before branching; only the feature implementing POST /api/tickets/{id}/assign/ needs engineer_id in implementation |
+
+For in-place patches: no version bump — no impact on spec_impact.py for any citing artifact.
+
+### Work Stopped
+- FEAT-001 (State: In progress) — glossary gate non-overridable; blocks CI.
+
+### Resume Criteria
+SCR S-6 Approved + ADR A-18 Approved + API-001 v0.2 Approved + all patches applied + `python scripts/glossary_check.py check` exits 0.
+
+### Assumptions
+None.
+
+### Open Questions
+None.
+
+### Traceability Links
+- Upstream: GLO-001 v0.3; API-001 v0.1; UIS-001 v0.1; STD-001 v0.1; TST-001 v0.1; DOD-001 v0.1; FEAT-000-ACC v0.1
+- Downstream: API-001 v0.2; ADR A-18; in-place patch artifacts (version unchanged)
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - reason"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] Vague words removed (etc., as needed, appropriate)
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW' — API-001: listed; in-place patches carry no version bump per DEC-060
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record
+- [x] Impact covers every artifact and feature that cites the changed artifact

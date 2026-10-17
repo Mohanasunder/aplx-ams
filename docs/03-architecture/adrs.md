@@ -544,6 +544,37 @@ Option 1. Values are generated on each server by the Release manager / DevOps fr
 
 ---
 
+## ADR A-18: Rename AssignTicketRequest request-body field to engineer_id for glossary compliance
+
+### Status And Date
+Proposed, 2026-10-18 (SCR S-6; proposed by Orchestrator to resolve non-overridable glossary gate)
+
+### Context
+- GLO-001 v0.3 defines 'Assigned support engineer' with a synonym in the Avoid list that the identifier-aware glossary checker (`scripts/glossary_check.py check`) detects inside compound identifiers; the gate is non-overridable.
+- The OpenAPI spec (docs/04-design/openapi.yaml) defines `AssignTicketRequest` with a request-body property (type: integer, the user account ID of the L2/L3 engineer to assign) whose name contained the avoided GLO-001 synonym. The checker splits snake_case tokens and flagged the name.
+- The existing `EffortRecord` schema uses `engineer_id` (integer) for the same concept — the L2/L3 support engineer's user account ID. Renaming the `AssignTicketRequest` field to `engineer_id` gives both schemas consistent naming.
+- No code has been written for the assign-ticket endpoint (`POST /api/tickets/{id}/assign/`) at the time of this ADR.
+
+### Options Considered
+1. Rename the field → `engineer_id`: consistent with EffortRecord.engineer_id naming; removes the avoided token; no behavioral change; no code exists yet to update. Chosen.
+2. Rename the field → `support_engineer_id`: removes the avoided token, descriptive, but inconsistent with EffortRecord.engineer_id naming convention.
+3. Rename the field → `assigned_to_id`: consistent with Ticket response schema (`assigned_to_id`). Removes the avoided token but introduces asymmetry with EffortRecord.engineer_id for request bodies.
+4. Do not rename, add glossary exemption for technical identifiers: requires changing the domain glossary (GLO-001) and the glossary_check.py script; script changes are human-authored only per SDLC rules; rejected.
+
+### Decision
+Option 1. Rename the `AssignTicketRequest` request-body field to `engineer_id` in `docs/04-design/openapi.yaml`. Update the POST /api/tickets/{id}/assign/ 400 error description accordingly. Bump API-001 to v0.2. Consistent with EffortRecord.engineer_id naming; no behavioral change.
+
+### Consequences
+- Positive: glossary gate passes; request body naming consistent with EffortRecord schema.
+- Negative: future implementations and tests for `POST /api/tickets/{id}/assign/` must use `engineer_id` in the request body; feature plans must update Input References citation from API-001 v0.1 to v0.2 before branching.
+- Follow-up: when the assign-ticket feature is planned and built, use `engineer_id` as the request body field name; the feature plan's Input References must cite API-001 v0.2.
+
+### Traceability Links
+- Upstream: GLO-001 v0.3 § Terms; API-001 v0.1; openapi.yaml `AssignTicketRequest`; SCR S-6.
+- Downstream: API-001 v0.2; openapi.yaml (revised); assign-ticket feature plan.
+
+---
+
 ## Assumptions
 <!-- guidance: Each labeled A-NNN and logged in docs/logs/assumptions-log.md (collection-level) -->
 - A-027 (Open): timestamps stored in UTC, shown in IST, SLA on the IST business calendar (ADR A-9).

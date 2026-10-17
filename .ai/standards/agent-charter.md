@@ -137,7 +137,7 @@ Source: `CLAUDE.md`, `.claude/settings.json`, `.claude/hooks/`.
 - [ ] `npx eslint src/frontend/src/ && npx tsc --noEmit` exit 0. (CI-enforced)
 - [ ] No unfilled template placeholders (`<fill:`) or unresolved code markers remain in any file on the branch.
 ### Security
-- [ ] `bandit -r src/ -ll` exits 0 with no high-severity findings. (CI-enforced)
+- [ ] `bandit -r src/ -ll` exits 0 with no high-level security findings. (CI-enforced)
 - [ ] `pip-audit` exits 0 with no known vulnerable dependencies. (CI-enforced)
 - [ ] `detect-secrets scan` exits 0; no new secrets detected. (CI-enforced)
 - [ ] No secret value committed; no production configuration path touched (STD-001 § Production Configuration paths).
