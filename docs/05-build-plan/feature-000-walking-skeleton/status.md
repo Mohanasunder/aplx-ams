@@ -24,13 +24,13 @@ validation: Pass
 Tracks the build-phase progress of FEAT-000. Updated by the builder agent during Phase 6.
 
 ## Branch And PR
-- Branch: <set by scripts/create-feature-branch.sh>
-- Base commit: <set by script>
-- Started: <set by script>
+- Branch: feature/FEAT-000-walking-skeleton
+- Base commit: b1f4bb1
+- Started: 2026-10-17
 - PR: <draft PR link>
 
 ## Progress
-- State: Not started
+- State: In progress
 - Assigned agents: builder
 - Last update: 2026-10-17
 
