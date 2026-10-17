@@ -424,7 +424,7 @@ The check_feature_size.py packages gate identified three npm packages in package
 Does not change: the feature's purpose, acceptance criteria, risk tier, dependencies, or any other plan section beyond "Files To Create Or Modify" and "New Packages".
 
 ### Changed Artifact
-- FEAT-001 plan.md v0.1 -> v0.2 (docs/05-build-plan/feature-001-frontend-scaffold/plan.md)
+- FEAT-001 v0.1 -> v0.2 (docs/05-build-plan/feature-001-frontend-scaffold/plan.md)
 
 ### Change Detail
 Files To Create Or Modify — add: src/frontend/index.html; src/frontend/package-lock.json; src/frontend/playwright.config.ts
