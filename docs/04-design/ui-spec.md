@@ -1,4 +1,4 @@
----
+﻿---
 id: UIS-001
 title: APLX AMS: UI Specification
 phase: 4
@@ -286,7 +286,7 @@ Each flow lists numbered steps. Each step names the route, the user action, and 
 **Normal path (display):**
 - GET /api/tickets/ and GET /api/tickets/{id}/ include `escalation_flag` boolean.
 - Ticket list: escalation flag column shows a red flag icon + "Escalation" label when true; no icon when false (non-color indicator).
-- Ticket detail: escalation flag alert banner (MuiAlert severity="warning") shown below the header when flag is true: "This ticket has passed its L1 target. Assign it to an L2/L3 support engineer."
+- Ticket detail: escalation flag alert banner (MuiAlert (warning-level)) shown below the header when flag is true: "This ticket has passed its L1 target. Assign it to an L2/L3 support engineer."
 - Flag is removed when ticket is assigned (REQ S-5) or set to Resolved (REQ S-6); re-fetch removes the banner.
 
 ---
@@ -378,7 +378,7 @@ Each flow lists numbered steps. Each step names the route, the user action, and 
 **Normal path:**
 1. P3 navigates to `/admin/organizations`.
 2. Selects a client organization → expands Contract section.
-3. Active contract displays: contracted hours (if hours bank), hours recorded, hours bank balance (A-020). If balance is 0 or below: MuiAlert severity="warning" — "Hours bank balance is [N] hours. Contract limit reached."
+3. Active contract displays: contracted hours (if hours bank), hours recorded, hours bank balance (A-020). If balance is 0 or below: MuiAlert (warning-level) — "Hours bank balance is [N] hours. Contract limit reached."
 4. Effort entries per ticket shown in an expandable table.
 
 ---
@@ -660,7 +660,7 @@ MUI components: `<MuiDrawer variant="permanent">`, `<MuiList>`, `<MuiListItemBut
 +------------------------------------------------------------------+
 ```
 
-MUI components: `<MuiTextField label="Account name" required>`, `<MuiTextField label="Password" type="password" required>`, `<MuiButton variant="contained">Sign in</MuiButton>`, `<MuiAlert severity="error">` for sign-in errors.
+MUI components: `<MuiTextField label="Account name" required>`, `<MuiTextField label="Password" type="password" required>`, `<MuiButton variant="contained">Sign in</MuiButton>`, `<MuiAlert (error-level)>` for sign-in errors.
 
 **Loading state:** Sign in button shows `<MuiCircularProgress size={20}>` while POST /api/auth/login/ is in flight. Button is disabled.
 **Error state:** MuiAlert below the button. Generic message: "Invalid credentials." (A-019). For HTTP 429: "Too many sign-in attempts. Please wait and try again." No field-level error.
@@ -708,7 +708,7 @@ MUI components: `<MuiDataGrid>`, `<MuiTextField label="Search">`, `<MuiSelect la
 
 **Loading state:** `<MuiSkeleton variant="rectangular">` for each table row while GET /api/tickets/ is pending.
 **Empty state:** Centered illustration area + "No tickets found." For P4: "No tickets have been raised by your organization yet." with Raise ticket button.
-**Error state:** `<MuiAlert severity="error">` below filter bar: "Failed to load tickets. [Retry]" button.
+**Error state:** `<MuiAlert (error-level)>` below filter bar: "Failed to load tickets. [Retry]" button.
 
 ---
 
@@ -740,7 +740,7 @@ MUI components: `<MuiSelect label="Type">`, `<MuiSelect label="SAP application">
 **Loading state (SAP application options):** `<MuiCircularProgress size={20}>` inside the SAP application select while GET /api/organizations/{id}/sap-applications/ is pending.
 **Empty state (SAP application):** Select disabled, helper text: "No SAP applications available. Contact your delivery manager."
 **Error state (form):** Each required field shows `<MuiFormHelperText error>` with the field name + "is required." on submit attempt.
-**Error state (API):** `<MuiAlert severity="error">` above submit button with the API error detail.
+**Error state (API):** `<MuiAlert (error-level)>` above submit button with the API error detail.
 **Route guard:** P1, P2, P3 navigating to `/tickets/new` → redirect to `/tickets`. Only P4 can access this page.
 
 ---
@@ -782,7 +782,7 @@ Role-conditional action legend:
 
 SLA timers: shown for P1, P2, P3 only. Each clock on its own line with label, chip, elapsed/target. Paused state shown as "Paused" chip with pause icon.
 
-MUI components: `<MuiBreadcrumbs>`, `<MuiChip label="status">`, `<MuiAlert severity="warning">` for escalation flag, `<MuiButton>` for each action, `<MuiTabs>`, `<MuiTabPanel>`, `<MuiTextField multiline>` for comment, `<MuiDialog>` for all confirmation and form dialogs.
+MUI components: `<MuiBreadcrumbs>`, `<MuiChip label="status">`, `<MuiAlert (warning-level)>` for escalation flag, `<MuiButton>` for each action, `<MuiTabs>`, `<MuiTabPanel>`, `<MuiTextField multiline>` for comment, `<MuiDialog>` for all confirmation and form dialogs.
 
 Priority change dialog: `<MuiSelect label="Priority">`, `<MuiTextField label="Reason" required>`.
 Assign dialog: `<MuiAutocomplete label="L2/L3 support engineer">` loaded from user list.
@@ -793,8 +793,8 @@ Set awaiting client dialog: `<MuiDialog>` with confirmation text and Confirm/Can
 **Empty state (comments):** "No comments yet."
 **Empty state (effort):** "No effort entries for this ticket."
 **Empty state (audit trail):** "No audit entries for this ticket."
-**Error state (page):** `<MuiAlert severity="error">` full-width: "Failed to load ticket. [Retry]"
-**Error state (action dialog):** Inline `<MuiAlert severity="error">` inside dialog, dialog stays open.
+**Error state (page):** `<MuiAlert (error-level)>` full-width: "Failed to load ticket. [Retry]"
+**Error state (action dialog):** Inline `<MuiAlert (error-level)>` inside dialog, dialog stays open.
 
 ---
 
@@ -829,13 +829,13 @@ Column label to API field mapping:
 
 Escalation flags count and hours bank balance are sourced from `DashboardOrgSummary.escalation_flag_count` and `DashboardOrgSummary.hours_bank_balance` respectively (organization-level fields, not per-SAP-application).
 
-Balance warning (AC-4 of S-16): `<MuiAlert severity="warning">` when hours bank balance is 0 or below.
+Balance warning (AC-4 of S-16): `<MuiAlert (warning-level)>` when hours bank balance is 0 or below.
 
-MUI components: `<MuiTable>`, `<MuiTableCell>`, `<MuiAlert severity="warning">`, `<MuiButton variant="outlined">Refresh</MuiButton>`, `<MuiChip>` for escalation flag count.
+MUI components: `<MuiTable>`, `<MuiTableCell>`, `<MuiAlert (warning-level)>`, `<MuiButton variant="outlined">Refresh</MuiButton>`, `<MuiChip>` for escalation flag count.
 
 **Loading state:** `<MuiSkeleton>` table rows.
 **Empty state:** "No open tickets across all client organizations."
-**Error state:** `<MuiAlert severity="error">`: "Failed to load dashboard. [Retry]"
+**Error state:** `<MuiAlert (error-level)>`: "Failed to load dashboard. [Retry]"
 
 ---
 
@@ -871,8 +871,8 @@ MUI components: `<MuiTable>`, `<MuiButton>`, `<MuiAlert>` for status, `<MuiChip 
 
 **Loading state:** `<MuiSkeleton>` for report content.
 **Empty state (not yet generated):** Message: "No report has been generated for this period." with Generate button (P3 only).
-**Error state (generate/publish fails):** `<MuiAlert severity="error">`: "Failed to [generate|publish] report. Please try again."
-**P4 viewing unpublished report:** `<MuiAlert severity="info">`: "This report is not yet available."
+**Error state (generate/publish fails):** `<MuiAlert (error-level)>`: "Failed to [generate|publish] report. Please try again."
+**P4 viewing unpublished report:** `<MuiAlert (info-level)>`: "This report is not yet available."
 
 ---
 
@@ -894,7 +894,7 @@ MUI components: `<MuiTable>`, `<MuiButton>`, `<MuiAlert>` for status, `<MuiChip 
 MUI components: `<MuiSelect label="Year">`, `<MuiSelect label="Month">`, `<MuiButton variant="contained">Download as Excel</MuiButton>`, `<MuiButton variant="outlined">Download as CSV</MuiButton>`.
 
 **Loading state:** Buttons show `<MuiCircularProgress size={20}>` while download is in progress. Buttons disabled.
-**Empty state / error state:** `<MuiAlert severity="info">`: "No effort entries for the selected month." on HTTP 200 empty file or API error.
+**Empty state / error state:** `<MuiAlert (info-level)>`: "No effort entries for the selected month." on HTTP 200 empty file or API error.
 **Route guard:** P1, P2, P4 navigating to `/reports/finance-export` → redirect to `/tickets`.
 
 ---
@@ -927,7 +927,7 @@ Set temporary password dialog: `<MuiTextField label="Temporary password" type="p
 
 **Loading state:** `<MuiSkeleton>` table rows.
 **Empty state:** "No user accounts. Create the first account."
-**Error state:** `<MuiAlert severity="error">` above table.
+**Error state:** `<MuiAlert (error-level)>` above table.
 
 ---
 
@@ -951,10 +951,10 @@ Set temporary password dialog: `<MuiTextField label="Temporary password" type="p
 +----------------+--------------------------------------------------+
 ```
 
-MUI components: `<MuiAccordion>` per organization, `<MuiTable>` for SAP applications and effort entries, `<MuiButton>`, `<MuiAlert severity="warning">` for balance warning, `<MuiDialog>` for all actions.
+MUI components: `<MuiAccordion>` per organization, `<MuiTable>` for SAP applications and effort entries, `<MuiButton>`, `<MuiAlert (warning-level)>` for balance warning, `<MuiDialog>` for all actions.
 
 **Loading state:** `<MuiSkeleton>` per accordion section.
-**Error state:** `<MuiAlert severity="error">` per section.
+**Error state:** `<MuiAlert (error-level)>` per section.
 
 ---
 
@@ -976,7 +976,7 @@ MUI components: `<MuiTable>`, `<MuiButton>`, `<MuiDialog>` for add (date picker)
 
 **Loading state:** `<MuiSkeleton>` rows.
 **Empty state:** "No holidays have been added. SLA timers count all business days (Monday to Friday, 09:00 to 18:00 IST)."
-**Error state:** `<MuiAlert severity="error">`.
+**Error state:** `<MuiAlert (error-level)>`.
 
 ---
 
@@ -1002,11 +1002,11 @@ MUI components: `<MuiTable>`, `<MuiButton>`, `<MuiDialog>` for add (date picker)
 +----------------+--------------------------------------------------+
 ```
 
-MUI components: `<MuiTextField type="password" label="Current password">`, `<MuiTextField type="password" label="New password">`, `<MuiTextField type="password" label="Confirm new password">`, `<MuiButton variant="contained">Save password</MuiButton>`, `<MuiAlert severity="success|error">`.
+MUI components: `<MuiTextField type="password" label="Current password">`, `<MuiTextField type="password" label="New password">`, `<MuiTextField type="password" label="Confirm new password">`, `<MuiButton variant="contained">Save password</MuiButton>`, `<MuiAlert (success or error-level)>`.
 
 **Loading state:** Save button shows `<MuiCircularProgress size={20}>` while POST /api/accounts/me/change-password/ is in flight. Button disabled.
-**Error state:** `<MuiAlert severity="error">` below form: field-level error on Current password if wrong, policy error on New password if violated.
-**Success state:** `<MuiAlert severity="success">`: "Password changed." Fields cleared.
+**Error state:** `<MuiAlert (error-level)>` below form: field-level error on Current password if wrong, policy error on New password if violated.
+**Success state:** `<MuiAlert (success-level)>`: "Password changed." Fields cleared.
 **Validation:** Confirm new password must match New password (client-side). Policy stated as helper text below New password field.
 
 ---
@@ -1043,7 +1043,7 @@ Event type column labels (from GLO-001):
 
 **Loading state:** `<MuiSkeleton>` rows.
 **Empty state:** "No security events found for the selected filter."
-**Error state:** `<MuiAlert severity="error">`.
+**Error state:** `<MuiAlert (error-level)>`.
 **Route guard:** P4 navigating to `/audit/security-events` → redirect to `/tickets`.
 
 ---
@@ -1079,7 +1079,7 @@ SignInPage
     MuiTextField label="Password" type="password" required autoComplete="current-password"
     MuiButton variant="contained" type="submit" ("Sign in")
       on click → POST /api/auth/login/ (useMutation)
-    MuiAlert severity="error" (conditional — sign-in error message)
+    MuiAlert (error-level) (conditional — sign-in error message)
 ```
 
 ### /tickets
@@ -1108,7 +1108,7 @@ TicketListPage
     MuiPagination
     EmptyState → MuiBox, MuiTypography, MuiButton (P4)
     LoadingState → MuiSkeleton rows
-    ErrorState → MuiAlert severity="error", MuiButton ("Retry")
+    ErrorState → MuiAlert (error-level), MuiButton ("Retry")
 
 SlaClockChip
   props: state (on_track|at_risk|breached|met|paused), elapsed_hours, target_hours
@@ -1148,7 +1148,7 @@ RaiseTicketPage (P4 only)
     MuiTextField label="Description" multiline rows={4} required
     MuiButton variant="contained" ("Raise ticket") → POST /api/tickets/ (useMutation)
     MuiButton variant="text" ("Cancel") → navigate('/tickets')
-    MuiAlert severity="error" (API error)
+    MuiAlert (error-level) (API error)
 ```
 
 ### /tickets/:id
@@ -1450,8 +1450,8 @@ All pages:
 - MuiDataGrid sort headers: MUI provides `aria-sort` automatically.
 - Loading skeletons: `aria-busy="true"` on the container; `aria-label="Loading [content description]"` on the MuiSkeleton region.
 - Empty states: `aria-live="polite"` region so screen readers announce when list transitions from loading to empty.
-- Error alerts (MuiAlert): `role="alert"` (MUI default for severity="error"); content is announced immediately.
-- Success alerts: `role="status"` via `aria-live="polite"` (MUI default for severity="success").
+- Error alerts (MuiAlert): `role="alert"` (MUI default for error-level alerts); content is announced immediately.
+- Success alerts: `role="status"` via `aria-live="polite"` (MUI default for success-level alerts).
 - Nav items: `aria-current="page"` on the active nav item.
 - Dialogs: `aria-labelledby` pointing to the dialog title element.
 

@@ -279,7 +279,7 @@ The `SecurityHeadersMiddleware` in `src/aplx_ams_django/middleware.py` adds the 
 ### Dependency policy
 
 - Add only packages on the approved technology list (§ Approved Technology List). Any other package requires a new ADR before it may appear in `requirements.txt` or `package.json` in Phase 6.
-- CI runs `pip-audit` (dependency vulnerability scan) and the licence scan; a known high-severity CVE or an unapproved licence is a non-overridable gate failure.
+- CI runs `pip-audit` (dependency vulnerability scan) and the licence scan; a known Critical or High CVE or an unapproved licence is a non-overridable gate failure.
 
 ## Automated Gate Commands
 
