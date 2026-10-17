@@ -86,7 +86,7 @@ Approved 2026-10-17 by Mohanasunder (Architect / tech lead).
 
 | FEAT | Title | Depends on | Supplementary artifacts status |
 | --- | --- | --- | --- |
-| FEAT-000 | Walking Skeleton — Backend Scaffold and CI Pipeline | none (foundation) | FEAT-000-ACC, FEAT-000-TASKS, FEAT-000-STATUS Approved v0.1 (2026-10-18); FEAT-000-TESTS Approved v0.1 (2026-10-18, Mohanasunder, Tech lead) |
+| FEAT-000 | Walking Skeleton — Backend Scaffold and CI Pipeline | none (foundation) | FEAT-000-ACC, FEAT-000-TASKS, FEAT-000-STATUS Approved v0.1 (2026-10-18); FEAT-000-TESTS Approved v0.1 (2026-10-18, Mohanasunder, Tech lead); PR #4 Approved 2026-10-18 by Mohanasunder (Tech lead, Release manager); not yet merged |
 | FEAT-001 | Frontend Scaffold — React + Vite + Tailwind | FEAT-000 | FEAT-001-ACC, FEAT-001-TASKS, FEAT-001-STATUS Approved v0.1 (2026-10-18) |
 | FEAT-035 | E2E CI Scaffold | FEAT-000, FEAT-001 | FEAT-035-ACC, FEAT-035-TASKS, FEAT-035-STATUS Approved v0.1 (2026-10-18) |
 
@@ -124,8 +124,9 @@ Traceability chain: STD-001, TST-001 → FEAT-000-ACC → FEAT-000-TESTS
 | TST-001 v0.1 → FEAT-000-TESTS | Test strategy criterion AC-2 maps to `test_health_returns_200` in `src/aplx_ams_django/tests/test_health.py` |
 | FEAT-000-ACC v0.1 → FEAT-000-TESTS | All four acceptance criteria (AC-1 to AC-4) covered by FEAT-000-TESTS; AC-2 by pytest, AC-1/AC-3/AC-4 by CI gates |
 | FEAT-000-TESTS v0.1 (Approved) | Approver: Mohanasunder (Tech lead), 2026-10-18; branch: feature/FEAT-000-walking-skeleton; test commit: 6586f38 |
+| FEAT-000 PR #4 → GitHub | https://github.com/Mohanasunder/aplx-ams/pull/4; approved 2026-10-18 by Mohanasunder (Tech lead) and Mohanasunder (Release manager); all automated gates passed; coverage: TST-001 AC-2 (pytest), STD-001 AC-1, AC-3, AC-4 (CI gates); not yet merged |
 
-Build status: In progress (Phase 6 build has begun; Mode B implementation follows approved test set).
+Build status: PR Approved (PR #4, https://github.com/Mohanasunder/aplx-ams/pull/4; approved 2026-10-18 by Mohanasunder, Tech lead and Release manager; all automated gates passed; not yet merged).
 
 ## Requirements with No Design ID
 
