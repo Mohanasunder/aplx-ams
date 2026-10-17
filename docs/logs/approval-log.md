@@ -30,3 +30,35 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-17 08:46 | SUM-002 | 0.1 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Reviewed after validation run 4; all open questions answered; R4 findings fixed. |
 | 2026-10-17 08:54 | SCR S-2 | 0.1 | Approve | Mohanasunder | Product owner / BA | n/a | - | Wording-only fix per SCR S-2. |
 | 2026-10-17 08:54 | SUM-002 | 0.2 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Wording-only fix per SCR S-2. |
+| 2026-10-17 09:48 | SCR S-3 | 0.1 | Approve | Mohanasunder | Product owner / BA | n/a | - | Password set, reset and change per SCR S-3; validated in Phase 3 run 3. |
+| 2026-10-17 09:48 | GLO-001 | 0.2 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Password set, reset and change per SCR S-3; validated in Phase 3 run 3. |
+| 2026-10-17 09:48 | REQ-001 | 0.2 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Password set, reset and change per SCR S-3; validated in Phase 3 run 3. |
+| 2026-10-17 09:48 | BR-001 | 0.2 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Password set, reset and change per SCR S-3; validated in Phase 3 run 3. |
+| 2026-10-17 09:48 | NFR-001 | 0.2 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Password set, reset and change per SCR S-3; validated in Phase 3 run 3. |
+| 2026-10-17 09:48 | EPC-001 | 0.2 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Password set, reset and change per SCR S-3; validated in Phase 3 run 3. |
+| 2026-10-17 09:48 | BKL-001 | 0.2 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Password set, reset and change per SCR S-3; validated in Phase 3 run 3. |
+| 2026-10-17 09:48 | PRS-001 | 0.2 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Password set, reset and change per SCR S-3; validated in Phase 3 run 3. |
+| 2026-10-17 09:48 | SUM-002 | 0.3 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Password set, reset and change per SCR S-3; validated in Phase 3 run 3. |
+| 2026-10-17 09:51 | INT-003 | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Run 3 passed; SCR S-3 approved, so the readiness condition is met. |
+| 2026-10-17 09:51 | PIB-003 | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Run 3 passed; SCR S-3 approved, so the readiness condition is met. |
+| 2026-10-17 09:51 | IRC-004 | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Run 3 passed; SCR S-3 approved, so the readiness condition is met. |
+| 2026-10-17 10:59 | SCR S-4 | 0.1 | Approve | Mohanasunder | Product owner / BA | n/a | - | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| 2026-10-17 10:59 | GLO-001 | 0.3 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| 2026-10-17 10:59 | REQ-001 | 0.3 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| 2026-10-17 10:59 | BR-001 | 0.3 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| 2026-10-17 10:59 | NFR-001 | 0.3 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| 2026-10-17 10:59 | EPC-001 | 0.3 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| 2026-10-17 10:59 | BKL-001 | 0.3 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| 2026-10-17 10:59 | PRS-001 | 0.3 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| 2026-10-17 10:59 | SUM-002 | 0.4 | Approve | Mohanasunder | Product owner / BA | Pass with warnings | - | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| 2026-10-17 11:03 | INT-003 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Citation update under SCR S-4; run 5 passed. |
+| 2026-10-17 11:03 | PIB-003 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Citation update under SCR S-4; run 5 passed. |
+| 2026-10-17 11:03 | IRC-004 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Citation update under SCR S-4; run 5 passed. |
+| 2026-10-17 11:25 | ARC-001 | 0.3 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Reviewed after validation run 6; gate decisions DEC-027 to DEC-038 applied; THR-001 envelope-opening log proposal adopted as DEC-039. |
+| 2026-10-17 11:25 | TEC-001 | 0.3 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Reviewed after validation run 6; gate decisions DEC-027 to DEC-038 applied; THR-001 envelope-opening log proposal adopted as DEC-039. |
+| 2026-10-17 11:25 | ADR-001 | 0.3 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Reviewed after validation run 6; gate decisions DEC-027 to DEC-038 applied; THR-001 envelope-opening log proposal adopted as DEC-039. |
+| 2026-10-17 11:25 | THR-001 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Reviewed after validation run 6; gate decisions DEC-027 to DEC-038 applied; THR-001 envelope-opening log proposal adopted as DEC-039. |
+| 2026-10-17 11:25 | TOP-001 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Reviewed after validation run 6; gate decisions DEC-027 to DEC-038 applied; THR-001 envelope-opening log proposal adopted as DEC-039. |
+| 2026-10-17 11:25 | CST-001 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Reviewed after validation run 6; gate decisions DEC-027 to DEC-038 applied; THR-001 envelope-opening log proposal adopted as DEC-039. |
+| 2026-10-17 11:25 | RSK-003 | 0.3 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Reviewed after validation run 6; gate decisions DEC-027 to DEC-038 applied; THR-001 envelope-opening log proposal adopted as DEC-039. |
+| 2026-10-17 11:25 | SUM-003 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Reviewed after validation run 6; gate decisions DEC-027 to DEC-038 applied; THR-001 envelope-opening log proposal adopted as DEC-039. |

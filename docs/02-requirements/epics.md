@@ -2,7 +2,7 @@
 id: EPC-001
 title: APLX AMS: Epics
 phase: 2
-version: 0.1
+version: 0.3
 template: epic
 template_version: 2.0
 status: Approved
@@ -23,6 +23,8 @@ validation: Pass with warnings
 - BRF-001 v0.2 § Business Goals And KPIs (G-1 to G-4).
 - SCP-001 v0.2 § In Scope (IS-1 to IS-5).
 - PER-001 v0.2 § Persona P-1 to P-4; PRC-001 v0.2 § Process M-1 to M-3 (Pain Points).
+- SCR S-3 (`docs/logs/spec-changes.md`): password set, reset and change (REQ S-30, S-31 in E-5), decided by Mohanasunder (Product owner / BA), chat, 2026-10-17.
+- SCR S-4 (`docs/logs/spec-changes.md`): security events in the audit trail (REQ S-32, S-33 in E-5), OQ-062 answered by Mohanasunder (Product owner / BA), chat, 2026-10-17.
 
 ## Purpose And Scope
 <!-- guidance: What this artifact covers and what it does not -->
@@ -105,16 +107,16 @@ REQ S-15, REQ S-16, REQ S-17, REQ S-19, REQ S-25, REQ S-26, REQ S-27
 ## Epic E-5: Access, setup and client data boundary
 
 ### Description
-Delivery manager setup of client organizations, SAP applications and user accounts; sign-in with user accounts and a password policy (no MFA); the client data boundary built and tested with two client organizations; the audit trail of ticket changes. Covers SCP IS-4 (log-in), IS-5, and INT-002 Q7, Q8, Q11.
+Delivery manager setup of client organizations, SAP applications and user accounts; sign-in with user accounts and a password policy (no MFA); the delivery manager sets a temporary password on a new user account and a new temporary password for a user who forgot their password, and any signed-in user changes their own password, with no forced change (SCR S-3); the client data boundary built and tested with two client organizations; the audit trail of ticket changes and of security events (sign-ins, lockouts, temporary passwords set, own password changes, viewed by the delivery manager for all user accounts and by each internal user for their own; SCR S-4). Covers SCP IS-4 (log-in), IS-5, and INT-002 Q7, Q8, Q11.
 
 ### Business Value
 BRF-001 G-3
 BRF-001 G-4
 
-A client organization counts as on the dashboard (G-4, denominator 1 in release 1) only once it is set up, its client users can sign in, and they see only their own organization's data (DEC-022, RSK R-6). The audit trail (REQ S-23) serves G-3, as PRS F-8 serves PRS G-3: ticket changes are recorded in the one tool instead of the shared mailbox and spreadsheet.
+A client organization counts as on the dashboard (G-4, denominator 1 in release 1) only once it is set up, its client users can sign in, and they see only their own organization's data (DEC-022, RSK R-6). The audit trail (REQ S-23, S-32, S-33) serves G-3, as PRS F-8 serves PRS G-3: ticket changes are recorded in the one tool instead of the shared mailbox and spreadsheet.
 
 ### Stories
-REQ S-18, REQ S-20, REQ S-21, REQ S-22, REQ S-23
+REQ S-18, REQ S-20, REQ S-21, REQ S-22, REQ S-23, REQ S-30, REQ S-31, REQ S-32, REQ S-33
 
 ---
 
@@ -124,13 +126,13 @@ None specific to the epics. Story-level assumptions A-009 to A-025 (A-009 to A-0
 
 ## Open Questions
 <!-- guidance: Each labeled OQ-NNN and logged in docs/logs/open-questions-log.md -->
-None specific to the epics. OQ-037 to OQ-051 are Answered (2026-10-17); all logged in `docs/logs/open-questions-log.md`. No brief goal is left uncovered, so no product owner scope decision is needed. Scope decision DEC-026 (client comments, part of IS-4) adds REQ S-28 and REQ S-29 to E-1.
+None specific to the epics. OQ-037 to OQ-051 are Answered (2026-10-17); all logged in `docs/logs/open-questions-log.md`. No brief goal is left uncovered, so no product owner scope decision is needed. Scope decision DEC-026 (client comments, part of IS-4) adds REQ S-28 and REQ S-29 to E-1. SCR S-3 adds REQ S-30 and REQ S-31 to E-5; their questions OQ-053, OQ-054 are Answered (2026-10-17) and listed in REQ-001. SCR S-4 (OQ-062, OQ-064, OQ-065 Answered, 2026-10-17) adds REQ S-32 and REQ S-33 to E-5; the questions are listed in REQ-001.
 
 ## Traceability Links
 <!-- guidance: Upstream and downstream IDs, or 'Not applicable - reason'.
      Cite individual epics downstream as EPC E-N (e.g. EPC E-2). -->
 - Upstream: BRF-001 v0.2 (G-1 to G-4); SCP-001 v0.2 (IS-1 to IS-5); PIB-002 v0.1; INT-002 v0.1; PER-001 v0.2; PRC-001 v0.2.
-- Downstream: REQ-001 (REQ S-1 to S-29); BKL-001; PRS-001 (features F-1 to F-8); `docs/logs/traceability-matrix.md` (seeded by the traceability agent).
+- Downstream: REQ-001 (REQ S-1 to S-33); BKL-001; PRS-001 (features F-1 to F-8); `docs/logs/traceability-matrix.md` (seeded by the traceability agent).
 
 ## Quality Checklist
 - [x] Every template section is filled, or marked "Not applicable - <reason>"
@@ -150,7 +152,7 @@ None specific to the epics. OQ-037 to OQ-051 are Answered (2026-10-17); all logg
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Product owner / BA |
-| Version | 0.1 |
+| Version | 0.3 |
 | Conditions | None |
-| Comments | Reviewed after validation run 4; all open questions answered; R4 findings fixed. |
-| Timestamp | 2026-10-17 08:46 UTC |
+| Comments | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| Timestamp | 2026-10-17 10:59 UTC |

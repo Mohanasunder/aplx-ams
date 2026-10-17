@@ -2,7 +2,7 @@
 id: REQ-001
 title: APLX AMS: User Stories
 phase: 2
-version: 0.1
+version: 0.3
 template: user-story
 template_version: 2.0
 status: Approved
@@ -27,10 +27,13 @@ validation: Pass with warnings
 - RSK-001 v0.2 § Risk R-6; DEC-022; DEC-026 (client comments, Mohanasunder, 2026-10-17).
 - Answers to OQ-037 to OQ-051 and the Phase 2 review answers, 2026-10-17 (Mohanasunder, 2026-10-17, chat; `docs/logs/open-questions-log.md`).
 - Phase 2 drafts referenced, not used as input: BR-001 (business rules), NFR-001 (NFRs), GLO-001 (domain glossary).
+- SCR S-3 (`docs/logs/spec-changes.md`): password set, reset and change, decided by Mohanasunder (Product owner / BA), chat, 2026-10-17 (option C on VAL-013 F-1); adds REQ S-30, S-31.
+- SCR S-4 (`docs/logs/spec-changes.md`): security events in the audit trail, OQ-062 answered by Mohanasunder (Product owner / BA), chat, 2026-10-17; adds REQ S-32, S-33.
+- NFR-001 v0.3 § NFR N-5 (password policy), § NFR N-6 (audit trail completeness).
 
 ## Purpose And Scope
 <!-- guidance: What this artifact covers and what it does not -->
-Covers: the release 1 user stories of APLX AMS, S-1 to S-29, with Given/When/Then acceptance criteria (AC-n) including edge, error and permission cases. Personas: PER P-1 L1 support engineer, PER P-2 L2/L3 support engineer, PER P-3 delivery manager, PER P-4 client user. All stories are Must for the 2027-01-17 go-live (INT-002 Q1). Each story has at most 4 criteria (`project.md` max_acceptance_criteria_per_feature, used as sizing guidance). Terms follow GLO-001.
+Covers: the release 1 user stories of APLX AMS, S-1 to S-33 (S-30 and S-31 added by SCR S-3; S-32 and S-33 by SCR S-4), with Given/When/Then acceptance criteria (AC-n) including edge, error and permission cases. Personas: PER P-1 L1 support engineer, PER P-2 L2/L3 support engineer, PER P-3 delivery manager, PER P-4 client user. All stories are Must for the 2027-01-17 go-live (INT-002 Q1). Each story has at most 4 criteria (`project.md` max_acceptance_criteria_per_feature, used as sizing guidance). Terms follow GLO-001.
 
 Does not cover: screens, colours, layout, endpoints, tables or technology (Phases 3 and 4), NFR targets (NFR-001), or the rule detail held in BR-001. Examples use business hours per BR B-2 on business days with no holiday.
 
@@ -493,7 +496,7 @@ BR B-21
 NFR N-5
 
 ### Priority
-Must: client user log-in is IS-4 (INT-002 Q7; SCP IS-4; BRF-001 G-4). Password policy and lockout: OQ-044 answered (Mohanasunder, 2026-10-17; replaces A-012, now Rejected).
+Must: client user log-in is IS-4 (INT-002 Q7; SCP IS-4; BRF-001 G-4). Password policy and lockout: OQ-044 answered (Mohanasunder, 2026-10-17; replaces A-012, now Rejected). Exception to AC-4: a new temporary password set by the delivery manager clears the lock at once (BR B-23; REQ S-30 AC-3; OQ-054, SCR S-3).
 
 ---
 
@@ -673,6 +676,94 @@ Must: internal users add comments visible to the client user; an internal commen
 
 ---
 
+## Story S-30: Delivery manager sets a temporary password
+
+### Story Statement
+As a delivery manager (PER P-3), I want to set a temporary password when I create a user account, and set a new temporary password when a user tells me outside APLX AMS that they forgot their password, so that every user can sign in.
+
+### Acceptance Criteria
+1. Given the delivery manager creates a user account with temporary password "Abcdefg1", when the account is saved, then the user signs in with that user account and "Abcdefg1" and is not asked to change the password (BR B-23).
+2. Given the delivery manager sets a temporary password, when it has fewer than 8 characters or lacks an upper-case letter, a lower-case letter or a digit (for example "abcdefg1"), then the temporary password is refused (NFR N-5, OQ-044).
+3. Given user X told the delivery manager outside APLX AMS that they forgot their password, and X's user account is locked after 5 failed sign-ins, when the delivery manager sets new temporary password "Bcdefgh2" on X's user account, then the lock clears at once, X signs in immediately with "Bcdefgh2", X's previous password is refused, and X is not asked to change the password (BR B-23, OQ-054).
+4. Given a user who is not a delivery manager, when they try to set a temporary password on another user's user account, then the change is refused (BR B-21, BR B-23).
+
+### Business Rules
+BR B-21, BR B-23
+
+### NFR References
+NFR N-5
+
+### Priority
+Must: users need a first password and a way back in after forgetting it (SCR S-3 decision (a), (b) and (d), Mohanasunder, Product owner / BA, 2026-10-17; INT-002 Q7, Q8; SCP IS-4; BRF-001 G-4). No email and no self-service password reset in release 1. A temporary password set on a locked user account clears the lock at once (OQ-054 answered, Mohanasunder, 2026-10-17).
+
+---
+
+## Story S-31: User changes their own password
+
+### Story Statement
+As any signed-in user (PER P-1, PER P-2, PER P-3 or PER P-4), I want to change my own password, so that I replace a temporary password or an earlier password with one of my own.
+
+### Acceptance Criteria
+1. Given signed-in user X (an internal user or a client user), when X enters their current password and changes their own password to "Cdefghi3", then X's next sign-in succeeds with "Cdefghi3" and X's previous password is refused (BR B-23).
+2. Given signed-in user X, when the new password has fewer than 8 characters or lacks an upper-case letter, a lower-case letter or a digit (for example "cdefghi3"), then the change is refused and X's previous password stays valid (NFR N-5, OQ-044).
+3. Given signed-in user X who is not a delivery manager, when X tries to change the password of another user's user account, then the change is refused (BR B-23).
+4. Given signed-in user X, when X enters a wrong current password while changing their own password, then the change is refused and X's previous password stays valid (BR B-23, OQ-053).
+
+### Business Rules
+BR B-23
+
+### NFR References
+NFR N-5
+
+### Priority
+Must: any signed-in user, internal or client, can change their own password (SCR S-3 decision (c), Mohanasunder, Product owner / BA, 2026-10-17; INT-002 Q7; SCP IS-4; BRF-001 G-4). The user enters their current password to change it (OQ-053 answered, Mohanasunder, 2026-10-17).
+
+---
+
+## Story S-32: Security events are recorded in the audit trail
+
+### Story Statement
+As a delivery manager (PER P-3), I want sign-ins, lockouts and password changes on every user account recorded in the audit trail like other audit entries, so that the use of a temporary password or a taken-over user account leaves a record of who did what, on which user account, and when.
+
+### Acceptance Criteria
+1. Given active, unlocked user account X, when X signs in with the correct password at 10:00:05 IST and a sign-in on X with a wrong password is refused at 10:01:10 IST, then the audit trail holds a successful sign-in entry and a failed sign-in entry, each with user account X and its date and time to the second (BR B-24).
+2. Given user account X with 4 failed sign-ins, when a fifth sign-in with a wrong password is refused and X is locked (NFR N-5), and then a sign-in on X with the correct password is refused while X is locked, then the audit trail holds a failed sign-in entry, a user account lockout entry and a second failed sign-in entry for X, each with its date and time (BR B-24, OQ-065).
+3. Given deactivated user account Y and the account name "user.unknown", which matches no user account, when a sign-in on Y and a sign-in with "user.unknown" are each refused, then the audit trail holds a failed sign-in entry for user account Y and a failed sign-in entry holding the account name "user.unknown" as typed, each with its date and time (BR B-24, OQ-065).
+4. Given delivery manager D sets temporary password "Bcdefgh2" on user account X, and signed-in user Z changes their own password to "Cdefghi3", when each change is saved, then the audit trail holds a temporary password set entry with user D, user account X and the time, and an own password change entry with user Z, user account Z and the time; and a search of every audit entry for every password value entered during the test of AC-1 to AC-4 (the correct and wrong passwords entered at sign-in, "Bcdefgh2", "Cdefghi3" and the current password entered by Z) finds 0 matches (BR B-23, BR B-24).
+
+### Business Rules
+BR B-22, BR B-23, BR B-24
+
+### NFR References
+NFR N-6, NFR N-5, NFR N-4
+
+### Priority
+Must: security events are recorded in the audit trail like other audit entries, with no alerting and no new reporting (OQ-062 answered, Mohanasunder, Product owner / BA, 2026-10-17, chat; SCR S-4; trigger THR T-3, T-5). Every refused sign-in is a failed sign-in, and an unknown account name is recorded as typed (OQ-065 answered, Mohanasunder, 2026-10-17, chat). Goal: BRF-001 G-3, as REQ S-23 (the audit trail is kept in the one tool, PRS F-8). Viewing: REQ S-33.
+
+---
+
+## Story S-33: Users view security events
+
+### Story Statement
+As an internal user (PER P-1, PER P-2 or PER P-3), I want to view security events, all user accounts' as the delivery manager and my own otherwise, so that misuse of a user account can be seen.
+
+### Acceptance Criteria
+1. Given security events recorded for user accounts X and Y and a failed sign-in with the account name "user.unknown", when the delivery manager views security events, then they see the security events of any user account they choose, X or Y, and the failed sign-in for "user.unknown", each with the event, the user, the user account or account name typed, and the date and time (BR B-24, OQ-064).
+2. Given an L1 support engineer, an L2/L3 support engineer or a delivery manager with user account W, when they view their own security events, then they see every security event of user account W (BR B-24, OQ-064).
+3. Given an L1 support engineer or an L2/L3 support engineer with user account W, when they try to view the security events of another user account, then access is refused (BR B-24, OQ-064).
+4. Given a client user, when they try to view any security event, their own included, then access is refused; and given any user, when they try to edit or delete a security event entry, then the change is refused (BR B-22, BR B-24, OQ-064).
+
+### Business Rules
+BR B-22, BR B-24
+
+### NFR References
+NFR N-6, NFR N-7
+
+### Priority
+Must: who views security events was decided with OQ-064 (answered, Mohanasunder, Product owner / BA, 2026-10-17, chat; SCR S-4): the delivery manager views all security events, per user account; each internal user views their own; client users view none. No alerting and no new reporting (OQ-062). Goal: BRF-001 G-3, as REQ S-23 (the audit trail is kept in the one tool, PRS F-8).
+
+---
+
 ## Assumptions
 <!-- guidance: Each labeled A-NNN and logged in docs/logs/assumptions-log.md -->
 Logged in `docs/logs/assumptions-log.md`:
@@ -684,15 +775,17 @@ Logged in `docs/logs/assumptions-log.md`:
 
 ## Open Questions
 <!-- guidance: Each labeled OQ-NNN and logged in docs/logs/open-questions-log.md -->
-Logged in `docs/logs/open-questions-log.md`, owner Mohanasunder. Answered 2026-10-17 (Mohanasunder, chat) and applied: OQ-037 (REQ S-7 AC-4), OQ-038 (S-17 AC-4), OQ-039 (S-13 AC-3), OQ-041 (S-24), OQ-042 (S-16 AC-4, S-27), OQ-043 (S-17 AC-3), OQ-044 (S-21 AC-3, AC-4), OQ-045 (S-8, S-28; DEC-026), OQ-046 (S-4 AC-1), OQ-047 (S-13, S-14 AC-4), OQ-048 (S-15 AC-4, S-25, S-26). Also answered 2026-10-17: OQ-049 MTTR baseline in business days (REQ S-13); OQ-050 holiday list change applies from the change onward (REQ S-24 AC-4); OQ-051 internal user comments (REQ S-29). No open question remains for these stories.
+Logged in `docs/logs/open-questions-log.md`, owner Mohanasunder. Answered 2026-10-17 (Mohanasunder, chat) and applied: OQ-037 (REQ S-7 AC-4), OQ-038 (S-17 AC-4), OQ-039 (S-13 AC-3), OQ-041 (S-24), OQ-042 (S-16 AC-4, S-27), OQ-043 (S-17 AC-3), OQ-044 (S-21 AC-3, AC-4), OQ-045 (S-8, S-28; DEC-026), OQ-046 (S-4 AC-1), OQ-047 (S-13, S-14 AC-4), OQ-048 (S-15 AC-4, S-25, S-26). Also answered 2026-10-17: OQ-049 MTTR baseline in business days (REQ S-13); OQ-050 holiday list change applies from the change onward (REQ S-24 AC-4); OQ-051 internal user comments (REQ S-29).
+- Raised by SCR S-3 and Answered 2026-10-17 (Mohanasunder, chat): OQ-053 the user enters their current password to change it (REQ S-31 AC-1, AC-4); OQ-054 a new temporary password clears the lock at once (REQ S-30 AC-3). No open question remains for these stories.
+- SCR S-4: OQ-062 Answered 2026-10-17 (Mohanasunder, chat): the 5 security events are recorded in the audit trail (REQ S-32). Raised by SCR S-4 and Answered 2026-10-17 (Mohanasunder, chat): OQ-064 the delivery manager views all security events, each internal user their own, client users none (REQ S-33); OQ-065 every refused sign-in is a failed sign-in, an unknown account name recorded as typed (REQ S-32 AC-2, AC-3). No open question remains for these stories.
 
 ## Traceability Links
 <!-- guidance: Upstream and downstream IDs, or 'Not applicable - reason'.
      Cite individual stories as REQ S-N; cite individual criteria as REQ S-N AC-n. -->
-- Upstream: PIB-002 v0.1; INT-002 v0.1; SUM-001 v0.3; BRF-001 v0.2 (G-1 to G-4); SCP-001 v0.2 (IS-1 to IS-5); PER-001 v0.2 (P-1 to P-4); PRC-001 v0.2 (M-1 to M-3); RSK-001 v0.2 (R-6).
+- Upstream: PIB-002 v0.1; INT-002 v0.1; SCR S-3; SCR S-4; NFR-001 v0.3 (N-5, N-6); SUM-001 v0.3; BRF-001 v0.2 (G-1 to G-4); SCP-001 v0.2 (IS-1 to IS-5); PER-001 v0.2 (P-1 to P-4); PRC-001 v0.2 (M-1 to M-3); RSK-001 v0.2 (R-6).
 - Related Phase 2: EPC-001 (epics list REQ S-N), BR-001, NFR-001, BKL-001, PRS-001, GLO-001.
 - Goal links (one rule): each story's Priority line cites the brief goals the story itself serves, as `BRF-001 G-n`; the Goal / KPI column of `docs/logs/traceability-matrix.md` holds the story's epic and exactly those goals. Each goal cited is also cited by the story's epic in EPC-001.
-- Story to scope: IS-1 REQ S-1 to S-11, S-24; IS-2 REQ S-12 to S-14; IS-3 REQ S-15 to S-17, S-19, S-25 to S-27; IS-4 REQ S-1, S-2, S-14, S-20, S-21, S-28, S-29 (scope decision in § Input References); IS-5 REQ S-22 (and data boundary criteria in S-1, S-2, S-12, S-14, S-18, S-28, S-29); setup (INT-002 Q8) REQ S-18 to S-20, S-24; audit (Q11) REQ S-23.
+- Story to scope: IS-1 REQ S-1 to S-11, S-24; IS-2 REQ S-12 to S-14; IS-3 REQ S-15 to S-17, S-19, S-25 to S-27; IS-4 REQ S-1, S-2, S-14, S-20, S-21, S-28, S-29, S-30, S-31 (scope decision in § Input References; S-30, S-31 by SCR S-3); IS-5 REQ S-22 (and data boundary criteria in S-1, S-2, S-12, S-14, S-18, S-28, S-29); setup (INT-002 Q8) REQ S-18 to S-20, S-24, S-30; audit (Q11) REQ S-23; security events in the audit trail (SCR S-4) REQ S-32, S-33.
 - Downstream: Phase 5 feature acceptance cites REQ S-N AC-n; Phase 7 test cases (not yet created).
 
 ## Quality Checklist
@@ -715,7 +808,7 @@ Logged in `docs/logs/open-questions-log.md`, owner Mohanasunder. Answered 2026-1
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Product owner / BA |
-| Version | 0.1 |
+| Version | 0.3 |
 | Conditions | None |
-| Comments | Reviewed after validation run 4; all open questions answered; R4 findings fixed. |
-| Timestamp | 2026-10-17 08:46 UTC |
+| Comments | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| Timestamp | 2026-10-17 10:59 UTC |

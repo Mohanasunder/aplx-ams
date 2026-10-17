@@ -173,3 +173,231 @@ None.
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+## SCR S-3: Password set, reset and change
+<!-- scr_approver: Mohanasunder -->
+
+<!-- scr_status: Approved -->
+<!-- scr_date: 2026-10-17 -->
+
+### Input References
+<!-- guidance: Exact IDs and versions of the approved artifacts used as input (status: Approved) -->
+- REQ-001 v0.1 § Story S-20, § Story S-21 (Approved 2026-10-17) - docs/02-requirements/user-stories.md.
+- BR-001 v0.1 § Rule B-21 (Approved 2026-10-17) - docs/02-requirements/business-rules.md.
+- GLO-001 v0.1 § Terms (Approved 2026-10-17) - docs/02-requirements/domain-glossary.md.
+- NFR-001 v0.1 § NFR N-5 (password policy; OQ-044) - docs/02-requirements/nfrs.md.
+- EPC-001 v0.1 § Epic E-5; BKL-001 v0.1; PRS-001 v0.1 § Feature F-6; SUM-002 v0.2.
+- Human decision: Mohanasunder (Product owner / BA), chat, 2026-10-17, option C on VAL-013 (docs/validation/phase-3-run-1.md) finding F-1.
+
+### Purpose And Scope
+<!-- guidance: What this change covers and what it does not -->
+Covers adding password handling to the release 1 requirements: (a) the delivery manager sets a temporary password when creating a user account; (b) a user who forgets their password asks the delivery manager outside APLX AMS, and the delivery manager sets a new temporary password; (c) any signed-in user (internal user or client user) changes their own password, and the new password meets the password policy (NFR N-5, OQ-044); (d) no forced password change at first sign-in or after a reset (lower security chosen knowingly). Does not add email, a self-service password reset, MFA or password expiry; no change to N-5 policy values; adds only the OQ-054 lockout exception to NFR N-5 (decision by Mohanasunder, 2026-10-17).
+
+### Changed Artifact
+<!-- guidance: One line per changed approved artifact: 'ID vOLD -> vNEW' (for example 'API v1.0 -> v1.1'), with its path -->
+- REQ-001 v0.1 -> v0.2 (docs/02-requirements/user-stories.md)
+- BR-001 v0.1 -> v0.2 (docs/02-requirements/business-rules.md)
+- GLO-001 v0.1 -> v0.2 (docs/02-requirements/domain-glossary.md)
+- EPC-001 v0.1 -> v0.2 (docs/02-requirements/epics.md)
+- BKL-001 v0.1 -> v0.2 (docs/02-requirements/backlog.md)
+- PRS-001 v0.1 -> v0.2 (docs/02-requirements/product-requirement-specification.md)
+- NFR-001 v0.1 -> v0.2 (docs/02-requirements/nfrs.md)
+- SUM-002 v0.2 -> v0.3 (docs/02-requirements/SUMMARY.md)
+
+### Trigger
+<!-- guidance: First line: what revealed the problem and where (FEAT-, DEF D-N, PR, review comment, feedback or incident ID) and who found it -->
+Phase 3 validation run 1 finding F-1 (checker, 2026-10-17, docs/validation/phase-3-run-1.md): the Phase 3 interview answer INT-003 Q8 (the delivery manager sets a temporary password for a new user and for a forgotten password; no forced change) is behaviour no approved story covers (REQ-001 v0.1 S-20, S-21; BR-001 v0.1 B-21). Finding F-2: a user changing their own password was assumed in PIB-003 without a story.
+
+### Change
+<!-- guidance: What changes, section by section: before and after. Specs change here first; code is regenerated from them -->
+- REQ-001: before, S-1 to S-29, no story on setting, resetting or changing a password. After: new REQ S-30 "Delivery manager sets a temporary password" (AC-1 to AC-4) and REQ S-31 "User changes their own password" (AC-1 to AC-4); § Input References, § Purpose And Scope, § Open Questions, § Traceability Links updated. S-20 unchanged; S-21 criteria unchanged (each story already has 4 criteria, the sizing limit), but the S-21 Priority line changes (OQ-054 lockout exception).
+- BR-001: before, B-1 to B-22. After: B-21 Rule adds that the delivery manager sets temporary passwords on user accounts, Applies To adds REQ S-30; new Rule B-23 (Applies To REQ S-30, REQ S-31) "Password set, reset and change" (decision (a) to (d)).
+- GLO-001: new terms Temporary password and Password policy; Delivery manager and User account definitions name setting temporary passwords; § Ambiguities Resolved adds the INT-003 Q8 wording "one-time temporary password".
+- EPC-001: E-5 Description adds password set, reset and change; Stories adds REQ S-30, REQ S-31; Downstream REQ S-1 to S-31.
+- BKL-001: new entries BL-30 (REQ S-30) and BL-31 (REQ S-31), Must, release 1; scope line BL-1 to BL-31.
+- PRS-001: F-6 Description adds password set, reset and change; Linked Stories adds REQ S-30, REQ S-31.
+- SUM-002: § Decisions story count 29 -> 31 and the password handling decision; § Documents cites the new versions; § Open Items adds OQ-053, OQ-054; cites SCR S-3.
+- `docs/logs/traceability-matrix.md` (log, not versioned): rows REQ S-30, REQ S-31 added.
+- `docs/logs/open-questions-log.md` (log): OQ-053, OQ-054 added, then Answered (Mohanasunder, 2026-10-17, chat).
+- OQ-053 answer applied: a user must enter their current password to change it. REQ S-31 AC-1 states it; new REQ S-31 AC-4 (wrong current password refused); BR B-23 Rule.
+- OQ-054 answer applied: when the delivery manager sets a temporary password on a locked user account, the lock clears at once and the user can sign in immediately. REQ S-30 AC-3 reworded (S-30 not yet approved); BR B-23 Rule; GLO-001 Temporary password; REQ S-21 Priority line changes to note the exception (S-21 criteria unchanged).
+- NFR-001 N-5: before, "a user account is locked for 30 minutes after 5 failed sign-ins"; after, the same plus "unless the delivery manager sets a new temporary password, which clears the lock at once (BR B-23, OQ-054)", with a matching Verification Method check. The v0.1 wording contradicted the OQ-054 answer. No other NFR change.
+
+### Reason
+<!-- guidance: Why the approved spec was wrong or incomplete -->
+REQ-001 v0.1 says only the delivery manager creates user accounts (S-20) and every user signs in with a password (S-21), but no story says how a user gets a first password, how a forgotten password is reset, or whether a user can change their own password. The Phase 3 interview (INT-003 Q8) answered this; the answer must enter the approved requirements before Phase 3 designs authentication on it.
+
+### Decision Record
+<!-- guidance: Required when Changed Artifact lists an architecture or contract artifact (templates architecture-overview, adr, api-spec, database-design, deployment-topology, threat-model): cite the new ADR A-N that records this change, with options considered and consequences. When an ADR itself changes, cite the new ADR that supersedes it (the old ADR's Status And Date becomes 'Superseded by ADR A-N', listed under Changed Artifact). The ADR is approved by the architect / tech lead together with this SCR (checked by scripts/spec_impact.py records). Otherwise write 'Not applicable - no architecture or contract artifact changes' -->
+Not applicable - no architecture or contract artifact changes. Human decision: Mohanasunder (Product owner / BA), chat, 2026-10-17, chose option C on VAL-013 F-1: release 1 adds (a) a temporary password set by the delivery manager when creating a user account; (b) forgotten password: the user asks the delivery manager outside the tool and the delivery manager sets a new temporary password; (c) any signed-in user (internal or client) changes their own password, meeting the password policy (OQ-044, NFR N-5); (d) no forced password change at first sign-in or after a reset (INT-003 Q8; lower security chosen knowingly). Nothing else (no email, no self-service reset link, no MFA).
+
+### Impact
+<!-- guidance: From 'python3 scripts/spec_impact.py impact <ID>': table of each citing artifact or feature, its state, and the action: revise, re-test, re-approve, or 'No change - reason' -->
+`python scripts/spec_impact.py impact REQ-001`, `... BR-001`, `... GLO-001` (2026-10-17): each is cited by INT-003 (Draft), IRC-004 (Draft), PIB-003 (Draft) and SUM-002 (Approved), all citing v0.1.
+
+| Artifact | State | Action |
+| --- | --- | --- |
+| REQ-001 | Approved v0.1 | Revise to v0.2 and re-approve |
+| BR-001 | Approved v0.1 | Revise to v0.2 and re-approve |
+| GLO-001 | Approved v0.1 | Revise to v0.2 and re-approve |
+| EPC-001 | Approved v0.1 | Revise to v0.2 (E-5 stories) and re-approve |
+| BKL-001 | Approved v0.1 | Revise to v0.2 (BL-30, BL-31) and re-approve |
+| PRS-001 | Approved v0.1 | Revise to v0.2 (F-6 linked stories) and re-approve |
+| SUM-002 | Approved v0.2 | Revise to v0.3 and re-approve |
+| NFR-001 | Approved v0.1 | Revise to v0.2 (N-5 lockout cleared by a new temporary password, OQ-054) and re-approve |
+| PIB-003 | Draft v0.1 | Revise (Orchestrator): cite REQ-001, BR-001, GLO-001 v0.2; fix VAL-013 F-1 to F-3 |
+| INT-003 | Draft v0.1 | Revise (Orchestrator): cite the new versions |
+| IRC-004 | Draft v0.1 | Revise (Orchestrator): cite the new versions; fix VAL-013 F-1 |
+
+### Work Stopped
+<!-- guidance: Features set to State: Blocked with this SCR cited, or 'None - reason' -->
+None - no features exist yet. Phase 3 producers not started; they start only after the Resume Criteria are met.
+
+### Resume Criteria
+<!-- guidance: What must be Approved before stopped work resumes (this SCR, the new artifact version, the ADR in Decision Record if any, revised downstream artifacts) -->
+SCR S-3 and all revised artifacts Approved: REQ-001 v0.2, BR-001 v0.2, GLO-001 v0.2, EPC-001 v0.2, BKL-001 v0.2, PRS-001 v0.2, NFR-001 v0.2, SUM-002 v0.3.
+
+### Assumptions
+<!-- guidance: Each labeled A-NNN and logged in docs/logs/assumptions-log.md -->
+None.
+
+### Open Questions
+<!-- guidance: Each labeled OQ-NNN and logged in docs/logs/open-questions-log.md -->
+- OQ-053 (Answered, Mohanasunder, 2026-10-17, chat): the user must enter their current password to change it (REQ S-31 AC-1, AC-4; BR B-23).
+- OQ-054 (Answered, Mohanasunder, 2026-10-17, chat): a temporary password set on a locked user account clears the lock at once; the user can sign in immediately (REQ S-30 AC-3; BR B-23; NFR N-5).
+
+### Traceability Links
+<!-- guidance: Upstream and downstream IDs, or 'Not applicable - reason' -->
+- Upstream: REQ-001 v0.1; BR-001 v0.1; GLO-001 v0.1; EPC-001 v0.1; BKL-001 v0.1; PRS-001 v0.1; SUM-002 v0.2; NFR-001 v0.1 (N-5); VAL-013 F-1, F-2.
+- Downstream: REQ-001 v0.2 (REQ S-30, S-31); BR-001 v0.2 (BR B-21, B-23); GLO-001 v0.2; EPC-001 v0.2 (EPC E-5); BKL-001 v0.2 (BKL BL-30, BL-31); PRS-001 v0.2 (PRS F-6); NFR-001 v0.2 (NFR N-5); SUM-002 v0.3; PIB-003, INT-003, IRC-004 (Phase 3, revised by the Orchestrator).
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] Vague words removed (etc., as needed, appropriate)
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record
+- [x] Impact covers every artifact and feature that cites the changed artifact
+
+## SCR S-4: Security events in the audit trail
+<!-- scr_approver: Mohanasunder -->
+
+<!-- scr_status: Approved -->
+<!-- scr_date: 2026-10-17 -->
+
+### Input References
+<!-- guidance: Exact IDs and versions of the approved artifacts used as input (status: Approved) -->
+- NFR-001 v0.2 § NFR N-5, § NFR N-6 (Approved 2026-10-17) - docs/02-requirements/nfrs.md.
+- REQ-001 v0.2 § Story S-21, S-23, S-30, S-31 (Approved 2026-10-17) - docs/02-requirements/user-stories.md.
+- BR-001 v0.2 § Rule B-22, § Rule B-23 (Approved 2026-10-17) - docs/02-requirements/business-rules.md.
+- GLO-001 v0.2 § Terms (Audit trail) (Approved 2026-10-17) - docs/02-requirements/domain-glossary.md.
+- EPC-001 v0.2 § Epic E-5; BKL-001 v0.2; PRS-001 v0.2 § Feature F-8; SUM-002 v0.3.
+- Human decision: Mohanasunder (Product owner / BA), chat, 2026-10-17, answer to OQ-062 (raised by the Draft threat model THR-001, T-3 and T-5).
+
+### Purpose And Scope
+<!-- guidance: What this change covers and what it does not -->
+Covers adding 5 security events to the release 1 audit trail, recorded like other audit entries: successful sign-ins, failed sign-ins, user account lockouts, temporary passwords set by the delivery manager, and users changing their own password; each with the event, the user who did it, the user account it concerns (an unknown account name recorded as typed), and the date and time; no password value in any audit entry; every refused sign-in is a failed sign-in (OQ-065); the delivery manager views all security events per user account, each internal user their own, client users none (OQ-064). Also covers citation-only revisions of the Approved Phase 3 intake files PIB-003, INT-003, IRC-004 (decision by Mohanasunder, 2026-10-17). Does not add alerting on security events, new reporting, or any other event (user account deactivations, named in OQ-062, are not added).
+
+### Changed Artifact
+<!-- guidance: One line per changed approved artifact: 'ID vOLD -> vNEW' (for example 'API v1.0 -> v1.1'), with its path -->
+- NFR-001 v0.2 -> v0.3 (docs/02-requirements/nfrs.md)
+- REQ-001 v0.2 -> v0.3 (docs/02-requirements/user-stories.md)
+- BR-001 v0.2 -> v0.3 (docs/02-requirements/business-rules.md)
+- GLO-001 v0.2 -> v0.3 (docs/02-requirements/domain-glossary.md)
+- EPC-001 v0.2 -> v0.3 (docs/02-requirements/epics.md)
+- BKL-001 v0.2 -> v0.3 (docs/02-requirements/backlog.md)
+- PRS-001 v0.2 -> v0.3 (docs/02-requirements/product-requirement-specification.md)
+- SUM-002 v0.3 -> v0.4 (docs/02-requirements/SUMMARY.md)
+- PIB-003 v0.1 -> v0.2 (docs/03-architecture/phase-input-brief.md), citation update only
+- INT-003 v0.1 -> v0.2 (docs/03-architecture/interview-record.md), citation update only
+- IRC-004 v0.1 -> v0.2 (docs/03-architecture/input-readiness-checklist.md), citation update only
+
+### Trigger
+<!-- guidance: First line: what revealed the problem and where (FEAT-, DEF D-N, PR, review comment, feedback or incident ID) and who found it -->
+Phase 3 threat model THR-001 (Draft, security-architect, 2026-10-17, docs/03-architecture/threat-model.md) raised OQ-062: NFR N-6 audits only status, priority, assignment and effort changes, so misuse of a known temporary password or a taken-over delivery manager user account cannot be detected (THR T-3, T-5; RSK-003 R-3).
+
+### Change
+<!-- guidance: What changes, section by section: before and after. Specs change here first; code is regenerated from them -->
+- NFR-001 N-6: before, 100% of status, priority, assignment and effort changes have an audit entry; after, also 100% of the 5 security events (BR B-24) have an audit entry with the event, the user who did it, the user account it concerns and the date and time to the second, and 0 audit entries hold a password value. Requirement adds the 4 kinds of failed sign-in (OQ-065) and who views security events (OQ-064); Verification Method adds a Phase 7 system test of the 5 security events, a check for values entered in password fields (a password typed as an account name is outside it: RSK-003 R-10, OQ-065) and a viewing test per role. § Requirement, § Input References, § Open Questions, § Traceability Links cite SCR S-4. No other NFR change.
+- REQ-001: before, S-1 to S-31; after, new REQ S-32 "Security events are recorded in the audit trail" (AC-1 to AC-4; AC-2, AC-3 cover every refused sign-in, OQ-065) and new REQ S-33 "Users view security events" (AC-1 to AC-4, OQ-064). S-23 unchanged (it already has 4 criteria, the sizing limit). § Input References, § Purpose And Scope, § Open Questions, § Traceability Links updated; NFR-001 cited at v0.3.
+- BR-001: before, B-1 to B-23; after, new Rule B-24 "Security events in the audit trail" (Applies To REQ S-32, S-33): the 5 events, every refused sign-in a failed sign-in, the content of each audit entry (unknown account name as typed), no password value, no alerting and no new reporting, the delivery manager views all security events, each internal user their own, client users none, and no user can edit or delete them (as BR B-22). B-22 Rule adds a pointer to BR B-24 for security events (no other B-22 rule change); B-22 Applies To adds REQ S-32, S-33; B-23 Rule text unchanged, Applies To adds REQ S-32. § Purpose And Scope, § Input References, § Open Questions, § Traceability Links updated; NFR-001 cited at v0.3.
+- GLO-001: Audit trail definition adds security events and who views them (OQ-064); new terms Account name, Audit entry and Security event (failed sign-in = any refused sign-in; unknown account name as typed, OQ-065). NFR-001 cited at v0.3.
+- EPC-001: E-5 Description adds security events in the audit trail and who views them; Stories adds REQ S-32, REQ S-33; Downstream REQ S-1 to S-33.
+- BKL-001: new entries BL-32 (REQ S-32) and BL-33 (REQ S-33), Must, release 1; scope line BL-1 to BL-33.
+- PRS-001: F-8 Description adds the 5 security events and who views them; Linked Stories adds REQ S-32, REQ S-33; Related REQ-001 S-1 to S-33.
+- SUM-002: § Decisions story count 31 -> 33 and the security events decision; § Documents and § Sections cite the new versions; § Constraints Set N-6 line adds security events; § Open Items adds OQ-062, OQ-064, OQ-065 (Answered); § Input References cites SCR S-4 and corrects SCR S-3 from Draft to Approved.
+- PIB-003, INT-003, IRC-004 (Phase 3 intake, Approved): citation update only, to the new versions of the S-4 artifacts; content revised by the Orchestrator's writer, not by the requirements analyst (decision by Mohanasunder, 2026-10-17).
+- `docs/logs/traceability-matrix.md` (log, not versioned): rows REQ S-32, REQ S-33 added.
+- `docs/logs/open-questions-log.md` (log): OQ-062 Answered (Mohanasunder, 2026-10-17, chat); OQ-064, OQ-065 added, then Answered (Mohanasunder, 2026-10-17, chat).
+
+### Reason
+<!-- guidance: Why the approved spec was wrong or incomplete -->
+NFR-001 v0.2 N-6 and BR-001 v0.2 B-22 record only ticket changes. No approved requirement records sign-ins, lockouts or password changes, so the Phase 3 threat model could not plan detection of misuse of a temporary password or a taken-over delivery manager user account. The OQ-062 answer must enter the approved requirements before Phase 3 designs on it.
+
+### Decision Record
+<!-- guidance: Required when Changed Artifact lists an architecture or contract artifact (templates architecture-overview, adr, api-spec, database-design, deployment-topology, threat-model): cite the new ADR A-N that records this change, with options considered and consequences. When an ADR itself changes, cite the new ADR that supersedes it (the old ADR's Status And Date becomes 'Superseded by ADR A-N', listed under Changed Artifact). The ADR is approved by the architect / tech lead together with this SCR (checked by scripts/spec_impact.py records). Otherwise write 'Not applicable - no architecture or contract artifact changes' -->
+Not applicable - no architecture or contract artifact changes (the Phase 3 artifacts are Draft, not Approved). Human decision: Mohanasunder (Product owner / BA), chat, 2026-10-17, answer to OQ-062: security events are recorded in the audit trail like other audit entries: successful sign-ins, failed sign-ins, account lockouts, temporary passwords set by the delivery manager, and users changing their own password. Nothing else (no alerting on them, no new reporting). No password value is recorded in any audit entry (only that the event happened, who, when, which user account). OQ-064 answer (Mohanasunder, chat, 2026-10-17): the delivery manager can view all security events (per user account); each internal user can view their own; client users cannot view security events. OQ-065 answer (Mohanasunder, chat, 2026-10-17): every refused sign-in counts as a failed sign-in (wrong password, unknown account name, deactivated account, locked account); for an unknown account name, the name is recorded as typed. Phase 3 intake files revised for citations only: decision by Mohanasunder, 2026-10-17.
+
+### Impact
+<!-- guidance: From 'python3 scripts/spec_impact.py impact <ID>': table of each citing artifact or feature, its state, and the action: revise, re-test, re-approve, or 'No change - reason' -->
+`python scripts/spec_impact.py impact NFR-001`, `... REQ-001`, `... BR-001`, `... GLO-001`, `... SUM-002` (2026-10-17): cited by Phase 2 artifacts (BR-001, GLO-001, REQ-001, SUM-002, all Approved), Phase 3 intake (INT-003, IRC-004, PIB-003, Approved) and Phase 3 deliverables (ADR-001, ARC-001, CST-001, RSK-003, TEC-001, THR-001, TOP-001, Draft), all citing NFR-001, REQ-001, BR-001, GLO-001 v0.2 and SUM-002 v0.3.
+
+| Artifact | State | Action |
+| --- | --- | --- |
+| NFR-001 | Approved v0.2 | Revise to v0.3 (N-6 security events) and re-approve |
+| REQ-001 | Approved v0.2 | Revise to v0.3 (REQ S-32, S-33) and re-approve |
+| BR-001 | Approved v0.2 | Revise to v0.3 (BR B-24) and re-approve |
+| GLO-001 | Approved v0.2 | Revise to v0.3 (Audit trail, Audit entry, Security event) and re-approve |
+| EPC-001 | Approved v0.2 | Revise to v0.3 (E-5 stories) and re-approve |
+| BKL-001 | Approved v0.2 | Revise to v0.3 (BL-32, BL-33) and re-approve |
+| PRS-001 | Approved v0.2 | Revise to v0.3 (F-8) and re-approve |
+| SUM-002 | Approved v0.3 | Revise to v0.4 and re-approve |
+| ARC-001 | Draft | Revise (Phase 3 producers): drafted against the S-4 Draft content; refresh citations to the new versions after approval |
+| ADR-001 | Draft | Revise (Phase 3 producers): drafted against the S-4 Draft content; refresh citations after approval |
+| THR-001 | Draft | Revise (Phase 3 producers): drafted against the S-4 Draft content (OQ-062, OQ-064, OQ-065; T-3, T-5 detection through BR B-24); refresh citations after approval |
+| TOP-001 | Draft | Revise (Phase 3 producers): drafted against the S-4 Draft content; refresh citations after approval |
+| CST-001 | Draft | Revise (Phase 3 producers): drafted against the S-4 Draft content; refresh citations after approval |
+| TEC-001 | Draft | Revise (Phase 3 producers): drafted against the S-4 Draft content; refresh citations after approval |
+| RSK-003 | Draft | Revise (Phase 3 producers): drafted against the S-4 Draft content (R-3, R-10); refresh citations after approval |
+| PIB-003 | Approved v0.1 | Revise (Orchestrator), citation update only, to v0.2, and re-approve |
+| INT-003 | Approved v0.1 | Revise (Orchestrator), citation update only, to v0.2, and re-approve |
+| IRC-004 | Approved v0.1 | Revise (Orchestrator), citation update only, to v0.2, and re-approve |
+
+### Work Stopped
+<!-- guidance: Features set to State: Blocked with this SCR cited, or 'None - reason' -->
+None - no features exist yet. The Phase 3 producers drafted ARC-001, ADR-001, THR-001, TOP-001, CST-001, TEC-001 and RSK-003 (all Draft) against the S-4 Draft content of the Phase 2 artifacts; after this SCR and its artifacts are Approved they refresh their citations to the approved versions.
+
+### Resume Criteria
+<!-- guidance: What must be Approved before stopped work resumes (this SCR, the new artifact version, the ADR in Decision Record if any, revised downstream artifacts) -->
+SCR S-4 and all revised artifacts Approved: NFR-001 v0.3, REQ-001 v0.3, BR-001 v0.3, GLO-001 v0.3, EPC-001 v0.3, BKL-001 v0.3, PRS-001 v0.3, SUM-002 v0.4, PIB-003 v0.2, INT-003 v0.2, IRC-004 v0.2.
+
+### Assumptions
+<!-- guidance: Each labeled A-NNN and logged in docs/logs/assumptions-log.md -->
+None.
+
+### Open Questions
+<!-- guidance: Each labeled OQ-NNN and logged in docs/logs/open-questions-log.md -->
+- OQ-062 (Answered, Mohanasunder, 2026-10-17, chat): the 5 security events are recorded in the audit trail like other audit entries; no alerting, no new reporting (REQ S-32; BR B-24; NFR N-6).
+- OQ-064 (Answered, Mohanasunder, 2026-10-17, chat): the delivery manager views all security events (per user account); each internal user views their own; client users view none (REQ S-33; BR B-24; NFR N-6).
+- OQ-065 (Answered, Mohanasunder, 2026-10-17, chat): every refused sign-in is a failed sign-in (wrong password, unknown account name, deactivated or locked user account); an unknown account name is recorded as typed (REQ S-32 AC-2, AC-3; BR B-24; NFR N-6).
+
+### Traceability Links
+<!-- guidance: Upstream and downstream IDs, or 'Not applicable - reason' -->
+- Upstream: NFR-001 v0.2 (N-6); REQ-001 v0.2; BR-001 v0.2 (B-22, B-23); GLO-001 v0.2; EPC-001 v0.2; BKL-001 v0.2; PRS-001 v0.2; SUM-002 v0.3; OQ-062; THR-001 (Draft) T-3, T-5.
+- Downstream: NFR-001 v0.3 (NFR N-6); REQ-001 v0.3 (REQ S-32, S-33); BR-001 v0.3 (BR B-24); GLO-001 v0.3; EPC-001 v0.3 (EPC E-5); BKL-001 v0.3 (BKL BL-32, BL-33); PRS-001 v0.3 (PRS F-8); SUM-002 v0.4; PIB-003 v0.2, INT-003 v0.2, IRC-004 v0.2 (citation update, Orchestrator); ARC-001, ADR-001, THR-001, TOP-001, CST-001, TEC-001, RSK-003 (Phase 3, revised by their producers).
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] Vague words removed (etc., as needed, appropriate)
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record
+- [x] Impact covers every artifact and feature that cites the changed artifact

@@ -2,7 +2,7 @@
 id: BKL-001
 title: APLX AMS: Backlog
 phase: 2
-version: 0.1
+version: 0.3
 template: backlog-entry
 template_version: 2.0
 status: Approved
@@ -21,10 +21,12 @@ validation: Pass with warnings
 - INT-002 v0.1 Q1.
 - SCP-001 v0.2 § In Scope, § Out Of Scope; SUM-001 v0.3 § Constraints Set.
 - RSK-001 v0.2 § Risk R-2 (MoSCoW so that a scope cut is an early named human decision).
+- SCR S-3 (`docs/logs/spec-changes.md`): password set, reset and change, decided by Mohanasunder (Product owner / BA), chat, 2026-10-17 (adds BL-30, BL-31).
+- SCR S-4 (`docs/logs/spec-changes.md`): security events in the audit trail, OQ-062 answered by Mohanasunder (Product owner / BA), chat, 2026-10-17 (adds BL-32, BL-33).
 
 ## Purpose And Scope
 <!-- guidance: What this artifact covers and what it does not -->
-Covers: the release 1 backlog of APLX AMS: one entry per story, BL-1 to BL-29 (BL-N links to REQ S-N with the same number), each with MoSCoW priority and release. Every entry is Must for release 1 (pilot go-live 2027-01-17) because the human set IS-1 to IS-5 all Must (INT-002 Q1); no Should, Could or Won't items exist, and no item is mapped to a later release. Items out of scope for release 1 are the PRS-001 non-goals NG-1 to NG-7, not backlog entries.
+Covers: the release 1 backlog of APLX AMS: one entry per story, BL-1 to BL-33 (BL-N links to REQ S-N with the same number), each with MoSCoW priority and release. Every entry is Must for release 1 (pilot go-live 2027-01-17) because the human set IS-1 to IS-5 all Must (INT-002 Q1); no Should, Could or Won't items exist, and no item is mapped to a later release. Items out of scope for release 1 are the PRS-001 non-goals NG-1 to NG-7, not backlog entries.
 
 Does not cover: build order, waves or feature slicing (Phase 5). No priority conflict was found; if capacity forces a cut (RSK R-2), the product owner decides which Must becomes Should, recorded as a decision.
 
@@ -407,13 +409,65 @@ Release 1 (MVP, go-live 2027-01-17)
 
 ---
 
+## Entry BL-30: Delivery manager sets a temporary password
+
+### Item
+REQ S-30 (EPC E-5, PRS F-6)
+
+### Priority
+Must: users need a first password and a way back in after forgetting it (SCR S-3, Mohanasunder, 2026-10-17; INT-002 Q1, Q7, Q8).
+
+### Release
+Release 1 (MVP, go-live 2027-01-17)
+
+---
+
+## Entry BL-31: User changes their own password
+
+### Item
+REQ S-31 (EPC E-5, PRS F-6)
+
+### Priority
+Must: any signed-in user changes their own password (SCR S-3, Mohanasunder, 2026-10-17; INT-002 Q1, Q7).
+
+### Release
+Release 1 (MVP, go-live 2027-01-17)
+
+---
+
+## Entry BL-32: Security events are recorded in the audit trail
+
+### Item
+REQ S-32 (EPC E-5, PRS F-8)
+
+### Priority
+Must: security events recorded in the audit trail like other audit entries (OQ-062 answered, SCR S-4, Mohanasunder, 2026-10-17; INT-002 Q1, Q11).
+
+### Release
+Release 1 (MVP, go-live 2027-01-17)
+
+---
+
+## Entry BL-33: Users view security events
+
+### Item
+REQ S-33 (EPC E-5, PRS F-8)
+
+### Priority
+Must: the delivery manager views all security events, each internal user their own (OQ-064 answered, SCR S-4, Mohanasunder, 2026-10-17; INT-002 Q1, Q11).
+
+### Release
+Release 1 (MVP, go-live 2027-01-17)
+
+---
+
 ## Assumptions
 <!-- guidance: Each labeled A-NNN and logged in docs/logs/assumptions-log.md -->
 None for the backlog. Story-level assumptions A-009 to A-025 (A-009 to A-011, A-013, A-017, A-018, A-023 to A-025 Confirmed; A-012 Rejected) are in REQ-001, BR-001 and GLO-001.
 
 ## Open Questions
 <!-- guidance: Each labeled OQ-NNN and logged in docs/logs/open-questions-log.md -->
-None for the backlog. OQ-037 to OQ-048 answered 2026-10-17 added BL-24 to BL-28 and criteria within existing entries; OQ-049 to OQ-051, answered the same day, added REQ S-24 AC-4 and BL-29. Each story has at most 4 criteria. No open question remains.
+None for the backlog. OQ-037 to OQ-048 answered 2026-10-17 added BL-24 to BL-28 and criteria within existing entries; OQ-049 to OQ-051, answered the same day, added REQ S-24 AC-4 and BL-29. SCR S-3 (2026-10-17) added BL-30 and BL-31; their questions OQ-053, OQ-054 are Answered (2026-10-17) and listed in REQ-001. SCR S-4 (2026-10-17; OQ-062, OQ-064, OQ-065 Answered) added BL-32 and BL-33. Each story has at most 4 criteria. No other open question remains.
 
 ## Traceability Links
 <!-- guidance: Upstream and downstream IDs, or 'Not applicable - reason'.
@@ -440,7 +494,7 @@ None for the backlog. OQ-037 to OQ-048 answered 2026-10-17 added BL-24 to BL-28 
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Product owner / BA |
-| Version | 0.1 |
+| Version | 0.3 |
 | Conditions | None |
-| Comments | Reviewed after validation run 4; all open questions answered; R4 findings fixed. |
-| Timestamp | 2026-10-17 08:46 UTC |
+| Comments | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| Timestamp | 2026-10-17 10:59 UTC |
