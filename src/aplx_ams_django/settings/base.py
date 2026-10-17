@@ -1,6 +1,7 @@
 """
 Shared Django settings. Reads secrets from /run/secrets/ (A-038, ADR A-17).
 """
+
 import os
 from pathlib import Path
 
