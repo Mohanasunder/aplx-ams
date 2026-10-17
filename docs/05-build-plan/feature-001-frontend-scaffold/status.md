@@ -29,7 +29,8 @@ Tracks the build-phase progress of FEAT-001. Updated by the builder agent during
 - PR: https://github.com/Mohanasunder/aplx-ams/pull/5
 
 ## Progress
-- State: Approved — awaiting merge
+- State: Merged
+- Merged: 2026-10-18 (PR #5, https://github.com/Mohanasunder/aplx-ams/pull/5, into master)
 - Assigned agents: builder (implementation complete); documentation-writer (PR description written 2026-10-18); governance-audit (post-approval audit 2026-10-18)
 - Last update: 2026-10-18
 
