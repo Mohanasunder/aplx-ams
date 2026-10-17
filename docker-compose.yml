@@ -22,6 +22,7 @@ services:
       POSTGRES_DB: aplx_ams
       POSTGRES_USER: aplx_ams_owner
       POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      PGDATA: /var/lib/postgresql/data
     secrets:
       - db_password
     volumes:
