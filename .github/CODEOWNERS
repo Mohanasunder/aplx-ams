@@ -1,0 +1,13 @@
+# Filled by /sdlc-init from the approvers in project.md. Replace placeholders with platform usernames or teams.
+# Every change needs review from a listed human owner; AI agents are never owners.
+
+*                       @tech-lead
+/docs/02-requirements/  @product-owner @business-analyst
+/docs/03-architecture/  @architect
+/docs/04-design/        @tech-lead @ux-lead
+/src/                   @tech-lead @developer-reviewers
+/infra/                 @tech-lead @release-manager
+/.github/               @tech-lead
+/.claude/               @tech-lead
+/.ai/                   @tech-lead
+/scripts/               @tech-lead

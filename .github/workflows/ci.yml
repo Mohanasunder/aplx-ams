@@ -1,0 +1,58 @@
+name: sdlc-gates
+on:
+  pull_request:
+jobs:
+  methodology:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # locked-test check needs each test set's Test Commit
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Branch name follows the standard
+        run: bash scripts/check-branch-name.sh "${{ github.head_ref }}"
+      - name: Spike branches are never merged
+        run: |
+          case "${{ github.head_ref }}" in spike/*) echo "Spike branches are throwaway and never merged (scripts/spike.py close)"; exit 1;; esac
+          python3 scripts/spike.py check
+      - name: Artifacts validate against templates
+        run: python3 scripts/validate_artifact.py docs --check-links
+      - name: Approved tests unchanged (non-overridable)
+        run: python3 scripts/locked_tests.py check
+      - name: Feature plans within sizing limits
+        run: python3 scripts/check_feature_size.py size
+      - name: Wave plan collision-free (shared paths run alone)
+        run: python3 scripts/check_feature_size.py waves
+      - name: Task 0 planned first; once merged, every gate command is set
+        run: python3 scripts/check_feature_size.py task0
+      - name: Changes stay within the feature's planned files
+        run: python3 scripts/check_feature_size.py scope --base "origin/${{ github.base_ref }}"
+      - name: New packages approved in the feature plan
+        run: python3 scripts/check_feature_size.py packages --base "origin/${{ github.base_ref }}"
+      - name: Every change to an approved spec has a spec change record
+        run: python3 scripts/spec_impact.py records
+      - name: Feature cites current, approved spec versions
+        run: python3 scripts/spec_impact.py check
+      - name: Context pack resolves to current approved sections, within size budget
+        run: python3 scripts/context_pack.py check
+      - name: Learned rules index matches the approved rules
+        run: python3 scripts/learned_rules.py check
+      - name: Agent charter matches its sources
+        run: python3 scripts/build_charter.py check
+      - name: Domain terms used consistently
+        run: python3 scripts/glossary_check.py check
+      - name: Change summary complete and accurate
+        run: python3 scripts/pr_summary.py check --base "origin/${{ github.base_ref }}"
+      - name: Decision log well-formed and append-only
+        run: python3 scripts/log_decision.py check --base "origin/${{ github.base_ref }}"
+      - name: Feedback and incident log matches the Phase 9 artifacts
+        run: python3 scripts/feedback_log.py check
+  project-gates:
+    # Replace with the exact commands from .ai/standards/automated-gates.md (filled in Phase 4):
+    # lint, type check, unit and integration tests with coverage, SAST, dependency scan, secrets scan.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Add the project gate commands here (Phase 4)"
