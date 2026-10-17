@@ -1,25 +1,25 @@
 ---
-id: FEAT-001
+id: FEAT-001-TASKS
 id_prefix: FEAT
-title: "FEAT-001: Frontend Scaffold — React 18, Nginx, and Frontend CI Gates — Tasks"
+title: "FEAT-001: Frontend Scaffold â€” React 18, Nginx, and Frontend CI Gates â€” Tasks"
 phase: 5
 version: 0.1
 template: feature-tasks
 template_version: 1.0
-status: In review
+status: Approved
 author_agent: build-planner
-approver: Tech lead
+approver: Mohanasunder
 default_approver: Tech lead
 default_folder: docs/05-build-plan
 date: 2026-10-17
-validation: Pending
+validation: Pass
 ---
-# FEAT-001: Frontend Scaffold — React 18, Nginx, and Frontend CI Gates — Tasks
+# FEAT-001: Frontend Scaffold â€” React 18, Nginx, and Frontend CI Gates â€” Tasks
 
 ## Input References
-- FEAT-001 plan.md — implementation steps and file list
-- STD-001 v0.1 § Automated Gate Commands — gate commands to wire
-- STD-001 v0.1 § Approved Technology List — packages
+- FEAT-001 plan.md â€” implementation steps and file list
+- STD-001 v0.1 Â§ Automated Gate Commands â€” gate commands to wire
+- STD-001 v0.1 Â§ Approved Technology List â€” packages
 
 ## Purpose And Scope
 Ordered task checklist for the builder of FEAT-001. Each task names the file(s) it produces.
@@ -27,7 +27,7 @@ Ordered task checklist for the builder of FEAT-001. Each task names the file(s) 
 ## Task Checklist
 - [ ] T-1: Update `docker-compose.yml`: add `frontend` build service (Node 24 LTS) and `nginx` service proxying `/api/` to the `app` service and `/` to the Vite dist.
 - [ ] T-2: Write `nginx/nginx.conf` proxying `/api/` to `app:8000` and serving `src/frontend/dist/` for all other paths.
-- [ ] T-3: Write `src/aplx_ams_django/middleware.py` with `RLSContextMiddleware`, `AbsoluteSessionTimeoutMiddleware`, and `SecurityHeadersMiddleware` (CSP, X-Frame-Options) per STD-001 § Backend file and folder structure.
+- [ ] T-3: Write `src/aplx_ams_django/middleware.py` with `RLSContextMiddleware`, `AbsoluteSessionTimeoutMiddleware`, and `SecurityHeadersMiddleware` (CSP, X-Frame-Options) per STD-001 Â§ Backend file and folder structure.
 - [ ] T-4: Update `.github/workflows/ci.yml` (created in FEAT-000): add `frontend` job with steps: `npm install`, `npm run build`, `npm run test -- --run`, eslint, tsc --noEmit.
 - [ ] T-5: Write `src/frontend/package.json` with all npm packages listed under New Packages at stated version specs.
 - [ ] T-6: Write `src/frontend/vite.config.ts` with `@vitejs/plugin-react` and `coverage` configured.
@@ -36,8 +36,8 @@ Ordered task checklist for the builder of FEAT-001. Each task names the file(s) 
 - [ ] T-9: Write `src/frontend/src/App.tsx` as a minimal root component rendering `<div>APLX AMS</div>`.
 - [ ] T-10: Write `src/frontend/src/main.tsx` as the Vite entry point mounting `<App />`.
 - [ ] T-11: Write `src/frontend/src/App.test.tsx` with one sample Vitest test asserting the root renders.
-- [ ] T-12: Run all gate commands locally; confirm each exits 0.
-- [ ] T-13: Run all gate commands locally (`ruff`, `mypy`, `pytest --cov`, `bandit`, `pip-audit`, `detect-secrets`); confirm each exits 0.
+- [ ] T-12: Run frontend gate commands: `npx eslint src/frontend/src/`, `npx tsc --noEmit`, `npm run test -- --run --coverage`; assert each exits 0.
+- [ ] T-13: Run backend gate commands: ruff, mypy, pytest --cov, bandit, pip-audit, detect-secrets; assert each exits 0.
 - [ ] T-14: Verify `python3 scripts/check_feature_size.py size FEAT-001` exits 0.
 
 ## Assumptions
@@ -48,7 +48,7 @@ None.
 
 ## Traceability Links
 - Upstream: FEAT-001 plan.md; STD-001 v0.1; TST-001 v0.1
-- Downstream: FEAT-001-TESTS (Phase 6 test set)
+- Downstream: Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist
 - [x] Every template section is filled, or marked "Not applicable - <reason>"
@@ -62,9 +62,10 @@ None.
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Architect / tech lead |
+| Version | 0.1 |
 | Conditions | None |
 | Comments | None |
-| Timestamp | Pending |
+| Timestamp | 2026-10-17 18:47 UTC |

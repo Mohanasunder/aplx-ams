@@ -1,27 +1,27 @@
 ---
-id: FEAT-009
+id: FEAT-009-TASKS
 id_prefix: FEAT
-title: "FEAT-009: S-31: User Changes Their Own Password — Tasks"
+title: "FEAT-009: S-31: User Changes Their Own Password â€” Tasks"
 phase: 5
 version: 0.1
 template: feature-tasks
 template_version: 1.0
-status: In review
+status: Approved
 author_agent: build-planner
-approver: Tech lead
+approver: Mohanasunder
 default_approver: Tech lead
 default_folder: docs/05-build-plan
 date: 2026-10-17
-validation: Pending
+validation: Pass
 ---
-# FEAT-009: S-31: User Changes Their Own Password — Tasks
+# FEAT-009: S-31: User Changes Their Own Password â€” Tasks
 
 ## Input References
-- FEAT-009 plan.md — implementation steps and file list
-- REQ-001 v0.3 § S-31 — acceptance criteria
-- API-001 v0.1 — endpoint contracts
-- DBD-001 v0.1 — table definitions
-- STD-001 v0.1 — coding standards
+- FEAT-009 plan.md â€” implementation steps and file list
+- REQ-001 v0.3 Â§ S-31 â€” acceptance criteria
+- API-001 v0.1 â€” endpoint contracts
+- DBD-001 v0.1 â€” table definitions
+- STD-001 v0.1 â€” coding standards
 
 ## Purpose And Scope
 Ordered task checklist for the builder of FEAT-009. Each task names the file(s) it produces.
@@ -43,8 +43,8 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: FEAT-009 plan.md; REQ-001 v0.3 § S-31; API-001 v0.1; DBD-001 v0.1; STD-001 v0.1
-- Downstream: FEAT-009-TESTS (Phase 6 test set)
+- Upstream: FEAT-009 plan.md; REQ-001 v0.3 Â§ S-31; API-001 v0.1; DBD-001 v0.1; STD-001 v0.1
+- Downstream: Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist
 - [x] Every template section is filled, or marked "Not applicable - <reason>"
@@ -58,9 +58,10 @@ None.
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Architect / tech lead |
+| Version | 0.1 |
 | Conditions | None |
 | Comments | None |
-| Timestamp | Pending |
+| Timestamp | 2026-10-17 18:47 UTC |

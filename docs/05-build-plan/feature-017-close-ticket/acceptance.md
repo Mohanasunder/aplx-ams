@@ -1,27 +1,27 @@
 ---
-id: FEAT-017
+id: FEAT-017-ACC
 id_prefix: FEAT
-title: "FEAT-017: S-7: L1 Support Engineer Closes a Resolved Ticket — Acceptance Criteria"
+title: "FEAT-017: S-7: L1 Support Engineer Closes a Resolved Ticket â€” Acceptance Criteria"
 phase: 5
 version: 0.1
 template: feature-acceptance
 template_version: 1.1
-status: In review
+status: Approved
 author_agent: build-planner
-approver: Tech lead
+approver: Mohanasunder
 default_approver: Tech lead
 default_folder: docs/05-build-plan
 date: 2026-10-17
-validation: Pending
+validation: Pass
 ---
-# FEAT-017: S-7: L1 Support Engineer Closes a Resolved Ticket — Acceptance Criteria
+# FEAT-017: S-7: L1 Support Engineer Closes a Resolved Ticket â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 — APLX AMS: User Stories (Approved 2026-10-17) § S-7
-- PIB-005 v0.1 — Phase 5 Build Planning Input Brief (Approved 2026-10-17)
+- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-7
+- PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-017 (REQ S-7). Criteria are copied verbatim from REQ-001 v0.3 § S-7.
+Covers the 4 acceptance criteria for FEAT-017 (REQ S-7). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-7.
 
 ## Acceptance Criteria
 REQ-007 AC-1 REQ S-7 AC-1: Given a Resolved ticket in the L1 queue, when an L1 support engineer closes it, then its status is Closed, it leaves the L1 queue, and the client user of its client organization sees it as Closed.
@@ -30,10 +30,10 @@ REQ-007 AC-3 REQ S-7 AC-3: Given a Resolved ticket, when it is closed, then the 
 REQ-007 AC-4 REQ S-7 AC-4: Given a Resolved ticket of client organization A, when an L1 support engineer closes it, then APLX AMS sends no email or other message about the closure to the client user; the Closed status on the ticket is the only notice (BR B-11, OQ-037).
 
 ## Test Scenarios
-REQ-007 AC-1 REQ S-7 AC-1: Given a Resolved ticket in the L1 queue, when an L1 support engineer closes it, ... — verify Given/When/Then conditions as stated above.
-REQ-007 AC-2 REQ S-7 AC-2: Given a ticket that is not Resolved, when an L1 support engineer tries to close ... — verify Given/When/Then conditions as stated above.
-REQ-007 AC-3 REQ S-7 AC-3: Given a Resolved ticket, when it is closed, then the resolution clock stop time ... — verify Given/When/Then conditions as stated above.
-REQ-007 AC-4 REQ S-7 AC-4: Given a Resolved ticket of client organization A, when an L1 support engineer cl... — verify Given/When/Then conditions as stated above.
+REQ-007 AC-1 REQ S-7 AC-1: Given a Resolved ticket in the L1 queue, when an L1 support engineer closes it, ... â€” verify Given/When/Then conditions as stated above.
+REQ-007 AC-2 REQ S-7 AC-2: Given a ticket that is not Resolved, when an L1 support engineer tries to close ... â€” verify Given/When/Then conditions as stated above.
+REQ-007 AC-3 REQ S-7 AC-3: Given a Resolved ticket, when it is closed, then the resolution clock stop time ... â€” verify Given/When/Then conditions as stated above.
+REQ-007 AC-4 REQ S-7 AC-4: Given a Resolved ticket of client organization A, when an L1 support engineer cl... â€” verify Given/When/Then conditions as stated above.
 
 ## Assumptions
 None beyond those logged in docs/logs/assumptions-log.md.
@@ -42,8 +42,8 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 § S-7; PIB-005 v0.1
-- Downstream: FEAT-017-TASKS (builder task list); Phase 6 test set FEAT-017-TESTS
+- Upstream: REQ-001 v0.3 Â§ S-7; PIB-005 v0.1
+- Downstream: FEAT-017-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist
 - [x] Every template section is filled, or marked "Not applicable - <reason>"
@@ -57,9 +57,10 @@ None.
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Architect / tech lead |
+| Version | 0.1 |
 | Conditions | None |
 | Comments | None |
-| Timestamp | Pending |
+| Timestamp | 2026-10-17 18:47 UTC |

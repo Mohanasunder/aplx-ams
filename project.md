@@ -31,9 +31,9 @@ approval_sla_business_days: 1
 stale_branch_days: 5
 loop_limit_failed_validations: 3
 max_acceptance_criteria_per_feature: 4
-max_source_files_per_feature: 10
-max_test_runtime_minutes: 10
-max_context_pack_lines: 400
+max_source_files_per_feature: 30
+max_test_runtime_minutes: 30
+max_context_pack_lines: 1000
 learned_rule_threshold: 2
 max_spike_days: 5
 
@@ -54,7 +54,7 @@ pilot_target_rules_per_week:
 | 3 | Solution architecture | Approved | 2026-10-17 | Mohanasunder |
 | 4 | Solution design | Approved | 2026-10-17 | Mohanasunder |
 | 5 | Build planning | Approved | 2026-10-17 | Mohanasunder |
-| 6 | Build (per feature) | Not started | | |
+| 6 | Build (per feature) | In progress | | |
 | 7 | Testing | Not started | | |
 | 8 | Deployment | Not started | | |
 | 9 | Operate and feedback | Not started | | |

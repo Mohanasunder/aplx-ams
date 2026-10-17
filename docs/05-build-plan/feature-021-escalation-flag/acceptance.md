@@ -1,27 +1,27 @@
 ---
-id: FEAT-021
+id: FEAT-021-ACC
 id_prefix: FEAT
-title: "FEAT-021: S-11: Ticket Is Flagged for Escalation at L1 Target — Acceptance Criteria"
+title: "FEAT-021: S-11: Ticket Is Flagged for Escalation at L1 Target â€” Acceptance Criteria"
 phase: 5
 version: 0.1
 template: feature-acceptance
 template_version: 1.1
-status: In review
+status: Approved
 author_agent: build-planner
-approver: Tech lead
+approver: Mohanasunder
 default_approver: Tech lead
 default_folder: docs/05-build-plan
 date: 2026-10-17
-validation: Pending
+validation: Pass
 ---
-# FEAT-021: S-11: Ticket Is Flagged for Escalation at L1 Target — Acceptance Criteria
+# FEAT-021: S-11: Ticket Is Flagged for Escalation at L1 Target â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 — APLX AMS: User Stories (Approved 2026-10-17) § S-11
-- PIB-005 v0.1 — Phase 5 Build Planning Input Brief (Approved 2026-10-17)
+- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-11
+- PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-021 (REQ S-11). Criteria are copied verbatim from REQ-001 v0.3 § S-11.
+Covers the 4 acceptance criteria for FEAT-021 (REQ S-11). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-11.
 
 ## Acceptance Criteria
 REQ-011 AC-1 REQ S-11 AC-1: Given a P1 ticket still with L1, when its resolution elapsed time reaches 2 business hours (50% of 4), then the ticket shows the escalation flag.
@@ -30,10 +30,10 @@ REQ-011 AC-3 REQ S-11 AC-3: Given a P1 ticket assigned to an L2/L3 support engin
 REQ-011 AC-4 REQ S-11 AC-4: Given a P1 ticket still with L1 showing the escalation flag at 2.5 business hours of resolution elapsed time, when an L1 support engineer changes the priority to P2 with a reason, then the escalation point moves to 4.5 business hours (50% of 9), the flag clears at the change, and the flag shows again when the resolution elapsed time reaches 4.5 business hours (BR B-7, BR B-10).
 
 ## Test Scenarios
-REQ-011 AC-1 REQ S-11 AC-1: Given a P1 ticket still with L1, when its resolution elapsed time reaches 2 busi... — verify Given/When/Then conditions as stated above.
-REQ-011 AC-2 REQ S-11 AC-2: Given a P2 ticket still with L1 at 3 business hours of resolution elapsed time (... — verify Given/When/Then conditions as stated above.
-REQ-011 AC-3 REQ S-11 AC-3: Given a P1 ticket assigned to an L2/L3 support engineer at 1 business hour, when... — verify Given/When/Then conditions as stated above.
-REQ-011 AC-4 REQ S-11 AC-4: Given a P1 ticket still with L1 showing the escalation flag at 2.5 business hour... — verify Given/When/Then conditions as stated above.
+REQ-011 AC-1 REQ S-11 AC-1: Given a P1 ticket still with L1, when its resolution elapsed time reaches 2 busi... â€” verify Given/When/Then conditions as stated above.
+REQ-011 AC-2 REQ S-11 AC-2: Given a P2 ticket still with L1 at 3 business hours of resolution elapsed time (... â€” verify Given/When/Then conditions as stated above.
+REQ-011 AC-3 REQ S-11 AC-3: Given a P1 ticket assigned to an L2/L3 support engineer at 1 business hour, when... â€” verify Given/When/Then conditions as stated above.
+REQ-011 AC-4 REQ S-11 AC-4: Given a P1 ticket still with L1 showing the escalation flag at 2.5 business hour... â€” verify Given/When/Then conditions as stated above.
 
 ## Assumptions
 None beyond those logged in docs/logs/assumptions-log.md.
@@ -42,8 +42,8 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 § S-11; PIB-005 v0.1
-- Downstream: FEAT-021-TASKS (builder task list); Phase 6 test set FEAT-021-TESTS
+- Upstream: REQ-001 v0.3 Â§ S-11; PIB-005 v0.1
+- Downstream: FEAT-021-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist
 - [x] Every template section is filled, or marked "Not applicable - <reason>"
@@ -57,9 +57,10 @@ None.
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Architect / tech lead |
+| Version | 0.1 |
 | Conditions | None |
 | Comments | None |
-| Timestamp | Pending |
+| Timestamp | 2026-10-17 18:47 UTC |

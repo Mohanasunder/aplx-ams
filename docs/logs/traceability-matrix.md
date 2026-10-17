@@ -8,39 +8,39 @@ Design column rule (Phase 4, 2026-10-17): `API-001`, `BED-001`, `UIS-001`, `PRM-
 
 | REQ | Goal / KPI | Design (API, DBD, UIS) | Feature | PR | Test cases | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| REQ S-1 | EPC E-1; BRF-001 G-1, G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-011 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-2 | EPC E-1; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-012 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-3 | EPC E-1; BRF-001 G-1 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-013 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-4 | EPC E-1; BRF-001 G-1 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-014 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-5 | EPC E-1; BRF-001 G-2 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-015 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-6 | EPC E-1; BRF-001 G-1, G-2 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-016 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-7 | EPC E-1; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-017 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-8 | EPC E-1; BRF-001 G-1 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-018 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-9 | EPC E-2; BRF-001 G-1 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-019 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-10 | EPC E-2; BRF-001 G-1 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-020 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-11 | EPC E-2; BRF-001 G-2 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-021 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-12 | EPC E-3; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-024 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-13 | EPC E-3; BRF-001 G-1, G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-025 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-14 | EPC E-3; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-026 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-15 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-027 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-16 | EPC E-4; BRF-001 G-3, G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-028 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-17 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-029 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-18 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-002 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-19 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-003 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-20 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-005 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-21 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-006 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-22 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-007 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-23 | EPC E-5; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-032 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-24 | EPC E-2; BRF-001 G-1 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-010 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-25 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-030 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-26 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-031 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-27 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-004 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-28 | EPC E-1; BRF-001 G-1, G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-022 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-29 | EPC E-1; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-023 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-30 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-008 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-31 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-009 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-32 | EPC E-5; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-033 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
-| REQ S-33 | EPC E-5; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-034 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17) |
+| REQ S-1 | EPC E-1; BRF-001 G-1, G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-011 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-2 | EPC E-1; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-012 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-3 | EPC E-1; BRF-001 G-1 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-013 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-4 | EPC E-1; BRF-001 G-1 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-014 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-5 | EPC E-1; BRF-001 G-2 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-015 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-6 | EPC E-1; BRF-001 G-1, G-2 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-016 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-7 | EPC E-1; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-017 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-8 | EPC E-1; BRF-001 G-1 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-018 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-9 | EPC E-2; BRF-001 G-1 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-019 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-10 | EPC E-2; BRF-001 G-1 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-020 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-11 | EPC E-2; BRF-001 G-2 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-021 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-12 | EPC E-3; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-024 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-13 | EPC E-3; BRF-001 G-1, G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-025 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-14 | EPC E-3; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-026 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-15 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-027 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-16 | EPC E-4; BRF-001 G-3, G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-028 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-17 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-029 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-18 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-002 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-19 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-003 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-20 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-005 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-21 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-006 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-22 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-007 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-23 | EPC E-5; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-032 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-24 | EPC E-2; BRF-001 G-1 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-010 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-25 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-030 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-26 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-031 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-27 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-004 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-28 | EPC E-1; BRF-001 G-1, G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-022 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-29 | EPC E-1; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-023 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-30 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-008 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-31 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-009 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-32 | EPC E-5; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-033 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-33 | EPC E-5; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-034 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 
 ## Phase 4 Cross-Artifact Traceability Links
 
@@ -84,13 +84,24 @@ Approved 2026-10-17 by Mohanasunder (Architect / tech lead).
 
 ### Phase 5 Enabling and Infrastructure Features (no REQ story)
 
-| FEAT | Title | Depends on |
-| --- | --- | --- |
-| FEAT-000 | Walking Skeleton — Backend Scaffold and CI Pipeline | none (foundation) |
-| FEAT-001 | Frontend Scaffold — React + Vite + Tailwind | FEAT-000 |
-| FEAT-035 | E2E CI Scaffold | FEAT-000, FEAT-001 |
+| FEAT | Title | Depends on | Supplementary artifacts status |
+| --- | --- | --- | --- |
+| FEAT-000 | Walking Skeleton — Backend Scaffold and CI Pipeline | none (foundation) | FEAT-000-ACC, FEAT-000-TASKS, FEAT-000-STATUS Approved v0.1 (2026-10-18) |
+| FEAT-001 | Frontend Scaffold — React + Vite + Tailwind | FEAT-000 | FEAT-001-ACC, FEAT-001-TASKS, FEAT-001-STATUS Approved v0.1 (2026-10-18) |
+| FEAT-035 | E2E CI Scaffold | FEAT-000, FEAT-001 | FEAT-035-ACC, FEAT-035-TASKS, FEAT-035-STATUS Approved v0.1 (2026-10-18) |
 
 These three features carry no REQ story (they are enabling features). They are linked to all Phase 4 design artifacts via STD-001 and TST-001.
+
+### Phase 5 Supplementary Artifact Approvals (all features, 2026-10-18)
+
+108 supplementary files approved 2026-10-18 by Mohanasunder at v0.1 (36 ACC + 36 TASKS + 36 STATUS, covering FEAT-000 through FEAT-035). Each set is upstream from its parent `FEAT-NNN` plan.md (Approved) and downstream to the Phase 6 feature branch for the same FEAT-NNN.
+
+| Artifact set | Scope | Upstream | Downstream |
+| --- | --- | --- | --- |
+| FEAT-000-ACC, FEAT-000-TASKS, FEAT-000-STATUS | Walking Skeleton | FEAT-000 plan.md Approved | Phase 6 feature/FEAT-000-* branch |
+| FEAT-001-ACC, FEAT-001-TASKS, FEAT-001-STATUS | Frontend Scaffold | FEAT-001 plan.md Approved | Phase 6 feature/FEAT-001-* branch |
+| FEAT-002-ACC through FEAT-034-ACC; FEAT-002-TASKS through FEAT-034-TASKS; FEAT-002-STATUS through FEAT-034-STATUS | Story features (REQ S-1 to S-33) | FEAT-NNN plan.md Approved | Phase 6 feature/FEAT-NNN-* branch |
+| FEAT-035-ACC, FEAT-035-TASKS, FEAT-035-STATUS | E2E CI Scaffold | FEAT-035 plan.md Approved | Phase 6 feature/FEAT-035-* branch |
 
 ### Phase 5 Phase-Scoped Artifact Links
 

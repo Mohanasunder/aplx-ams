@@ -1,18 +1,18 @@
 ---
-id: FEAT-026
+id: FEAT-026-STATUS
 id_prefix: FEAT
 title: "FEAT-026: S-14: Client User Views and Downloads the Monthly Client Report — Status"
 phase: 5
 version: 0.1
 template: feature-status
 template_version: 1.1
-status: In review
+status: Approved
 author_agent: build-planner
-approver: Tech lead
+approver: Mohanasunder
 default_approver: Tech lead
 default_folder: docs/05-build-plan
 date: 2026-10-17
-validation: Pending
+validation: Pass
 ---
 # FEAT-026: S-14: Client User Views and Downloads the Monthly Client Report — Status
 
@@ -58,9 +58,10 @@ None.
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Architect / tech lead |
+| Version | 0.1 |
 | Conditions | None |
 | Comments | None |
-| Timestamp | Pending |
+| Timestamp | 2026-10-17 18:47 UTC |
