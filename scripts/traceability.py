@@ -349,7 +349,7 @@ def epics():
     fm, body, _ = read_artifact(p)
     out = {}
     for heading, content in sections(body):
-        m = re.match(r"EPC (E-\d+):", heading)
+        m = re.match(r"(?:Epic|EPC) (E-\d+):", heading)
         if not m:
             continue
         eid = f"EPC {m.group(1)}"

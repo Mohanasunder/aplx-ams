@@ -26,7 +26,71 @@ Source: `.ai/standards/coding-standards.md`, Approved ADRs.
 - **Coverage targets:** not set yet (Phase 4)
 - **Logging format:** not set yet (Phase 4)
 
-Source: `.ai/standards/coding-standards.md`.
+Domain terms: name things (code, API fields, tables, UI text) with these terms, never the avoided ones (GLO-001 v0.1):
+
+- **APLX AMS**: The internal AMS delivery tool for the company's support of client organizations' SAP applications, which client users also sign in to in release 1. Avoid: nothing listed.
+- **Client organization**: An organization whose SAP applications the AMS team supports; it owns tickets, a contract, SAP applications and client users. Release 1 pilot: one client organization, Applexus. Avoid: customer, tenant.
+- **Client user**: A person from a client organization who signs in to raise tickets, view their client organization's tickets and statuses, add comments on their client organization's tickets, and view their client organization's published monthly client reports (one client role); PER P-4. Avoid: end user.
+- **L1 support engineer**: AMS team member at level L1 who acknowledges, triages, changes priority, escalates, resolves and closes tickets; PER P-1. Avoid: nothing listed.
+- **L2/L3 support engineer**: AMS team member at level L2 or L3 who resolves tickets escalated by L1; PER P-2. Avoid: nothing listed.
+- **Support engineer**: An L1 support engineer or an L2/L3 support engineer. Avoid: nothing listed.
+- **Delivery manager**: Internal user who sets up client organizations, SAP applications, contracts (and ends them) and user accounts, maintains the company holiday list, monitors SLA, generates and publishes monthly client reports, reviews and corrects effort entries, and downloads the finance export to email to finance; PER P-3. Avoid: nothing listed.
+- **Internal user**: An L1 support engineer, L2/L3 support engineer or delivery manager; not a client user. Avoid: nothing listed.
+- **User account**: The APLX AMS sign-in account of one person (staff or client user), with a password and a role; a client user's account belongs to one client organization. Created, changed and deactivated only by the delivery manager. INT-002 Q7 calls it an "app account"; Phase 2 uses "user account". Avoid: nothing listed.
+- **Role**: The set of tasks a user account may do. Release 1 has four roles: L1 support engineer, L2/L3 support engineer, delivery manager and client user (one client role). Avoid: nothing listed.
+- **SAP application**: An SAP application of a client organization that the AMS team supports; every ticket is for one SAP application. Avoid: nothing listed.
+- **Ticket**: A record of one incident or one service request raised by a client user for one SAP application. Avoid: issue.
+- **Incident**: A ticket type: something on an SAP application is not working as it should. Avoid: nothing listed.
+- **Service request**: A ticket type: a request for a service on an SAP application, not a fault. Avoid: nothing listed.
+- **Priority**: The urgency of a ticket, P1 (highest) to P4, set by the client user at raise and changeable only by an L1 support engineer with a reason, and not after the ticket is Resolved; it sets the SLA targets. On a change only running SLA timers recalculate, from the raise time (a timer paused while awaiting client counts as running: A-018, confirmed 2026-10-17); stopped timers keep their met or breached result; the escalation point moves to 50% of the new resolution target. Confirmed rule, Phase 2 gate answers, 2026-10-17. Avoid: severity.
+- **Standard SLA**: The one set of response and resolution targets per priority used for every client organization. Avoid: nothing listed.
+- **Response target**: The business time, set by the ticket's priority, before which the response clock must stop (acknowledgement) for the target to be met; a stop at exactly 100% of it is breached. Avoid: first response.
+- **Resolution target**: The business time, set by the ticket's priority, before which the ticket must be set to Resolved for the target to be met; a stop at exactly 100% of it is breached. Avoid: nothing listed.
+- **Business hours**: 09:00 to 18:00 IST, Monday to Friday, excluding the dates on the company holiday list; the only time SLA timers count. Avoid: working hours, office hours.
+- **Business day**: One day of business hours, counted as 9 business hours when converting targets in days (OQ-040 answered). Avoid: nothing listed.
+- **Company holiday list**: The Applexus company holiday list: the holiday dates excluded from business hours, entered in APLX AMS and kept current each year by the delivery manager; a change applies from the time of the change onward, with no recalculation of business time already counted (OQ-050). INT-002 Q2 calls it the "India holiday list"; OQ-041 named it. Avoid: nothing listed.
+- **SLA timer**: The count of elapsed business time of a ticket against one target. Each ticket has two SLA timers: the response clock and the resolution clock. Avoid: nothing listed.
+- **Response clock**: The SLA timer of a ticket against its response target; it starts at raise and stops at acknowledgement. Avoid: response timer.
+- **Resolution clock**: The SLA timer of a ticket against its resolution target; it starts at raise and stops when the ticket is set to Resolved. Avoid: resolution timer.
+- **Acknowledgement**: The first action on a ticket by an L1 support engineer, whether an explicit acknowledgement or another action such as a priority change or an assignment; it stops the response clock. An action is a change recorded on the ticket, not a view (A-017, confirmed rule, Phase 2 review answers, 2026-10-17). Confirmed rule, Phase 2 gate answers, 2026-10-17. A comment by an L1 support engineer is an action (Phase 2 review answers, 2026-10-17). When the acknowledgement is a priority change, it is judged against the new priority's response target (OQ-046). Avoid: nothing listed.
+- **Awaiting client**: A ticket status set while the AMS team waits on the client user; SLA timers are paused while it is set. Only the assigned support engineer sets it; the assigned support engineer may clear it, and a client user's comment on the ticket clears it automatically (OQ-045; A-013 Confirmed). Avoid: on hold.
+- **Comment**: Text added on a ticket in APLX AMS, saved with the user and the time: by a client user on their own client organization's ticket (visible to internal users), or by an internal user on any ticket (confirmed, Phase 2 review answers, 2026-10-17; visible to the client users of that ticket's client organization). Only a client user's comment clears awaiting client. Avoid: nothing listed.
+- **On track**: SLA timer state: elapsed business time below 90% of the target. Avoid: nothing listed.
+- **At risk**: SLA timer state: elapsed business time at or above 90% and below 100% of the target while the timer runs. Avoid: nothing listed.
+- **Breached**: SLA timer state: elapsed business time at or above 100% of the target, running or stopped; a timer that stops at exactly 100% of its target is breached. An SLA breach. Confirmed rule, Phase 2 gate answers, 2026-10-17. Avoid: SLA violation, overdue.
+- **Met**: SLA timer state: the timer stopped before its elapsed business time reached 100% of the target; a met or breached result is kept after a priority change. Confirmed rule, Phase 2 gate answers, 2026-10-17. Avoid: nothing listed.
+- **L1 target**: 50% of a ticket's resolution target (the escalation point); L1's own time before the ticket is flagged for escalation. It moves with the resolution target when the priority changes. Avoid: nothing listed.
+- **Escalation flag**: A mark on a ticket still with L1 once its L1 target has elapsed; removed when the ticket is assigned to an L2/L3 support engineer or set to Resolved. On a priority change it is re-evaluated against the new L1 target: if the priority is lowered and the elapsed time falls below the new point, the flag clears and reappears when the elapsed time reaches the new point. Confirmed rule, Phase 2 review answers, 2026-10-17. Avoid: nothing listed.
+- **Escalate**: To assign a ticket from L1 to an L2/L3 support engineer. Avoid: nothing listed.
+- **Triage**: An L1 support engineer's check of a ticket to decide whether to resolve it at L1 or escalate it; escalate when L1 cannot resolve it within its L1 target or it needs functional or technical SAP skills. Done in APLX AMS. Avoid: nothing listed.
+- **Assignment**: Who a ticket is currently given to: L1 (the L1 queue) or a named L2/L3 support engineer after escalation; every change of assignment is recorded in the audit trail. Avoid: nothing listed.
+- **Assigned support engineer**: The support engineer a ticket is currently assigned to: the named L2/L3 support engineer, or, when no L2/L3 support engineer is assigned, every L1 support engineer (A-024, Confirmed). Only the assigned support engineer records effort on the ticket and sets awaiting client. Avoid: assignee.
+- **L1 queue**: The list of tickets for L1 support engineers: tickets still with L1 (not assigned to an L2/L3 support engineer and not Resolved) and Resolved tickets awaiting closure. Avoid: nothing listed.
+- **Ticket reference**: The identifier of one ticket by which users find and open it, and which the finance export shows in its ticket field. Avoid: nothing listed.
+- **Ticket status**: The stage of a ticket: Open, Awaiting client, Resolved or Closed. Awaiting client, Resolved and Closed come from the sources; "Open" for any other stage is assumption A-022. Avoid: nothing listed.
+- **Open ticket**: A ticket whose status is Open or Awaiting client, that is, not Resolved and not Closed. Avoid: nothing listed.
+- **New ticket**: A ticket with no L1 action yet; its response clock is running. Avoid: nothing listed.
+- **Resolved**: Ticket status set by a support engineer when the fault or request is dealt with; it stops the resolution clock and returns the ticket to the L1 queue. Not the same as Closed. Avoid: solved.
+- **Closed**: Final ticket status, set only by an L1 support engineer on a Resolved ticket; the client user sees it in APLX AMS and receives no email or other message about it. Avoid: nothing listed.
+- **Response %**: Share of tickets whose response clock stopped in the period with the response target met. Avoid: nothing listed.
+- **Resolution %**: Share of tickets whose resolution clock stopped in the period with the resolution target met; the measure of BRF-001 G-1. Avoid: nothing listed.
+- **SLA compliance %**: The BRF-001 G-1 KPI (baseline 80%, target 95%), measured as resolution %. Avoid: nothing listed.
+- **MTTR**: Mean time to resolve: for a client organization and a calendar month, the mean over tickets set to Resolved in that month of each ticket's business time from raise to Resolved, excluding paused (awaiting client) time, in business days of 9 business hours. Avoid: nothing listed.
+- **Monthly client report**: The per-client-organization report for one calendar month: response % and resolution % per priority, breached tickets, MTTR and ticket counts. The delivery manager generates it, reviews it and publishes it; client users see it only once published, view it in APLX AMS and download it as Excel or PDF. Avoid: nothing listed.
+- **Live dashboard**: The internal view of open tickets, SLA timer states, escalation flags and hours bank balance across client organizations and SAP applications. Avoid: nothing listed.
+- **Contract**: The agreement between the company and a client organization against which effort counts; type hours bank or fixed fee. The delivery manager can end a contract; an ended contract is no longer active and keeps its effort entries and hours bank balance (A-023, Confirmed). Avoid: nothing listed.
+- **Active contract**: The one contract of a client organization that effort hours count against at a given time; no effort entry can be recorded for a client organization with no active contract. Avoid: nothing listed.
+- **Hours bank**: Contract type with a number of contracted hours that recorded effort draws down. Avoid: hour bank, prepaid.
+- **Contracted hours**: The hours an hours bank contract holds before any effort is recorded. Avoid: nothing listed.
+- **Hours bank balance**: Contracted hours minus effort hours recorded against an hours bank contract; it may go negative, and while it is 0 or below the delivery manager sees a warning. Avoid: nothing listed.
+- **Fixed fee**: Contract type where effort hours are recorded for visibility only and do not count against a balance. Avoid: fixed price, retainer.
+- **Effort entry**: Hours a support engineer records on one ticket assigned to them for one date. The support engineer may change or delete their own effort entry until the end of the calendar month of its date (A-025, Confirmed); the delivery manager can correct (change, not delete) any effort entry; every save, change and deletion is in the audit trail. Avoid: timesheet.
+- **Finance export**: The monthly Excel or CSV file for finance with one row per effort entry: client organization, contract, ticket, engineer, date, hours, remaining hours bank balance (the balance at the end of the export month). The delivery manager downloads it and emails it to finance outside APLX AMS. Avoid: nothing listed.
+- **Audit trail**: The record of every change to a ticket's status, priority, assignment and effort entries, with user, date and time; visible to internal users only. Avoid: nothing listed.
+- **Client data boundary**: The rule that a client user sees and acts only on their own client organization's data. Avoid: nothing listed.
+- **Portal**: APLX AMS as used by client users to raise tickets; the only ticket intake in release 1. Avoid: nothing listed.
+
+Source: `.ai/standards/coding-standards.md`, Approved domain glossary.
 
 ## Forbidden actions
 
