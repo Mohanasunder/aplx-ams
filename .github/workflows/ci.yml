@@ -1,58 +1,306 @@
-name: sdlc-gates
+name: CI
+
 on:
   pull_request:
+  push:
+    branches:
+      - master
+
+# ---------------------------------------------------------------------------
+# All jobs use ubuntu-latest runners, actions/checkout@v4, and
+# actions/setup-python@v5 with Python 3.13 unless noted.
+#
+# Parallelism:
+#   - methodology, lint, typecheck, sast, deps, secrets, build  → parallel
+#   - test       → needs: [lint, typecheck]
+#   - migrate    → needs: [test]  (same DB service, proves migrations apply
+#                  cleanly on a codebase that already passes all tests)
+# ---------------------------------------------------------------------------
+
 jobs:
+
+  # --------------------------------------------------------------------------
+  # SDLC methodology gates
+  # Validates artifact structure, SDLC process rules, and repo hygiene.
+  # --------------------------------------------------------------------------
   methodology:
+    name: Methodology gates
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # locked-test check needs each test set's Test Commit
+          fetch-depth: 0   # locked-test check needs full history
+
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
+
+      - name: Install script dependencies
+        run: pip install -r requirements.txt
+
       - name: Branch name follows the standard
         run: bash scripts/check-branch-name.sh "${{ github.head_ref }}"
+
       - name: Spike branches are never merged
         run: |
-          case "${{ github.head_ref }}" in spike/*) echo "Spike branches are throwaway and never merged (scripts/spike.py close)"; exit 1;; esac
-          python3 scripts/spike.py check
+          case "${{ github.head_ref }}" in
+            spike/*)
+              echo "ERROR: Spike branches are throwaway and must not be merged. Run: python scripts/spike.py close"
+              exit 1
+              ;;
+          esac
+          python scripts/spike.py check
+
       - name: Artifacts validate against templates
-        run: python3 scripts/validate_artifact.py docs --check-links
+        run: python scripts/validate_artifact.py docs --check-links
+
       - name: Approved tests unchanged (non-overridable)
-        run: python3 scripts/locked_tests.py check
+        run: python scripts/locked_tests.py check
+
       - name: Feature plans within sizing limits
-        run: python3 scripts/check_feature_size.py size
+        run: python scripts/check_feature_size.py size
+
       - name: Wave plan collision-free (shared paths run alone)
-        run: python3 scripts/check_feature_size.py waves
+        run: python scripts/check_feature_size.py waves
+
       - name: Task 0 planned first; once merged, every gate command is set
-        run: python3 scripts/check_feature_size.py task0
+        run: python scripts/check_feature_size.py task0
+
       - name: Changes stay within the feature's planned files
-        run: python3 scripts/check_feature_size.py scope --base "origin/${{ github.base_ref }}"
+        run: python scripts/check_feature_size.py scope --base "origin/${{ github.base_ref }}"
+
       - name: New packages approved in the feature plan
-        run: python3 scripts/check_feature_size.py packages --base "origin/${{ github.base_ref }}"
+        run: python scripts/check_feature_size.py packages --base "origin/${{ github.base_ref }}"
+
       - name: Every change to an approved spec has a spec change record
-        run: python3 scripts/spec_impact.py records
+        run: python scripts/spec_impact.py records
+
       - name: Feature cites current, approved spec versions
-        run: python3 scripts/spec_impact.py check
+        run: python scripts/spec_impact.py check
+
       - name: Context pack resolves to current approved sections, within size budget
-        run: python3 scripts/context_pack.py check
+        run: python scripts/context_pack.py check
+
       - name: Learned rules index matches the approved rules
-        run: python3 scripts/learned_rules.py check
+        run: python scripts/learned_rules.py check
+
       - name: Agent charter matches its sources
-        run: python3 scripts/build_charter.py check
+        run: python scripts/build_charter.py check
+
       - name: Domain terms used consistently
-        run: python3 scripts/glossary_check.py check
+        run: python scripts/glossary_check.py check
+
       - name: Change summary complete and accurate
-        run: python3 scripts/pr_summary.py check --base "origin/${{ github.base_ref }}"
+        run: python scripts/pr_summary.py check --base "origin/${{ github.base_ref }}"
+
       - name: Decision log well-formed and append-only
-        run: python3 scripts/log_decision.py check --base "origin/${{ github.base_ref }}"
-      - name: Feedback and incident log matches the Phase 9 artifacts
-        run: python3 scripts/feedback_log.py check
-  project-gates:
-    # Replace with the exact commands from .ai/standards/automated-gates.md (filled in Phase 4):
-    # lint, type check, unit and integration tests with coverage, SAST, dependency scan, secrets scan.
+        run: python scripts/log_decision.py check --base "origin/${{ github.base_ref }}"
+
+      - name: Feedback and incident log matches Phase 9 artifacts
+        run: python scripts/feedback_log.py check
+
+  # --------------------------------------------------------------------------
+  # Lint (Python) — ruff check + ruff format
+  # --------------------------------------------------------------------------
+  lint:
+    name: Lint (Python)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo "Add the project gate commands here (Phase 4)"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lint and format check (ruff)
+        run: ruff check src/ && ruff format --check src/
+
+  # --------------------------------------------------------------------------
+  # Type check (Python) — mypy --strict
+  # --------------------------------------------------------------------------
+  typecheck:
+    name: Type check (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Static type check (mypy --strict)
+        run: mypy src/ --strict
+
+  # --------------------------------------------------------------------------
+  # SAST — bandit (non-overridable)
+  # --------------------------------------------------------------------------
+  sast:
+    name: SAST (bandit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: SAST scan (bandit -ll)
+        run: bandit -r src/ -ll
+
+  # --------------------------------------------------------------------------
+  # Dependency scan — pip-audit (non-overridable)
+  # --------------------------------------------------------------------------
+  deps:
+    name: Dependency scan (pip-audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Dependency vulnerability scan (pip-audit)
+        run: pip-audit
+
+  # --------------------------------------------------------------------------
+  # Secrets scan — detect-secrets (non-overridable)
+  # The committed .secrets.baseline is checked out by actions/checkout@v4
+  # automatically; the scan is then run against that baseline so that only
+  # newly introduced secrets cause a failure.
+  # --------------------------------------------------------------------------
+  secrets:
+    name: Secrets scan (detect-secrets)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install detect-secrets
+        run: pip install "detect-secrets>=1.5,<2"
+
+      - name: Secrets scan against committed baseline
+        run: detect-secrets scan --baseline .secrets.baseline
+
+  # --------------------------------------------------------------------------
+  # Unit + integration tests with coverage (depends on lint and typecheck)
+  # Requires PostgreSQL 18 service for Django test runner.
+  # --------------------------------------------------------------------------
+  test:
+    name: Tests + coverage (pytest)
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck]
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: aplx_ams_test
+          POSTGRES_USER: aplx_ams
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgres://aplx_ams:postgres@localhost:5432/aplx_ams_test
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: aplx_ams_test
+      POSTGRES_USER: aplx_ams
+      POSTGRES_PASSWORD: postgres
+      DJANGO_SETTINGS_MODULE: aplx_ams_django.settings.base
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run unit and integration tests with coverage (80% gate)
+        run: pytest src/ --cov=src --cov-fail-under=80 --timeout=600
+
+  # --------------------------------------------------------------------------
+  # Migration check — applies Django built-in migrations on a scratch DB.
+  # Runs after tests to confirm the schema applies cleanly on a passing
+  # codebase.  No app migrations exist in the skeleton yet; this validates
+  # Django core tables only.
+  # --------------------------------------------------------------------------
+  migrate:
+    name: Migration check (manage.py migrate)
+    runs-on: ubuntu-latest
+    needs: [test]
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: aplx_ams_migrate
+          POSTGRES_USER: aplx_ams
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgres://aplx_ams:postgres@localhost:5432/aplx_ams_migrate
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: aplx_ams_migrate
+      POSTGRES_USER: aplx_ams
+      POSTGRES_PASSWORD: postgres
+      DJANGO_SETTINGS_MODULE: aplx_ams_django.settings.base
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Apply Django built-in migrations (--run-syncdb)
+        run: python manage.py migrate --run-syncdb
+
+  # --------------------------------------------------------------------------
+  # Build — docker compose build app (no push)
+  # Runs in parallel; does not depend on code-quality jobs so that a broken
+  # Dockerfile is caught independently of Python issues.
+  # --------------------------------------------------------------------------
+  build:
+    name: Docker build (no push)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image (app service only, no push)
+        run: docker compose build app
