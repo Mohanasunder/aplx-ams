@@ -227,3 +227,5 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-17 20:31 | PRD FEAT-000 | 0.1 | Approve | Mohanasunder | Tech lead | n/a | - | [review depth: Deep, tier Critical] [review: 20 min] |
 | 2026-10-17 20:32 | PRD FEAT-000 | 0.1 | Approve | Mohanasunder | Release manager | n/a | - | [review depth: Deep, tier Critical] [review: 5 min] |
 | 2026-10-17 21:01 | FEAT-001-TESTS | 0.1 | Approve | Mohanasunder | Tech lead | Pass | - | None |
+| 2026-10-17 21:36 | SCR S-5 | 0.1 | Approve | Mohanasunder | Tech lead | n/a | - | - |
+| 2026-10-17 21:38 | FEAT-001 | 0.2 | Approve | Mohanasunder | Tech lead | Pass | - | v0.2: adds 3 scaffold files and 3 npm peer deps per SCR S-5. |

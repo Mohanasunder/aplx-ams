@@ -407,7 +407,7 @@ None.
 ## SCR S-5: FEAT-001 plan — missing scaffold files and unlisted npm peer dependencies
 <!-- scr_approver: Mohanasunder -->
 
-<!-- scr_status: Open -->
+<!-- scr_status: Approved -->
 <!-- scr_date: 2026-10-18 -->
 
 ### Input References
