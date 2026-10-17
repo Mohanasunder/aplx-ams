@@ -40,7 +40,7 @@ for d in $(echo "$deps" | grep -oE 'FEAT-[0-9]{3}' || true); do
 done
 
 # 3b. No collision with open features: no two change the same files; one that changes a shared path runs alone
-python3 "$root/scripts/check_feature_size.py" start "$feat" || fail "$feat collides with an open feature (details above)"
+python "$root/scripts/check_feature_size.py" start "$feat" || fail "$feat collides with an open feature (details above)"
 
 # 4. Review capacity
 max="$(grep -m1 -E '^max_open_feature_branches:' project.md | sed 's/^[^:]*:[[:space:]]*//' || true)"
