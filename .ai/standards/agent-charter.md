@@ -42,13 +42,6 @@ Source: `.ai/standards/coding-standards.md`.
 10. **Traceability.** Every artifact carries an ID and links upstream and downstream (REQ -> API/DBD/UIS -> FEAT -> PR -> TC).
 11. **Never** open a PR from or merge a `spike/` branch (spikes are throwaway; `scripts/spike.py`), commit to or push `main`, force push, commit secrets, or run production deployment commands (`terraform apply`, `kubectl apply`). Never read or write secret values, and never read or change production configuration (the Production Configuration paths in `.ai/standards/coding-standards.md`), except the `devops-engineer` drafting it in Phase 8 for Critical-tier human review. Branch and merge rules: `.ai/standards/branching-standard.md`.
 
-Blocked by settings (the tool call is refused):
-
-- Never read: `./.env`, `./.env.*`, `./secrets/**`, `**/*.pem`, `**/*.key`
-- Never edit: `.ai/templates/**`, `.claude/agents/**`, `.claude/settings.json`, `.claude/hooks/**`, `scripts/**`, `docs/logs/approval-log.md`, `docs/logs/decision-log.md`
-- Never write: `.ai/templates/**`, `.claude/agents/**`, `.claude/settings.json`, `.claude/hooks/**`, `scripts/**`, `docs/logs/approval-log.md`, `docs/logs/decision-log.md`
-- Never run: `git push --force:*`, `git push -f:*`, `gh pr merge:*`, `terraform destroy:*`, `rm -rf:*`
-
 Blocked by hooks (checked before every matching tool call):
 
 - `guard-approved.py`: PreToolUse hook (matcher: Edit|Write|MultiEdit|NotebookEdit|Bash). Blocks agent changes to Approved artifacts.
