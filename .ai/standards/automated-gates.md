@@ -4,16 +4,19 @@ Run before any PR reaches a human. Failing tests, security scans, or secrets fin
 
 | Gate | Command | Required |
 | --- | --- | --- |
-| Build | <set in Phase 4> | yes |
-| Run locally (app starts, health check answers) | <set in Phase 4> | yes |
-| Lint | <set in Phase 4, e.g. `npm run lint`> | yes |
-| Type check | <set in Phase 4> | yes |
-| Unit tests with coverage | <set in Phase 4> | yes |
-| Integration tests | <set in Phase 4> | yes |
-| SAST | <set in Phase 4> | yes (non-overridable) |
-| Dependency scan | <set in Phase 4> | yes (non-overridable) |
-| Secrets scan | <set in Phase 4> | yes (non-overridable) |
-| Migration check (apply and reverse on a scratch DB) | <set in Phase 4> | yes |
+| Build | `docker compose build app && npm --prefix src/frontend ci && npm --prefix src/frontend run build` | yes |
+| Run locally (app starts, health check answers) | `docker compose up -d && curl --fail http://localhost/api/health/` | yes |
+| Lint (Python) | `ruff check src/ && ruff format --check src/` | yes |
+| Lint (TypeScript) | `eslint src/frontend/src/ --max-warnings=0` | yes |
+| Type check (Python) | `mypy src/ --strict` | yes |
+| Type check (TypeScript) | `tsc --noEmit --project src/frontend/tsconfig.json` | yes |
+| Unit + integration tests with coverage (Python, 80% gate) | `pytest src/ --cov=src --cov-fail-under=80 --timeout=600` | yes |
+| Unit tests with coverage (TypeScript, 70% gate) | `vitest run --coverage --coverage.threshold.lines=70` | yes |
+| E2E tests (separate CI job) | `playwright test` | yes |
+| SAST | `bandit -r src/ -ll` | yes (non-overridable) |
+| Dependency scan | `pip-audit` | yes (non-overridable) |
+| Secrets scan | `detect-secrets scan` | yes (non-overridable) |
+| Migration check (apply and reverse on a scratch DB) | `python manage.py migrate --run-syncdb` then `python manage.py migrate <app> zero` (finalized in FEAT-000) | yes |
 | Locked tests unchanged | `python3 scripts/locked_tests.py check` | yes (non-overridable) |
 | Feature size (Phase 5) | `python3 scripts/check_feature_size.py size` | yes (non-overridable) |
 | Wave plan collision-free (Phase 5) | `python3 scripts/check_feature_size.py waves` | yes (non-overridable) |
@@ -32,7 +35,7 @@ Run before any PR reaches a human. Failing tests, security scans, or secrets fin
 | Domain terms used consistently | `python3 scripts/glossary_check.py check` (add `--code` once src/ exists) | yes (non-overridable) |
 | Artifact validation | `python3 scripts/validate_artifact.py docs --check-links` | yes |
 | Branch name | `scripts/check-branch-name.sh "$(git branch --show-current)"` | yes |
-| IaC validate and policy check (Phase 8) | <set in Phase 4> | yes (non-overridable) |
+| IaC validate and policy check (Phase 8) | <set in Phase 8> | yes (non-overridable) |
 | Go recorded before production deploy (Phase 8) | `python3 scripts/go_live.py check` | yes (non-overridable) |
 | Feedback and incident log matches the Phase 9 artifacts | `python3 scripts/feedback_log.py check` | yes |
 | Every incident and feedback item triaged; every improvement item decided (Phase 9 gate) | `python3 scripts/feedback_log.py check --gate` | yes |

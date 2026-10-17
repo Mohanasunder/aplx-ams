@@ -1,0 +1,2909 @@
+openapi: "3.1.0"
+
+info:
+  title: APLX AMS API
+  description: >
+    Internal REST JSON API for APLX AMS (Application Management Services).
+    All endpoints are under /api/ on the same origin as the frontend.
+    Session-based authentication only (HttpOnly cookie sessionid).
+    No public URL; internal Applexus network or VPN only (ADR A-14).
+  version: "1.0.0"
+  contact:
+    name: Mohanasunder (Tech lead)
+
+servers:
+  - url: /api
+    description: >
+      Internal AMS server. No public URL, hostname, or IP address is published
+      in this file (ADR A-13; THR T-31, T-32).
+
+security:
+  - sessionAuth: []
+
+components:
+  securitySchemes:
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+      description: >
+        Server-side session cookie set by POST /api/auth/login/.
+        HttpOnly, Secure, SameSite=Strict.
+        Expires after 60 minutes of inactivity or 12 hours after sign-in (ADR A-7, DEC-030).
+
+  schemas:
+
+    # --- Error schemas ---
+
+    SimpleError:
+      type: object
+      required: [detail, code]
+      properties:
+        detail:
+          type: string
+          description: Human-readable error message.
+          example: "Invalid credentials."
+        code:
+          type: string
+          description: Machine-readable error code (kebab-case).
+          example: "authentication_failed"
+
+    ValidationError:
+      type: object
+      description: >
+        DRF validation error. Keys are field names or "non_field_errors".
+        Each value is an array of error message strings.
+      additionalProperties:
+        type: array
+        items:
+          type: string
+      example:
+        priority: ["This field is required."]
+        non_field_errors: ["Cannot change priority after ticket is Resolved."]
+
+    # --- Auth schemas ---
+
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+          maxLength: 150
+          description: User account name (email address).
+          example: "user@applexus.com"
+        password:
+          type: string
+          description: User account password. Never returned in any API response.
+          example: "Abcdefg1"
+
+    UserMe:
+      type: object
+      required: [id, name, email, role, is_active]
+      properties:
+        id:
+          type: integer
+          description: User account ID.
+        name:
+          type: string
+          description: User's full name.
+          example: "Arjun Sharma"
+        email:
+          type: string
+          format: email
+          description: User's email address (NFR N-9).
+          example: "user@applexus.com"
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        is_active:
+          type: boolean
+        client_organization_id:
+          type: ['integer', 'null']
+          description: Set only when role is client_user.
+        client_organization_name:
+          type: ['string', 'null']
+          description: Set only when role is client_user.
+
+    ChangePasswordRequest:
+      type: object
+      required: [current_password, new_password]
+      properties:
+        current_password:
+          type: string
+          description: Current password of the signed-in user (BR B-23; REQ S-31 AC-4).
+        new_password:
+          type: string
+          description: New password. Must meet the password policy (NFR N-5).
+
+    SetTempPasswordRequest:
+      type: object
+      required: [temp_password]
+      properties:
+        temp_password:
+          type: string
+          description: >
+            Temporary password set by the delivery manager on the target user account.
+            Must meet the password policy (NFR N-5; BR B-23).
+            Clears an existing lockout at once (REQ S-30 AC-3).
+
+    # --- User account schemas ---
+
+    RoleEnum:
+      type: string
+      enum: [l1_support, l2l3_support, delivery_manager, client_user]
+      description: >
+        l1_support = L1 support engineer (PER P-1);
+        l2l3_support = L2/L3 support engineer (PER P-2);
+        delivery_manager = delivery manager (PER P-3);
+        client_user = client user (PER P-4).
+        These values match the role_enum PostgreSQL ENUM in DBD-001.
+
+    UserAccount:
+      type: object
+      required: [id, name, email, role, is_active]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        is_active:
+          type: boolean
+        client_organization_id:
+          type: ['integer', 'null']
+          description: Required when role is client_user (REQ S-20 AC-2).
+        client_organization_name:
+          type: ['string', 'null']
+
+    CreateUserAccountRequest:
+      type: object
+      required: [name, email, role, temp_password]
+      properties:
+        name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        client_organization_id:
+          type: ['integer', 'null']
+          description: Required when role is client_user (REQ S-20 AC-2).
+        temp_password:
+          type: string
+          description: >
+            Temporary password set at account creation (BR B-23; REQ S-30 AC-1).
+            Must meet the password policy (NFR N-5).
+
+    UpdateUserAccountRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        client_organization_id:
+          type: ['integer', 'null']
+
+    PaginatedUserAccountList:
+      type: object
+      required: [count, results]
+      properties:
+        count:
+          type: integer
+        next:
+          type: ['string', 'null']
+          format: uri
+        previous:
+          type: ['string', 'null']
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserAccount'
+
+    # --- Organization schemas ---
+
+    Organization:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 200
+
+    CreateOrganizationRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          maxLength: 200
+
+    PaginatedOrganizationList:
+      type: object
+      required: [count, results]
+      properties:
+        count:
+          type: integer
+        next:
+          type: ['string', 'null']
+          format: uri
+        previous:
+          type: ['string', 'null']
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Organization'
+
+    SAPApplication:
+      type: object
+      required: [id, client_org_id, name]
+      properties:
+        id:
+          type: integer
+        client_org_id:
+          type: integer
+          description: Foreign key to the client organization. Maps to client_org_id in DBD-001 organizations_sapapplication table.
+        name:
+          type: string
+          maxLength: 200
+
+    CreateSAPApplicationRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          maxLength: 200
+
+    PaginatedSAPApplicationList:
+      type: object
+      required: [count, results]
+      properties:
+        count:
+          type: integer
+        next:
+          type: ['string', 'null']
+          format: uri
+        previous:
+          type: ['string', 'null']
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SAPApplication'
+
+    # --- Contract schemas ---
+
+    ContractTypeEnum:
+      type: string
+      enum: [hours_bank, fixed_fee]
+      description: >
+        hours_bank: contracted hours that recorded effort draws down (BR B-16).
+        fixed_fee: effort recorded for visibility only, no balance (BR B-17).
+
+    Contract:
+      type: object
+      required: [id, client_org_id, contract_type, is_active, started_at]
+      properties:
+        id:
+          type: integer
+        client_org_id:
+          type: integer
+          description: Foreign key to the client organization. Maps to client_org_id in DBD-001 organizations_contract table.
+        contract_type:
+          $ref: '#/components/schemas/ContractTypeEnum'
+        contracted_hours:
+          type: ['number', 'null']
+          description: Present only when contract_type is hours_bank.
+          example: 100.0
+        hours_bank_balance:
+          type: ['number', 'null']
+          description: >
+            Present only when contract_type is hours_bank. May be negative (BR B-16).
+            Delivery manager sees a warning when 0 or below.
+          example: 70.0
+        is_active:
+          type: boolean
+        started_at:
+          type: string
+          format: date
+          description: Date the contract became active (YYYY-MM-DD).
+        ended_at:
+          type: ['string', 'null']
+          format: date
+          description: Date the contract was ended; null if still active.
+
+    CreateContractRequest:
+      type: object
+      required: [contract_type]
+      properties:
+        contract_type:
+          $ref: '#/components/schemas/ContractTypeEnum'
+        contracted_hours:
+          type: ['number', 'null']
+          description: Required when contract_type is hours_bank.
+          example: 100.0
+
+    PaginatedContractList:
+      type: object
+      required: [count, results]
+      properties:
+        count:
+          type: integer
+        next:
+          type: ['string', 'null']
+          format: uri
+        previous:
+          type: ['string', 'null']
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contract'
+
+    # --- Holiday list schemas ---
+
+    HolidayDate:
+      type: object
+      required: [id, date, added_at]
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+          format: date
+          description: IST calendar date excluded from business hours (BR B-2).
+          example: "2027-01-26"
+        added_at:
+          type: string
+          format: date-time
+          description: UTC timestamp when this date was added to the list.
+
+    CreateHolidayDateRequest:
+      type: object
+      required: [date]
+      properties:
+        date:
+          type: string
+          format: date
+          description: IST calendar date to add to the company holiday list.
+          example: "2027-01-26"
+
+    PaginatedHolidayDateList:
+      type: object
+      required: [count, results]
+      properties:
+        count:
+          type: integer
+        next:
+          type: ['string', 'null']
+          format: uri
+        previous:
+          type: ['string', 'null']
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/HolidayDate'
+
+    # --- Ticket schemas ---
+
+    TicketTypeEnum:
+      type: string
+      enum: [incident, service_request]
+      description: >
+        incident: something on an SAP application is not working (BR B-19).
+        service_request: a request for a service, not a fault (BR B-19).
+
+    PriorityEnum:
+      type: string
+      enum: [P1, P2, P3, P4]
+      description: >
+        Priority set by client user at raise; changeable only by L1 with a reason (BR B-7).
+        Targets per BR B-1: P1 1h/4h, P2 4h/9h, P3 9h/27h, P4 18h/45h response/resolution.
+
+    TicketStatusEnum:
+      type: string
+      enum: [Open, "Awaiting client", Resolved, Closed]
+      description: >
+        Open: ticket raised, being worked (A-022 open assumption).
+        Awaiting client: SLA timers paused while waiting for client user reply (BR B-6).
+        Resolved: resolution clock stopped; in L1 queue for closure (BR B-5, B-11).
+        Closed: final status, set by L1 only (BR B-11).
+        Values match the ticket_status PostgreSQL ENUM in DBD-001 (space, not underscore).
+
+    SLAClockStateEnum:
+      type: string
+      enum: [on_track, at_risk, breached, met]
+      description: >
+        on_track: elapsed < 90% of target.
+        at_risk: elapsed >= 90% and < 100% of target, timer running.
+        breached: elapsed >= 100% of target, running or stopped.
+        met: timer stopped before elapsed reached 100% of target (BR B-8).
+
+    SLAClockState:
+      type: object
+      required: [state, elapsed_business_minutes, target_business_minutes]
+      properties:
+        state:
+          $ref: '#/components/schemas/SLAClockStateEnum'
+        elapsed_business_minutes:
+          type: integer
+          description: Business minutes elapsed (ADR A-10 — computed on read).
+        target_business_minutes:
+          type: integer
+          description: Target in business minutes for the ticket's current priority (BR B-1).
+        stopped_at:
+          type: ['string', 'null']
+          format: date-time
+          description: UTC timestamp when this clock was stopped; null if still running.
+
+    Ticket:
+      type: object
+      required:
+        - id
+        - reference
+        - ticket_type
+        - client_organization_id
+        - client_organization_name
+        - sap_application_id
+        - sap_application_name
+        - priority
+        - status
+        - description
+        - raised_by_id
+        - raised_by_name
+        - raised_at
+        - escalation_flag
+        - response_clock
+        - resolution_clock
+      properties:
+        id:
+          type: integer
+        reference:
+          type: string
+          description: Human-readable ticket reference (GLO-001).
+          example: "TKT-00042"
+        ticket_type:
+          $ref: '#/components/schemas/TicketTypeEnum'
+        client_organization_id:
+          type: integer
+          description: Client organization that owns this ticket (ADR A-6; BR B-20).
+        client_organization_name:
+          type: string
+        sap_application_id:
+          type: integer
+        sap_application_name:
+          type: string
+        priority:
+          $ref: '#/components/schemas/PriorityEnum'
+        status:
+          $ref: '#/components/schemas/TicketStatusEnum'
+        description:
+          type: string
+        raised_by_id:
+          type: integer
+          description: User account ID of the client user who raised the ticket.
+        raised_by_name:
+          type: string
+        assigned_to_id:
+          type: ['integer', 'null']
+          description: >
+            User account ID of the L2/L3 support engineer currently assigned.
+            null means the ticket is with L1 (every L1 is the assigned engineer, A-024).
+        assigned_to_name:
+          type: ['string', 'null']
+        raised_at:
+          type: string
+          format: date-time
+          description: UTC timestamp of ticket creation (BR B-3).
+        resolved_at:
+          type: ['string', 'null']
+          format: date-time
+          description: UTC timestamp when status changed to Resolved; null otherwise.
+        closed_at:
+          type: ['string', 'null']
+          format: date-time
+          description: UTC timestamp when status changed to Closed; null otherwise.
+        escalation_flag:
+          type: boolean
+          description: >
+            True when resolution elapsed time >= 50% of resolution target and ticket is
+            still with L1 (not Resolved, not assigned to L2/L3 support engineer) (BR B-10).
+        response_clock:
+          $ref: '#/components/schemas/SLAClockState'
+        resolution_clock:
+          $ref: '#/components/schemas/SLAClockState'
+
+    RaiseTicketRequest:
+      type: object
+      required: [ticket_type, sap_application_id, priority, description]
+      properties:
+        ticket_type:
+          $ref: '#/components/schemas/TicketTypeEnum'
+        sap_application_id:
+          type: integer
+          description: >
+            Must belong to the client user's own client organization (REQ S-1 AC-3; BR B-20).
+        priority:
+          $ref: '#/components/schemas/PriorityEnum'
+        description:
+          type: string
+          minLength: 1
+
+    ChangePriorityRequest:
+      type: object
+      required: [priority, reason]
+      properties:
+        priority:
+          $ref: '#/components/schemas/PriorityEnum'
+        reason:
+          type: string
+          minLength: 1
+          description: >
+            Reason for the priority change; required (REQ S-4 AC-3; BR B-7).
+            If the priority change is the first L1 action, the response clock stops
+            and is judged against the new priority's response target (BR B-4; OQ-046).
+
+    AssignTicketRequest:
+      type: object
+      required: [assignee_id]
+      properties:
+        assignee_id:
+          type: integer
+          description: User account ID of the L2/L3 support engineer to assign (REQ S-5).
+
+    PaginatedTicketList:
+      type: object
+      required: [count, results]
+      properties:
+        count:
+          type: integer
+        next:
+          type: ['string', 'null']
+          format: uri
+        previous:
+          type: ['string', 'null']
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ticket'
+
+    # --- Comment schemas ---
+
+    Comment:
+      type: object
+      required: [id, ticket_id, author_id, author_name, body, created_at]
+      properties:
+        id:
+          type: integer
+        ticket_id:
+          type: integer
+        author_id:
+          type: integer
+        author_name:
+          type: string
+        body:
+          type: string
+          description: Comment body text. Maps to the body column in DBD-001 tickets_comment table.
+        created_at:
+          type: string
+          format: date-time
+          description: UTC timestamp of comment creation.
+
+    CreateCommentRequest:
+      type: object
+      required: [body]
+      properties:
+        body:
+          type: string
+          minLength: 1
+          description: >
+            Comment body. A client user comment on a ticket in Awaiting client status
+            clears awaiting client automatically (BR B-6; REQ S-28 AC-2).
+            An internal user comment does not clear awaiting client (BR B-6; REQ S-29 AC-2).
+            An L1 support engineer comment on a new ticket stops the response clock (BR B-4; REQ S-29 AC-4).
+
+    PaginatedCommentList:
+      type: object
+      required: [count, results]
+      properties:
+        count:
+          type: integer
+        next:
+          type: ['string', 'null']
+          format: uri
+        previous:
+          type: ['string', 'null']
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+
+    # --- Effort entry schemas ---
+
+    EffortEntry:
+      type: object
+      required: [id, ticket_id, engineer_id, engineer_name, date, hours, created_at]
+      properties:
+        id:
+          type: integer
+        ticket_id:
+          type: integer
+        engineer_id:
+          type: integer
+        engineer_name:
+          type: string
+        date:
+          type: string
+          format: date
+          description: Date the effort was performed (YYYY-MM-DD IST).
+        hours:
+          type: number
+          exclusiveMinimum: 0
+          description: Hours worked. Must be above 0 (A-020 open assumption; BR B-15).
+        created_at:
+          type: string
+          format: date-time
+          description: UTC timestamp of entry creation.
+        updated_at:
+          type: string
+          format: date-time
+          description: UTC timestamp of last update.
+
+    CreateEffortEntryRequest:
+      type: object
+      required: [date, hours]
+      properties:
+        date:
+          type: string
+          format: date
+          description: >
+            Date the effort was performed. The caller must be the assigned support engineer
+            of this ticket (BR B-15; A-024 confirmed). Effort only allowed when client
+            organization has an active contract (BR B-15; REQ S-27 AC-2).
+        hours:
+          type: number
+          exclusiveMinimum: 0
+          description: Hours worked; must be above 0 (A-020).
+
+    UpdateEffortEntryRequest:
+      type: object
+      required: [hours]
+      properties:
+        hours:
+          type: number
+          exclusiveMinimum: 0
+          description: >
+            Updated hours. Must be above 0 (A-020).
+            P1/P2 can edit own entries until end of calendar month of the entry date (BR B-15; A-025).
+            P3 can edit any entry at any time (REQ S-26 AC-1). P3 cannot delete.
+
+    PaginatedEffortEntryList:
+      type: object
+      required: [count, results]
+      properties:
+        count:
+          type: integer
+        next:
+          type: ['string', 'null']
+          format: uri
+        previous:
+          type: ['string', 'null']
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EffortEntry'
+
+    # --- Audit trail schemas ---
+
+    AuditEntry:
+      type: object
+      required: [id, event_type, actor_name, timestamp]
+      properties:
+        id:
+          type: integer
+        ticket_id:
+          type: ['integer', 'null']
+          description: >
+            Ticket this entry relates to. null for security events not linked to a ticket
+            (e.g. failed sign-in with unknown account name).
+        event_type:
+          type: string
+          enum:
+            - status_change
+            - priority_change
+            - assignment_change
+            - effort_added
+            - effort_changed
+            - effort_deleted
+            - successful_sign_in
+            - failed_sign_in
+            - account_lockout
+            - temporary_password_set
+            - own_password_changed
+          description: >
+            Type of the event. Ticket events: "status_change", "priority_change",
+            "assignment_change", "effort_added", "effort_changed", "effort_deleted".
+            Security events (BR B-24): "successful_sign_in", "failed_sign_in",
+            "account_lockout", "temporary_password_set", "own_password_changed".
+          example: "priority_change"
+        actor_id:
+          type: ['integer', 'null']
+          description: >
+            User account ID of the person who performed the action.
+            null when the actor is unknown (e.g. sign-in attempt with unknown account name).
+        actor_name:
+          type: ['string', 'null']
+          description: >
+            Name of the person who performed the action, or the account name as typed
+            for unknown account sign-in attempts (BR B-24; OQ-065).
+        subject_account_id:
+          type: ['integer', 'null']
+          description: "For security events: the user account the event concerns."
+        subject_account_name:
+          type: ['string', 'null']
+          description: >
+            For security events: name or account name as typed. For failed sign-in with
+            unknown account name, this is the account name as typed (BR B-24; OQ-065).
+        old_value:
+          type: ['string', 'null']
+          description: Previous value before the change (A-016 open assumption).
+        new_value:
+          type: ['string', 'null']
+          description: New value after the change (A-016 open assumption).
+        timestamp:
+          type: string
+          format: date-time
+          description: UTC timestamp of the event, to the second (NFR N-6).
+
+    PaginatedAuditEntryList:
+      type: object
+      required: [count, results]
+      properties:
+        count:
+          type: integer
+        next:
+          type: ['string', 'null']
+          format: uri
+        previous:
+          type: ['string', 'null']
+          format: uri
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditEntry'
+
+    # --- Dashboard schema ---
+
+    DashboardOrgSummary:
+      type: object
+      required: [org_id, org_name, open_ticket_count, at_risk_count, breached_count, escalation_flag_count, sap_applications]
+      properties:
+        org_id:
+          type: integer
+        org_name:
+          type: string
+        open_ticket_count:
+          type: integer
+          description: Number of open tickets (status Open or Awaiting client).
+        at_risk_count:
+          type: integer
+          description: Number of open tickets with at least one SLA clock in at_risk state.
+        breached_count:
+          type: integer
+          description: Number of open tickets with at least one SLA clock in breached state.
+        escalation_flag_count:
+          type: integer
+          description: Number of open tickets with the escalation flag set (BR B-10).
+        hours_bank_balance:
+          type: ['number', 'null']
+          description: >
+            Hours bank balance of the active contract. null if no active contract
+            or contract type is fixed_fee (BR B-16).
+        sap_applications:
+          type: array
+          description: >
+            Per-SAP-application ticket counts for this client organization (UIS-001 wireframe).
+            Enables the frontend to render the per-application breakdown shown on the dashboard.
+          items:
+            type: object
+            required: [sap_app_id, sap_app_name, open_ticket_count, at_risk_count, breached_count]
+            properties:
+              sap_app_id:
+                type: integer
+                description: SAP application ID (FK to organizations_sapapplication.id).
+              sap_app_name:
+                type: string
+                description: SAP application name.
+              open_ticket_count:
+                type: integer
+                description: Number of open tickets for this SAP application (status Open or Awaiting client).
+              at_risk_count:
+                type: integer
+                description: Number of open tickets with at least one SLA clock in at_risk state.
+              breached_count:
+                type: integer
+                description: Number of open tickets with at least one SLA clock in breached state.
+
+    Dashboard:
+      type: object
+      required: [as_of, organizations]
+      properties:
+        as_of:
+          type: string
+          format: date-time
+          description: UTC timestamp of when the dashboard was computed.
+        organizations:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardOrgSummary'
+
+    # --- Monthly client report schemas ---
+
+    SLAPerPriority:
+      type: object
+      required: [priority, response_pct, resolution_pct]
+      properties:
+        priority:
+          $ref: '#/components/schemas/PriorityEnum'
+        response_pct:
+          type: ['number', 'null']
+          description: >
+            Response % for this priority in the report period.
+            null means "no tickets" (denominator is 0, A-021 open assumption).
+          example: 90.0
+        resolution_pct:
+          type: ['number', 'null']
+          description: >
+            Resolution % for this priority in the report period.
+            null means "no tickets" (A-021).
+          example: 85.0
+
+    BreachedTicketSummary:
+      type: object
+      required: [ticket_id, reference, priority, breached_clocks]
+      properties:
+        ticket_id:
+          type: integer
+        reference:
+          type: string
+          example: "TKT-00012"
+        priority:
+          $ref: '#/components/schemas/PriorityEnum'
+        breached_clocks:
+          type: array
+          items:
+            type: string
+            enum: [response, resolution]
+          description: Which SLA clocks were breached for this ticket.
+
+    TicketCountPerPriority:
+      type: object
+      required: [priority, raised, resolved, closed]
+      properties:
+        priority:
+          $ref: '#/components/schemas/PriorityEnum'
+        raised:
+          type: integer
+        resolved:
+          type: integer
+        closed:
+          type: integer
+
+    MonthlyClientReport:
+      type: object
+      required: [org_id, org_name, year, month, is_published, sla_summary, breached_tickets, ticket_counts]
+      properties:
+        org_id:
+          type: integer
+        org_name:
+          type: string
+        year:
+          type: integer
+          example: 2026
+        month:
+          type: integer
+          minimum: 1
+          maximum: 12
+          example: 9
+        is_published:
+          type: boolean
+          description: >
+            False means the report is generated but not yet published.
+            Client users (P4) can see this report only when is_published is true (BR B-14; REQ S-14 AC-4).
+        generated_at:
+          type: ['string', 'null']
+          format: date-time
+          description: UTC timestamp of generation; null if not yet generated.
+        published_at:
+          type: ['string', 'null']
+          format: date-time
+          description: UTC timestamp of publication; null if not yet published.
+        sla_summary:
+          type: array
+          items:
+            $ref: '#/components/schemas/SLAPerPriority'
+          description: SLA % per priority. Includes a row for each priority P1-P4.
+        total_response_pct:
+          type: ['number', 'null']
+          description: Overall response % across all priorities. null if no tickets.
+        total_resolution_pct:
+          type: ['number', 'null']
+          description: Overall resolution % across all priorities. null if no tickets.
+        breached_tickets:
+          type: array
+          items:
+            $ref: '#/components/schemas/BreachedTicketSummary'
+        mttr_business_days:
+          type: ['number', 'null']
+          description: >
+            MTTR in business days (BR B-13; GLO-001). null if no tickets were Resolved
+            in this month. Example: 1.5 business days (REQ S-13 AC-3).
+          example: 1.5
+        ticket_counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/TicketCountPerPriority'
+
+    # --- Finance export schemas ---
+
+    FinanceExportRow:
+      type: object
+      description: >
+        Logical structure of one row in the monthly finance export (BR B-18; REQ S-17; F-8).
+        The export is delivered as xlsx or csv (binary), not JSON. This schema documents
+        the columns so frontend, backend, and test agents share one definition.
+      required: [period, client_org, contract_type, ticket_ref, ticket_title, engineer, hours]
+      properties:
+        period:
+          type: string
+          description: Export month in YYYY-MM format.
+          example: "2026-10"
+        client_org:
+          type: string
+          description: Client organization name.
+          example: "Acme Corp"
+        contract_type:
+          type: string
+          enum: [hours_bank, fixed_fee]
+          description: Contract type for the ticket's client organization (BR B-16, B-17).
+        ticket_ref:
+          type: string
+          description: Ticket reference (GLO-001).
+          example: "TKT-00001"
+        ticket_title:
+          type: string
+          description: Ticket description (first line or full text as rendered in the export).
+        engineer:
+          type: string
+          description: Full name of the engineer who recorded the effort entry.
+          example: "Arjun Sharma"
+        hours:
+          type: number
+          exclusiveMinimum: 0
+          description: Decimal hours recorded in the effort entry. Always > 0 (BR B-15; A-020).
+          example: 2.5
+        remaining_hours_bank_balance:
+          type: ['number', 'null']
+          description: >
+            Hours bank balance at the end of the export month.
+            null for fixed_fee contracts (BR B-17; A-011 confirmed).
+            May be negative (BR B-16).
+          example: 42.0
+
+# =============================================================================
+# PATHS
+# =============================================================================
+
+paths:
+
+  # ---------------------------------------------------------------------------
+  # Authentication
+  # ---------------------------------------------------------------------------
+
+  /auth/login/:
+    post:
+      operationId: auth_login
+      summary: Sign in
+      description: >
+        Authenticate with username and password; create a server-side session.
+        Rate limited: 10 requests/minute per client IP, burst 5 (Nginx; THR T-2, T-35; ADR A-14).
+        Returns HTTP 401 with {"detail": "Invalid credentials.", "code": "authentication_failed"}
+        for all four refusal cases without indicating which field was wrong (A-019 confirmed; REQ S-21 AC-2).
+        Records a security event (successful sign-in or failed sign-in) in the audit trail (BR B-24; REQ S-32).
+      security: []
+      x-roles: []
+      x-csrf-required: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        "200":
+          description: Sign-in successful. Session cookie set.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserMe'
+        "401":
+          description: >
+            Sign-in refused. Generic message regardless of cause (A-019; REQ S-21 AC-2).
+            Cause may be: wrong password, unknown account name, deactivated user account,
+            or locked user account (5 failed sign-ins within 30 minutes; NFR N-5).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "429":
+          description: Rate limit exceeded (10 req/min per IP at Nginx proxy).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /auth/logout/:
+    post:
+      operationId: auth_logout
+      summary: Sign out
+      description: End the current session. Session cookie is invalidated server-side.
+      x-roles: [l1_support, l2l3_support, delivery_manager, client_user]
+      x-csrf-required: true
+      responses:
+        "204":
+          description: Session ended.
+        "401":
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /auth/me/:
+    get:
+      operationId: auth_me
+      summary: Current signed-in user
+      description: Returns the profile of the currently signed-in user.
+      x-roles: [l1_support, l2l3_support, delivery_manager, client_user]
+      x-csrf-required: false
+      responses:
+        "200":
+          description: Current user profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserMe'
+        "401":
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  # ---------------------------------------------------------------------------
+  # User account management (F-6)
+  # ---------------------------------------------------------------------------
+
+  /accounts/users/:
+    post:
+      operationId: accounts_users_create
+      summary: Create user account
+      description: >
+        Delivery manager creates a user account with a role and a temporary password (BR B-23; REQ S-20, S-30).
+        A client user account must include a client_organization_id (REQ S-20 AC-2).
+      x-roles: [delivery_manager]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserAccountRequest'
+      responses:
+        "201":
+          description: User account created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAccount'
+        "400":
+          description: Validation error (missing field, invalid role, password policy violation).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+    get:
+      operationId: accounts_users_list
+      summary: List user accounts
+      description: Returns a paginated list of all user accounts.
+      x-roles: [delivery_manager]
+      x-csrf-required: false
+      parameters:
+        - name: role
+          in: query
+          schema:
+            $ref: '#/components/schemas/RoleEnum'
+          required: false
+        - name: is_active
+          in: query
+          schema:
+            type: boolean
+          required: false
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          required: false
+      responses:
+        "200":
+          description: Paginated list of user accounts.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserAccountList'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /accounts/users/{id}/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      operationId: accounts_users_retrieve
+      summary: Get user account detail
+      x-roles: [delivery_manager]
+      x-csrf-required: false
+      responses:
+        "200":
+          description: User account detail.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAccount'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: User account not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+    patch:
+      operationId: accounts_users_update
+      summary: Update user account
+      description: >
+        Delivery manager updates name, email, role, or client organization (REQ S-20).
+        Changing role to client_user without a client_organization_id returns HTTP 400.
+      x-roles: [delivery_manager]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserAccountRequest'
+      responses:
+        "200":
+          description: User account updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAccount'
+        "400":
+          description: Validation error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: User account not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /accounts/users/{id}/deactivate/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: accounts_users_deactivate
+      summary: Deactivate user account
+      description: >
+        Deactivates the user account. The user can no longer sign in (REQ S-20 AC-3).
+        Ends all existing sessions of that user account (ADR A-7).
+      x-roles: [delivery_manager]
+      x-csrf-required: true
+      responses:
+        "200":
+          description: User account deactivated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAccount'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: User account not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /accounts/users/{id}/set-temp-password/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: accounts_users_set_temp_password
+      summary: Set temporary password
+      description: >
+        Delivery manager sets a temporary password on a user account (BR B-23; REQ S-30).
+        Clears a lockout immediately if the account is locked (REQ S-30 AC-3; NFR N-5).
+        Ends all other sessions of that user account (ADR A-7).
+        Password value is never returned in any response (THR T-16; BR B-24).
+        Records a security event (temporary_password_set) in the audit trail (BR B-24; REQ S-32 AC-4).
+      x-roles: [delivery_manager]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetTempPasswordRequest'
+      responses:
+        "200":
+          description: Temporary password set.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAccount'
+        "400":
+          description: Password does not meet the password policy (NFR N-5).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: User account not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /accounts/me/change-password/:
+    post:
+      operationId: accounts_me_change_password
+      summary: Change own password
+      description: >
+        Any signed-in user changes their own password (REQ S-31; BR B-23).
+        Requires the current password (REQ S-31 AC-4; OQ-053).
+        A wrong current password returns HTTP 400 (REQ S-31 AC-4).
+        Password value is never returned (THR T-16).
+        Records a security event (own_password_changed) in the audit trail (BR B-24; REQ S-32 AC-4).
+        A user cannot change another user's password via this endpoint (REQ S-31 AC-3; BR B-23).
+      x-roles: [l1_support, l2l3_support, delivery_manager, client_user]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+      responses:
+        "200":
+          description: Password changed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserMe'
+        "400":
+          description: >
+            Validation error: current_password wrong, or new_password does not meet policy (NFR N-5).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "401":
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  # ---------------------------------------------------------------------------
+  # Organization setup (F-1 setup, F-5)
+  # ---------------------------------------------------------------------------
+
+  /organizations/:
+    post:
+      operationId: organizations_create
+      summary: Create client organization
+      description: Delivery manager creates a client organization (REQ S-18; BR B-19, B-20).
+      x-roles: [delivery_manager]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationRequest'
+      responses:
+        "201":
+          description: Client organization created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        "400":
+          description: Validation error (e.g. missing name).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+    get:
+      operationId: organizations_list
+      summary: List client organizations
+      description: >
+        P1, P2, P3: returns all client organizations.
+        P4: returns only the client user's own client organization (ADR A-6; BR B-20).
+      x-roles: [l1_support, l2l3_support, delivery_manager, client_user]
+      x-csrf-required: false
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          required: false
+      responses:
+        "200":
+          description: Paginated list of client organizations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationList'
+
+  /organizations/{id}/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      operationId: organizations_retrieve
+      summary: Get client organization detail
+      x-roles: [l1_support, l2l3_support, delivery_manager]
+      x-csrf-required: false
+      responses:
+        "200":
+          description: Client organization detail.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        "404":
+          description: Client organization not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+    patch:
+      operationId: organizations_update
+      summary: Update client organization name
+      x-roles: [delivery_manager]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationRequest'
+      responses:
+        "200":
+          description: Client organization updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Client organization not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /organizations/{id}/sap-applications/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: organizations_sap_applications_create
+      summary: Add SAP application to client organization
+      description: >
+        Delivery manager adds an SAP application. Client users of other organizations
+        cannot choose it (REQ S-18 AC-2; BR B-20).
+      x-roles: [delivery_manager]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSAPApplicationRequest'
+      responses:
+        "201":
+          description: SAP application added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SAPApplication'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Client organization not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+    get:
+      operationId: organizations_sap_applications_list
+      summary: List SAP applications of client organization
+      description: >
+        P4 can list SAP applications of their own organization only (ADR A-6; BR B-20).
+        P1, P2, P3 can list any organization's SAP applications.
+      x-roles: [l1_support, l2l3_support, delivery_manager, client_user]
+      x-csrf-required: false
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          required: false
+      responses:
+        "200":
+          description: Paginated list of SAP applications.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSAPApplicationList'
+        "403":
+          description: P4 trying to access another organization's SAP applications.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Client organization not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  # ---------------------------------------------------------------------------
+  # Contract management (F-4, F-5)
+  # ---------------------------------------------------------------------------
+
+  /organizations/{id}/contracts/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: organizations_contracts_create
+      summary: Create contract
+      description: >
+        Delivery manager creates a contract for a client organization (REQ S-19; BR B-15).
+        Returns HTTP 409 if a second active contract is attempted (REQ S-19 AC-2; BR B-15).
+      x-roles: [delivery_manager]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContractRequest'
+      responses:
+        "201":
+          description: Contract created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contract'
+        "400":
+          description: Validation error (e.g. hours_bank requires contracted_hours).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "409":
+          description: Client organization already has an active contract (BR B-15; REQ S-19 AC-2).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+    get:
+      operationId: organizations_contracts_list
+      summary: List contracts for client organization
+      x-roles: [delivery_manager]
+      x-csrf-required: false
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          required: false
+      responses:
+        "200":
+          description: Paginated list of contracts.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedContractList'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /organizations/{id}/contracts/active/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      operationId: organizations_contracts_active
+      summary: Get active contract with hours bank balance
+      description: >
+        Returns the single active contract for the client organization, with the current
+        hours bank balance (BR B-16; REQ S-16). Returns HTTP 404 if no active contract.
+      x-roles: [delivery_manager]
+      x-csrf-required: false
+      responses:
+        "200":
+          description: Active contract.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contract'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: No active contract for this client organization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /organizations/{id}/contracts/{contract_id}/end/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: contract_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: organizations_contracts_end
+      summary: End active contract
+      description: >
+        Delivery manager ends the active contract. The ended contract keeps its effort entries
+        and hours bank balance (BR B-15; A-023 confirmed; REQ S-27).
+        Returns HTTP 409 if the contract is already ended.
+      x-roles: [delivery_manager]
+      x-csrf-required: true
+      responses:
+        "200":
+          description: Contract ended.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contract'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Contract not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "409":
+          description: Contract is already ended.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  # ---------------------------------------------------------------------------
+  # Company holiday list (F-2 SLA support)
+  # ---------------------------------------------------------------------------
+
+  /holidays/:
+    get:
+      operationId: holidays_list
+      summary: List company holiday dates
+      description: >
+        Returns all dates on the company holiday list. SLA timers exclude these dates
+        from business hours (BR B-2; REQ S-24).
+      x-roles: [l1_support, l2l3_support, delivery_manager]
+      x-csrf-required: false
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          required: false
+      responses:
+        "200":
+          description: Paginated list of holiday dates.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedHolidayDateList'
+        "403":
+          description: Caller is a client user (P4 cannot view the holiday list).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+    post:
+      operationId: holidays_create
+      summary: Add company holiday date
+      description: >
+        Delivery manager adds a date to the company holiday list. Takes effect immediately
+        for SLA calculations from the time of the change; no recalculation of time already
+        counted on running timers (BR B-2; OQ-050; REQ S-24 AC-1).
+      x-roles: [delivery_manager]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHolidayDateRequest'
+      responses:
+        "201":
+          description: Holiday date added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidayDate'
+        "400":
+          description: Validation error (e.g. invalid date format).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /holidays/{id}/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    delete:
+      operationId: holidays_delete
+      summary: Remove company holiday date
+      description: >
+        Delivery manager removes a date from the company holiday list. Takes effect
+        immediately; business time already excluded is not added back (BR B-2; OQ-050; REQ S-24 AC-2).
+      x-roles: [delivery_manager]
+      x-csrf-required: true
+      responses:
+        "204":
+          description: Holiday date removed.
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Holiday date not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  # ---------------------------------------------------------------------------
+  # Tickets (F-1)
+  # ---------------------------------------------------------------------------
+
+  /tickets/:
+    post:
+      operationId: tickets_create
+      summary: Raise ticket
+      description: >
+        Client user raises a ticket (incident or service request) for one of their
+        client organization's SAP applications (BR B-19; REQ S-1).
+        Attempting to raise a ticket for another organization's SAP application returns HTTP 403
+        (REQ S-1 AC-3; BR B-20; ADR A-6).
+        SLA timers start at raise time; if raised outside business hours, elapsed time is 0
+        until 09:00 IST the next business day (BR B-3; REQ S-1 AC-4).
+      x-roles: [client_user]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RaiseTicketRequest'
+      responses:
+        "201":
+          description: Ticket created. Response includes computed SLA state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        "400":
+          description: >
+            Validation error: missing ticket_type, sap_application_id, priority or description
+            (REQ S-1 AC-2).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "403":
+          description: >
+            SAP application does not belong to the client user's organization,
+            or caller is not a client user (REQ S-1 AC-3).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+    get:
+      operationId: tickets_list
+      summary: List tickets
+      description: >
+        Returns a paginated list of tickets. SLA state and escalation flag are computed on read (ADR A-10).
+        P4 sees only their own client organization's tickets (ADR A-6; BR B-20; REQ S-2, S-22).
+        P1, P2, P3 see all tickets.
+        Supports filtering by status, priority, client_org_id, and sap_app_id.
+      x-roles: [l1_support, l2l3_support, delivery_manager, client_user]
+      x-csrf-required: false
+      parameters:
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/TicketStatusEnum'
+          required: false
+        - name: priority
+          in: query
+          schema:
+            $ref: '#/components/schemas/PriorityEnum'
+          required: false
+        - name: client_org_id
+          in: query
+          schema:
+            type: integer
+          required: false
+          description: Filter by client organization (P4 sees only their own org regardless).
+        - name: sap_app_id
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          required: false
+      responses:
+        "200":
+          description: Paginated list of tickets with SLA state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTicketList'
+
+  /tickets/{id}/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      operationId: tickets_retrieve
+      summary: Get ticket detail
+      description: >
+        Returns ticket detail with current SLA state and escalation flag (computed on read, ADR A-10).
+        P4 sees only their own client organization's tickets; trying to access another
+        organization's ticket returns HTTP 403 with no detail (ADR A-6; REQ S-22 AC-2).
+        P4 does not see the audit trail (BR B-22; REQ S-2 AC-3).
+      x-roles: [l1_support, l2l3_support, delivery_manager, client_user]
+      x-csrf-required: false
+      responses:
+        "200":
+          description: Ticket detail.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        "403":
+          description: Access to another organization's ticket (P4 only; no detail returned; REQ S-22 AC-2).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /tickets/{id}/priority/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    patch:
+      operationId: tickets_change_priority
+      summary: Change ticket priority with reason
+      description: >
+        L1 support engineer changes a ticket's priority with a mandatory reason (BR B-7; REQ S-4).
+        Only running SLA timers recalculate from the raise time against the new priority's targets;
+        stopped timers keep their met/breached result (BR B-7).
+        If this is the first L1 action, the response clock stops and is judged against the new
+        priority's response target (BR B-4; OQ-046).
+        Returns HTTP 409 if the ticket is Resolved or Closed (REQ S-4 AC-4; BR B-7).
+        Missing reason returns HTTP 400 (REQ S-4 AC-3).
+      x-roles: [l1_support]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePriorityRequest'
+      responses:
+        "200":
+          description: Priority changed. Response includes recalculated SLA state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        "400":
+          description: Missing reason (REQ S-4 AC-3).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "403":
+          description: Caller is not an L1 support engineer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "409":
+          description: Ticket is Resolved or Closed; priority change not allowed (REQ S-4 AC-4; BR B-7).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /tickets/{id}/assign/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: tickets_assign
+      summary: Assign ticket to L2/L3 support engineer
+      description: >
+        L1 support engineer assigns the ticket to an L2/L3 support engineer.
+        If this is the first L1 action, the response clock stops (BR B-4; REQ S-5 AC-1).
+        The escalation flag is removed on assignment (BR B-10; REQ S-5 AC-2).
+        Client users cannot change assignment (REQ S-5 AC-4).
+      x-roles: [l1_support]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignTicketRequest'
+      responses:
+        "200":
+          description: Ticket assigned. Response includes updated SLA state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        "400":
+          description: Validation error (e.g. assignee not an L2/L3 user).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "403":
+          description: Caller is not an L1 support engineer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /tickets/{id}/resolve/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: tickets_resolve
+      summary: Set ticket status to Resolved
+      description: >
+        Support engineer sets the ticket to Resolved. The resolution clock stops (BR B-5; REQ S-6).
+        The ticket enters the L1 queue for closure (BR B-11; REQ S-6 AC-2).
+        L2/L3 cannot close a Resolved ticket (REQ S-6 AC-4).
+      x-roles: [l1_support, l2l3_support]
+      x-csrf-required: true
+      responses:
+        "200":
+          description: Ticket set to Resolved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        "403":
+          description: Caller is not a support engineer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "409":
+          description: Ticket is not in a state that allows Resolved (already Resolved or Closed).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /tickets/{id}/close/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: tickets_close
+      summary: Close a Resolved ticket
+      description: >
+        L1 support engineer closes a Resolved ticket (BR B-11; REQ S-7).
+        Only Resolved tickets can be closed; returns HTTP 409 otherwise (REQ S-7 AC-2).
+        The resolution clock stop time is not changed (REQ S-7 AC-3; BR B-5).
+        No email or other message is sent to the client user; they see Closed status in APLX AMS
+        only (BR B-11; OQ-037; REQ S-7 AC-4).
+      x-roles: [l1_support]
+      x-csrf-required: true
+      responses:
+        "200":
+          description: Ticket closed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        "403":
+          description: Caller is not an L1 support engineer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "409":
+          description: Ticket is not Resolved (REQ S-7 AC-2; BR B-11).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /tickets/{id}/await-client/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: tickets_await_client_set
+      summary: Set awaiting client
+      description: >
+        The assigned support engineer sets the ticket to Awaiting client; SLA timers pause (BR B-6; REQ S-8).
+        Object-level permission: only the assigned support engineer can set awaiting client.
+        For a ticket still with L1 (no L2/L3 assigned), any L1 support engineer is the assigned
+        support engineer (A-024 confirmed; BR B-6).
+        A non-assigned support engineer returns HTTP 403.
+        Client users and non-assigned engineers cannot set awaiting client (REQ S-8 AC-4).
+      x-roles: [l1_support, l2l3_support]
+      x-csrf-required: true
+      responses:
+        "200":
+          description: Awaiting client set. SLA timers paused.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        "403":
+          description: Caller is not the assigned support engineer (object-level check).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "409":
+          description: Ticket is already in Awaiting client status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+    delete:
+      operationId: tickets_await_client_clear
+      summary: Clear awaiting client
+      description: >
+        The assigned support engineer manually clears awaiting client; SLA timers resume (BR B-6; REQ S-8).
+        A client user comment also clears it automatically (handled in POST /tickets/{id}/comments/;
+        no separate call needed from the client; REQ S-28 AC-2).
+        Object-level permission: only the assigned support engineer can clear awaiting client.
+      x-roles: [l1_support, l2l3_support]
+      x-csrf-required: true
+      responses:
+        "200":
+          description: Awaiting client cleared. SLA timers resumed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        "403":
+          description: Caller is not the assigned support engineer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "409":
+          description: Ticket is not in Awaiting client status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /tickets/{id}/comments/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: tickets_comments_create
+      summary: Add comment on ticket
+      description: >
+        Add a comment on a ticket (REQ S-28, S-29; BR B-6; DEC-026).
+        P4 (client user): can only comment on their own organization's tickets (BR B-20; REQ S-28 AC-4).
+        A P4 comment on a ticket in Awaiting client status clears awaiting client automatically
+        and resumes SLA timers (BR B-6; REQ S-28 AC-2).
+        An internal user (P1, P2, P3) comment does not clear awaiting client (BR B-6; REQ S-29 AC-2).
+        An L1 support engineer comment on a new ticket stops the response clock (BR B-4; REQ S-29 AC-4).
+        Client users of other organizations see HTTP 403 (REQ S-28 AC-4).
+      x-roles: [l1_support, l2l3_support, delivery_manager, client_user]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommentRequest'
+      responses:
+        "201":
+          description: Comment added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        "400":
+          description: Validation error (empty body).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "403":
+          description: P4 trying to comment on another organization's ticket.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+    get:
+      operationId: tickets_comments_list
+      summary: List comments on ticket
+      description: >
+        P4: only their own organization's tickets (ADR A-6; BR B-20).
+        All comments on the ticket are visible to internal users and to the client users
+        of the ticket's organization (BR B-6; REQ S-2 AC-1, S-28 AC-1, S-29 AC-1).
+      x-roles: [l1_support, l2l3_support, delivery_manager, client_user]
+      x-csrf-required: false
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          required: false
+      responses:
+        "200":
+          description: Paginated list of comments.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCommentList'
+        "403":
+          description: P4 trying to access another organization's ticket.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  # ---------------------------------------------------------------------------
+  # Effort tracking (F-4)
+  # ---------------------------------------------------------------------------
+
+  /tickets/{id}/effort/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: tickets_effort_create
+      summary: Record effort entry on ticket
+      description: >
+        Support engineer records their own effort on a ticket assigned to them (BR B-15; REQ S-15).
+        Object-level permission: caller must be the assigned support engineer (A-024 confirmed).
+        The client organization of the ticket must have an active contract; otherwise HTTP 409
+        (BR B-15; REQ S-27 AC-2).
+        Hours must be > 0 (A-020; REQ S-15 AC-2).
+        The effort entry is recorded in the audit trail (BR B-22; REQ S-15 AC-3).
+      x-roles: [l1_support, l2l3_support]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEffortEntryRequest'
+      responses:
+        "201":
+          description: Effort entry recorded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EffortEntry'
+        "400":
+          description: Validation error (hours <= 0, invalid date).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "403":
+          description: >
+            Caller is not the assigned support engineer (object-level; REQ S-15 AC-4).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "409":
+          description: No active contract for the ticket's client organization (BR B-15; REQ S-27 AC-2).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+    get:
+      operationId: tickets_effort_list
+      summary: List effort entries on ticket
+      x-roles: [l1_support, l2l3_support, delivery_manager]
+      x-csrf-required: false
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          required: false
+      responses:
+        "200":
+          description: Paginated list of effort entries for this ticket.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEffortEntryList'
+        "404":
+          description: Ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /effort/{effort_id}/:
+    parameters:
+      - name: effort_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    patch:
+      operationId: effort_update
+      summary: Edit effort entry
+      description: >
+        P1/P2: can edit their own effort entry until the end of the calendar month of the
+        entry's date (BR B-15; A-025 confirmed; REQ S-25 AC-1). Returns HTTP 409 after month end.
+        P3: can edit any effort entry at any time (REQ S-26 AC-1; BR B-15).
+        P3 cannot delete effort entries (REQ S-26 AC-4).
+        Hours must be > 0 (A-020).
+        The change is recorded in the audit trail with old and new value (BR B-22; REQ S-25 AC-1).
+      x-roles: [l1_support, l2l3_support, delivery_manager]
+      x-csrf-required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEffortEntryRequest'
+      responses:
+        "200":
+          description: Effort entry updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EffortEntry'
+        "400":
+          description: Validation error (hours <= 0; A-020).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "403":
+          description: >
+            P1/P2 trying to edit another engineer's entry (REQ S-25 AC-4; BR B-15).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Effort entry not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "409":
+          description: >
+            P1/P2 trying to edit entry after the end of its calendar month
+            (REQ S-25 AC-3; BR B-15; A-025).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+    delete:
+      operationId: effort_delete
+      summary: Delete own effort entry
+      description: >
+        P1/P2 can delete their own effort entry until the end of the calendar month of
+        the entry's date (BR B-15; A-025; REQ S-25 AC-2). Returns HTTP 409 after month end.
+        P3 cannot delete effort entries (REQ S-26 AC-4); P3 must use PATCH.
+        The deletion is recorded in the audit trail (BR B-22; REQ S-25 AC-2).
+      x-roles: [l1_support, l2l3_support]
+      x-csrf-required: true
+      responses:
+        "204":
+          description: Effort entry deleted.
+        "403":
+          description: >
+            Caller trying to delete another engineer's entry (REQ S-25 AC-4).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Effort entry not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "409":
+          description: >
+            Caller trying to delete entry after the end of its calendar month
+            (REQ S-25 AC-3; BR B-15; A-025).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  # ---------------------------------------------------------------------------
+  # Service reporting and dashboards (F-3)
+  # ---------------------------------------------------------------------------
+
+  /reports/dashboard/:
+    get:
+      operationId: reports_dashboard
+      summary: Live dashboard
+      description: >
+        Returns the current live dashboard: open ticket counts, SLA timer states,
+        escalation flags, and hours bank balances per client organization and SAP application
+        (REQ S-12; BR B-8, B-9, B-10, B-16). Client users (P4) are refused (REQ S-12 AC-4).
+        SLA states computed on read (ADR A-10).
+      x-roles: [l1_support, l2l3_support, delivery_manager]
+      x-csrf-required: false
+      responses:
+        "200":
+          description: Live dashboard.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+        "403":
+          description: Client user access refused (REQ S-12 AC-4).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /reports/client-reports/{org_id}/{year}/{month}/generate/:
+    parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: year
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 2026
+      - name: month
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 12
+          example: 9
+    post:
+      operationId: reports_client_reports_generate
+      summary: Generate monthly client report
+      description: >
+        Delivery manager generates the monthly client report for a client organization
+        and calendar month (BR B-14; REQ S-13). The report is initially not published
+        (is_published: false). If a report for this org/year/month already exists,
+        it is regenerated with the latest data. Returns HTTP 409 if the month is the
+        current or a future month (data not yet complete; A-015 open assumption).
+        Calculations: response %, resolution % per priority (BR B-12); MTTR (BR B-13);
+        breached tickets; ticket counts per priority (BR B-14).
+      x-roles: [delivery_manager]
+      x-csrf-required: true
+      responses:
+        "201":
+          description: Report generated (not yet published).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonthlyClientReport'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Client organization not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /reports/client-reports/{org_id}/{year}/{month}/publish/:
+    parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: year
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: month
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 12
+    post:
+      operationId: reports_client_reports_publish
+      summary: Publish monthly client report
+      description: >
+        Delivery manager publishes the generated monthly client report. After publication,
+        client users of that organization can view and download it (BR B-14; REQ S-13, S-14 AC-4).
+        Returns HTTP 409 if the report has not been generated yet.
+      x-roles: [delivery_manager]
+      x-csrf-required: true
+      responses:
+        "200":
+          description: Report published.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonthlyClientReport'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Client organization not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "409":
+          description: Report not yet generated; generate before publishing.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /reports/client-reports/{org_id}/{year}/{month}/:
+    parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: year
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: month
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 12
+    get:
+      operationId: reports_client_reports_retrieve
+      summary: View monthly client report
+      description: >
+        Internal users (P1, P2, P3) can view any report, published or not.
+        P4 can view only their own organization's published reports
+        (BR B-14; REQ S-14 AC-3, AC-4; ADR A-6).
+        Returns HTTP 404 if P4 tries to access another organization's report (REQ S-14 AC-3).
+        Returns HTTP 404 if P4 tries to access an unpublished report (REQ S-14 AC-4).
+      x-roles: [l1_support, l2l3_support, delivery_manager, client_user]
+      x-csrf-required: false
+      responses:
+        "200":
+          description: Monthly client report.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonthlyClientReport'
+        "404":
+          description: Report not found or not accessible (P4 data boundary or not published).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /reports/client-reports/{org_id}/{year}/{month}/download/:
+    parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: year
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: month
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 12
+    get:
+      operationId: reports_client_reports_download
+      summary: Download monthly client report as Excel or PDF
+      description: >
+        Download the monthly client report in Excel (.xlsx) or PDF format.
+        The ?format= parameter selects the format (xlsx or pdf).
+        P4: only their own organization's published reports (ADR A-6; BR B-20; REQ S-14 AC-1, AC-2, AC-3).
+        Files generated on request; not stored on disk (ADR A-12; A-029 open assumption).
+        Excel export cells starting with = + - @ are prefixed to prevent formula injection
+        (THR T-14 control; ADR A-12 follow-up).
+      x-roles: [l1_support, l2l3_support, delivery_manager, client_user]
+      x-csrf-required: false
+      parameters:
+        - name: format
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [xlsx, pdf]
+          description: Download format. xlsx uses XlsxWriter; pdf uses WeasyPrint (ADR A-12; A-029).
+      responses:
+        "200":
+          description: Report file download.
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Missing or invalid format parameter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "404":
+          description: Report not found or not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  # ---------------------------------------------------------------------------
+  # Finance export (F-8)
+  # ---------------------------------------------------------------------------
+
+  /reports/finance-export/{year}/{month}/:
+    parameters:
+      - name: year
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 2026
+      - name: month
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 12
+          example: 10
+    get:
+      operationId: reports_finance_export
+      summary: Download finance export as Excel or CSV
+      description: >
+        Delivery manager downloads the monthly finance export with one row per effort entry
+        recorded in the given calendar month (BR B-18; REQ S-17).
+        Columns per row (see FinanceExportRow schema): period (YYYY-MM), client_org,
+        contract_type (hours_bank or fixed_fee), ticket_ref, ticket_title, engineer
+        (full name), hours (decimal > 0), remaining_hours_bank_balance (null for
+        fixed_fee contracts; BR B-17; A-011 confirmed).
+        Files generated on request; not stored on disk (ADR A-12).
+        Excel cells with formula prefix characters are escaped (THR T-14; ADR A-12 follow-up).
+        APLX AMS sends nothing to finance (BR B-18; OQ-038; REQ S-17 AC-4).
+      x-roles: [delivery_manager]
+      x-csrf-required: false
+      parameters:
+        - name: format
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [xlsx, csv]
+          description: Download format (BR B-18; REQ S-17 AC-1, AC-4; A-029 open assumption).
+      responses:
+        "200":
+          description: Finance export file download.
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Missing or invalid format parameter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        "403":
+          description: Caller is not the delivery manager.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  # ---------------------------------------------------------------------------
+  # Audit trail (F-7)
+  # ---------------------------------------------------------------------------
+
+  /tickets/{id}/audit/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      operationId: tickets_audit_list
+      summary: List audit entries for a ticket
+      description: >
+        Returns the audit trail for a ticket: status, priority, assignment, and effort
+        changes, each with user, date, time, old value, and new value (BR B-22; REQ S-23; A-016).
+        Client users (P4) cannot view the audit trail (BR B-22; REQ S-2 AC-3; REQ S-23 AC-3).
+        No user can edit or delete audit entries (BR B-22; REQ S-23 AC-4).
+        Security events are in /api/audit/security-events/, not here (BR B-24; REQ S-33).
+      x-roles: [l1_support, l2l3_support, delivery_manager]
+      x-csrf-required: false
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          required: false
+      responses:
+        "200":
+          description: Paginated audit entries for the ticket.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAuditEntryList'
+        "403":
+          description: Caller is a client user (P4) — access refused.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+        "404":
+          description: Ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'
+
+  /audit/security-events/:
+    get:
+      operationId: audit_security_events_list
+      summary: View security events
+      description: >
+        Returns security events from the audit trail (BR B-24; REQ S-33).
+        P3 (delivery manager): can view security events for any user account; use ?account_id=
+        to filter by user account (REQ S-33 AC-1; OQ-064).
+        P1/P2 (L1/L2/L3 support engineer): can view their own security events only;
+        attempting to view another account's events returns HTTP 403 (REQ S-33 AC-2, AC-3; OQ-064).
+        P4 (client user): cannot view any security events, own or otherwise (REQ S-33 AC-4; BR B-24).
+        Security event types (BR B-24): successful_sign_in, failed_sign_in, account_lockout,
+        temporary_password_set, own_password_changed.
+        Failed sign-in with unknown account name recorded with the account name as typed (OQ-065; BR B-24).
+        No user can edit or delete security events (BR B-22, B-24; REQ S-33 AC-4).
+      x-roles: [l1_support, l2l3_support, delivery_manager]
+      x-csrf-required: false
+      parameters:
+        - name: account_id
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: >
+            P3 only: filter security events by user account ID. P1/P2 may only omit this
+            parameter (returns their own events) or pass their own account_id.
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          required: false
+      responses:
+        "200":
+          description: Paginated security events.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAuditEntryList'
+        "403":
+          description: P1/P2 trying to view another account's security events; or P4 access.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleError'

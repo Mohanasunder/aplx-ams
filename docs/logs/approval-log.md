@@ -62,3 +62,13 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-17 11:25 | CST-001 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Reviewed after validation run 6; gate decisions DEC-027 to DEC-038 applied; THR-001 envelope-opening log proposal adopted as DEC-039. |
 | 2026-10-17 11:25 | RSK-003 | 0.3 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Reviewed after validation run 6; gate decisions DEC-027 to DEC-038 applied; THR-001 envelope-opening log proposal adopted as DEC-039. |
 | 2026-10-17 11:25 | SUM-003 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | Reviewed after validation run 6; gate decisions DEC-027 to DEC-038 applied; THR-001 envelope-opening log proposal adopted as DEC-039. |
+| 2026-10-17 11:54 | PIB-004 | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | Phase 4 entry interview complete; all blockers resolved; 6 decisions recorded DEC-040 to DEC-045 |
+| 2026-10-17 14:04 | DBD-001 | 0.1 | Approve | Mohanasunder | Architect / tech lead + UX | Pass | - | Phase 4 design package approved after 3 checker runs. All Majors and Minors resolved. |
+| 2026-10-17 14:04 | API-001 | 0.1 | Approve | Mohanasunder | Architect / tech lead + UX | Pass | - | Phase 4 design package approved. |
+| 2026-10-17 14:04 | BED-001 | 0.1 | Approve | Mohanasunder | Architect / tech lead + UX | Pass | - | Phase 4 design package approved. |
+| 2026-10-17 14:04 | UIS-001 | 0.1 | Approve | Mohanasunder | Architect / tech lead + UX | Pass | - | Phase 4 design package approved. |
+| 2026-10-17 14:04 | PRM-001 | 0.1 | Approve | Mohanasunder | Architect / tech lead + UX | Pass | - | Phase 4 design package approved. |
+| 2026-10-17 14:04 | STD-001 | 0.1 | Approve | Mohanasunder | Architect / tech lead + UX | Pass | - | Phase 4 design package approved. |
+| 2026-10-17 14:04 | TST-001 | 0.1 | Approve | Mohanasunder | Architect / tech lead + UX | Pass | - | Phase 4 design package approved. |
+| 2026-10-17 14:11 | INT-004 | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | Phase 4 intake artifact; content captured in PIB-004 which is Approved. Approving formally to close the Phase 4 record. |
+| 2026-10-17 14:11 | IRC-005 | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | Phase 4 intake artifact; content captured in PIB-004 which is Approved. Approving formally to close the Phase 4 record. |

@@ -48,10 +48,10 @@ Files that hold production environment settings. Builders never read or change t
 
 | Item | Value |
 | --- | --- |
-| Backend language and framework | <to be set in Phase 4> |
-| Frontend language and framework | <to be set in Phase 4> |
-| Database | <to be set in Phase 4> |
-| Folder layout | <to be set in Phase 4> |
-| Naming conventions | <to be set in Phase 4> |
-| Coverage targets | <to be set in Phase 4> |
-| Logging format | <to be set in Phase 4> |
+| Backend language and framework | Python 3.13 + Django 5.2 LTS + DRF 3.x (Gunicorn WSGI server) |
+| Frontend language and framework | React 18.x + TypeScript 5.x + Vite 5.x + MUI v6 |
+| Database | PostgreSQL 18 |
+| Folder layout | `src/aplx_ams_django/` (project), `src/<app>/` (accounts, organizations, tickets, sla, effort, reports, audit), `src/frontend/src/` (React) |
+| Naming conventions | Python: snake_case modules/funcs/vars, PascalCase classes, UPPER_SNAKE_CASE constants; TypeScript: PascalCase components, camelCase funcs/vars, UPPER_SNAKE_CASE constants |
+| Coverage targets | Backend Python: 80% line coverage; frontend TypeScript: 70% line coverage |
+| Logging format | `%(asctime)s %(levelname)s %(name)s %(message)s` UTC; never log secrets or passwords |
