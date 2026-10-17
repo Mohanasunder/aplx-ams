@@ -86,7 +86,7 @@ Approved 2026-10-17 by Mohanasunder (Architect / tech lead).
 
 | FEAT | Title | Depends on | Supplementary artifacts status |
 | --- | --- | --- | --- |
-| FEAT-000 | Walking Skeleton — Backend Scaffold and CI Pipeline | none (foundation) | FEAT-000-ACC, FEAT-000-TASKS, FEAT-000-STATUS Approved v0.1 (2026-10-18) |
+| FEAT-000 | Walking Skeleton — Backend Scaffold and CI Pipeline | none (foundation) | FEAT-000-ACC, FEAT-000-TASKS, FEAT-000-STATUS Approved v0.1 (2026-10-18); FEAT-000-TESTS Approved v0.1 (2026-10-18, Mohanasunder, Tech lead) |
 | FEAT-001 | Frontend Scaffold — React + Vite + Tailwind | FEAT-000 | FEAT-001-ACC, FEAT-001-TASKS, FEAT-001-STATUS Approved v0.1 (2026-10-18) |
 | FEAT-035 | E2E CI Scaffold | FEAT-000, FEAT-001 | FEAT-035-ACC, FEAT-035-TASKS, FEAT-035-STATUS Approved v0.1 (2026-10-18) |
 
@@ -112,9 +112,28 @@ These three features carry no REQ story (they are enabling features). They are l
 | WAV-001 v0.1 (wave-plan.md) | FBD-001 v0.1 | FEAT-000 through FEAT-035 (ordered by wave) |
 | ENV-001 v0.1 (environment-plan.md) | STD-001 v0.1, BED-001 v0.1, DBD-001 v0.1 | FEAT-000 through FEAT-035 |
 
+## Phase 6 Cross-Artifact Traceability Links
+
+### FEAT-000 Test Set (Approved 2026-10-18)
+
+Traceability chain: STD-001, TST-001 → FEAT-000-ACC → FEAT-000-TESTS
+
+| Link | Detail |
+| --- | --- |
+| STD-001 v0.1 → FEAT-000-TESTS | Coding standards and CI gate criteria (AC-1, AC-3, AC-4) map to CI-gate checks in FEAT-000-TESTS |
+| TST-001 v0.1 → FEAT-000-TESTS | Test strategy criterion AC-2 maps to `test_health_returns_200` in `src/aplx_ams_django/tests/test_health.py` |
+| FEAT-000-ACC v0.1 → FEAT-000-TESTS | All four acceptance criteria (AC-1 to AC-4) covered by FEAT-000-TESTS; AC-2 by pytest, AC-1/AC-3/AC-4 by CI gates |
+| FEAT-000-TESTS v0.1 (Approved) | Approver: Mohanasunder (Tech lead), 2026-10-18; branch: feature/FEAT-000-walking-skeleton; test commit: 6586f38 |
+
+Build status: In progress (Phase 6 build has begun; Mode B implementation follows approved test set).
+
 ## Requirements with No Design ID
 
 None. All 33 in-scope stories (REQ S-1 to S-33, Priority: Must / Should / Could) are covered by API-001, BED-001, UIS-001, PRM-001, and TST-001. DBD-001 is linked to user stories transitively via BED-001.
+
+## `scripts/traceability.py report` Output (Phase 6 update, 2026-10-18)
+
+Note: `python3` is not available in the CI/agent shell on this machine (Windows Store alias only; no Python runtime installed). Script could not be re-run on 2026-10-18. The Phase 5 output below remains the last valid run. Feature, Test cases, and Status columns for FEAT-000 are updated manually from FEAT-000-TESTS.md front matter (status: Approved, confirmed directly). The Orchestrator should re-run `python3 scripts/traceability.py report` from a Python-enabled environment to regenerate this section.
 
 ## `scripts/traceability.py report` Output (Phase 5, run 2026-10-17)
 
@@ -263,3 +282,5 @@ Traceability (phase 5 gate): 33 stories, 131 story criteria, 36 features, 0 orph
 ```
 
 Phase 5 gate: PASS. 0 orphans. All 33 in-scope stories have a feature assignment. 36 approved feature plans exist (FEAT-000 through FEAT-035). No requirements are missing a feature ID.
+
+Note (2026-10-18): Phase 7 gate (`--phase 7`) has not yet been run; project is in Phase 6 (Build). The Phase 5 check result above remains valid. `python3` is not available in the agent shell on 2026-10-18; re-run from a Python-enabled environment when Phase 6 completes.
