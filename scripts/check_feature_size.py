@@ -317,7 +317,10 @@ def check_packages(fid, base):
         print(f"FAIL  {fid}: no plan folder under docs/05-build-plan/")
         return 1
     text = section_map(dirs[0] / "plan.md").get("New Packages", "")
-    approved = {(e, n.lower().replace("_", "-") if e == "pypi" else n.lower()): v.replace(" ", "")
+    # DEC-057: plan format uses '@' as separator before version (e.g. 'react @^18.3');
+    # strip the leading '@' from npm version specs so they match package.json format.
+    approved = {(e, n.lower().replace("_", "-") if e == "pypi" else n.lower()):
+                (v.lstrip("@") if e == "npm" else v).replace(" ", "")
                 for e, n, v in PKG_LINE.findall(text)}
     diff = git("diff", "--name-only", f"{base}...HEAD")
     if diff.returncode != 0:

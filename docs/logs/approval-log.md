@@ -223,3 +223,14 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-17 18:47 | FEAT-035-ACC | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | - |
 | 2026-10-17 18:47 | FEAT-035-TASKS | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | - |
 | 2026-10-17 18:47 | FEAT-035-STATUS | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | - |
+| 2026-10-17 19:43 | FEAT-000-TESTS | 0.1 | Approve | Mohanasunder | Tech lead | Pass with warnings | - | Test set approved for FEAT-000 walking skeleton. Mode B may begin. |
+| 2026-10-17 20:31 | PRD FEAT-000 | 0.1 | Approve | Mohanasunder | Tech lead | n/a | - | [review depth: Deep, tier Critical] [review: 20 min] |
+| 2026-10-17 20:32 | PRD FEAT-000 | 0.1 | Approve | Mohanasunder | Release manager | n/a | - | [review depth: Deep, tier Critical] [review: 5 min] |
+| 2026-10-17 21:01 | FEAT-001-TESTS | 0.1 | Approve | Mohanasunder | Tech lead | Pass | - | None |
+| 2026-10-17 21:36 | SCR S-5 | 0.1 | Approve | Mohanasunder | Tech lead | n/a | - | - |
+| 2026-10-17 21:38 | FEAT-001 | 0.2 | Approve | Mohanasunder | Tech lead | Pass | - | v0.2: adds 3 scaffold files and 3 npm peer deps per SCR S-5. |
+| 2026-10-17 22:33 | SCR S-6 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | None |
+| 2026-10-17 22:33 | ADR-001 | 0.3 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | ADR A-18 approved: AssignTicketRequest field rename to engineer_id for glossary compliance per SCR S-6. |
+| 2026-10-17 22:34 | API-001 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass | - | API-001 v0.2: AssignTicketRequest field rename to engineer_id per SCR S-6 and ADR A-18. No behavioral change. |
+| 2026-10-17 23:10 | PRD FEAT-001 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | [review depth: Deep, tier Critical] [review: 14 min] |
+| 2026-10-17 23:11 | PRD FEAT-001 | 0.1 | Approve | Mohanasunder | Release manager / DevOps | n/a | - | [review depth: Deep, tier Critical] [review: 14 min] |

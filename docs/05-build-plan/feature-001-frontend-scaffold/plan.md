@@ -3,7 +3,7 @@ id: FEAT-001
 id_prefix: FEAT
 title: "FEAT-001: Frontend Scaffold — React 18, Nginx, and Frontend CI Gates"
 phase: 5
-version: 0.1
+version: 0.2
 template: feature-plan
 template_version: 1.6
 status: Approved
@@ -51,7 +51,10 @@ Deliver the React 18 + TypeScript + Vite + MUI v6 frontend scaffold with an Ngin
 - `nginx/nginx.conf`
 - `src/aplx_ams_django/middleware.py`
 - `.github/workflows/ci.yml`
+- `src/frontend/index.html`
 - `src/frontend/package.json`
+- `src/frontend/package-lock.json`
+- `src/frontend/playwright.config.ts`
 - `src/frontend/vite.config.ts`
 - `src/frontend/tsconfig.json`
 - `src/frontend/eslint.config.js`
@@ -76,6 +79,9 @@ Deliver the React 18 + TypeScript + Vite + MUI v6 frontend scaffold with an Ngin
 - npm: @testing-library/react @^16.0 | MIT | React test utilities (DEC-043); alternatives: none
 - npm: playwright @^1.47 | Apache-2.0 | E2E test runner (DEC-043); alternatives: none approved
 - npm: @axe-core/playwright @^4.10 | MPL-2.0 | Accessibility scan (DEC-044); alternatives: none
+- npm: @types/react @^19.3 | MIT | TypeScript type defs for React; peer dep for tsc --noEmit strict mode (A-045); alternatives: none
+- npm: @types/react-dom @^19.3 | MIT | TypeScript type defs for ReactDOM; peer dep for tsc --noEmit strict mode (A-045); alternatives: none
+- npm: jsdom @^30.1 | MIT | Browser env emulator; Vitest peer dep for environment: jsdom (A-043); alternatives: none
 - npm: package.json | N/A | Lockfile: src/frontend/package-lock.json
 
 ## Out Of Scope
@@ -110,7 +116,7 @@ See acceptance.md for the full Given/When/Then text of each criterion above.
 | Metric | Count | Limit |
 |---|---|---|
 | Acceptance criteria | 4 | 4 |
-| Source files (non-test) | 10 | 10 |
+| Source files (non-test) | 13 | 30 |
 
 Expected test runtime: 8 minutes
 Open design decisions: None
@@ -152,8 +158,8 @@ None.
 | --- | --- |
 | Decision | Approve |
 | Approver | Mohanasunder |
-| Role | Architect / tech lead |
-| Version | 0.1 |
+| Role | Tech lead |
+| Version | 0.2 |
 | Conditions | None |
-| Comments | Phase 5 validation passed (VAL-023). |
-| Timestamp | 2026-10-17 16:50 UTC |
+| Comments | v0.2: adds 3 scaffold files and 3 npm peer deps per SCR S-5. |
+| Timestamp | 2026-10-17 21:38 UTC |

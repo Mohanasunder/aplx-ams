@@ -562,9 +562,9 @@ components:
 
     AssignTicketRequest:
       type: object
-      required: [assignee_id]
+      required: [engineer_id]
       properties:
-        assignee_id:
+        engineer_id:
           type: integer
           description: User account ID of the L2/L3 support engineer to assign (REQ S-5).
 
@@ -2044,7 +2044,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Ticket'
         "400":
-          description: Validation error (e.g. assignee not an L2/L3 user).
+          description: Validation error (e.g. engineer_id is not an L2/L3 user ID).
           content:
             application/json:
               schema:

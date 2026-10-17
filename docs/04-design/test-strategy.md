@@ -111,11 +111,11 @@ Each Playwright test also runs `@axe-core/playwright` against every page the jou
 **Scope:** Static analysis and dependency checking run on every pull request in CI.
 
 **Tools and commands:**
-- SAST: `bandit -r src/ -ll` (flags medium- and high-severity findings; non-overridable gate).
+- SAST: `bandit -r src/ -ll` (flags medium- and high-level findings; non-overridable gate).
 - Dependency vulnerability: `pip-audit` (non-overridable gate).
 - Secret scan: `detect-secrets scan` (non-overridable gate).
 
-A finding that `bandit` rates as medium or high severity blocks the PR. The builder fixes the finding or raises an OQ-NNN with an explanation before the PR goes to human review.
+A finding that `bandit` rates as medium or high level blocks the PR. The builder fixes the finding or raises an OQ-NNN with an explanation before the PR goes to human review.
 
 ## Tools
 

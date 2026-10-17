@@ -29,7 +29,7 @@ Covers the 4 acceptance criteria for FEAT-000 (walking skeleton, Enabling). All 
 STD-001 AC-1: Given `docker compose build app` is run on a fresh clone, when the build completes, then the Django application Docker image is built successfully and the command exits 0.
 TST-001 AC-2: Given a fresh clone with one health endpoint integration test, when `pytest src/ --cov=src --cov-fail-under=80 --timeout=600` runs against the test database, then the test passes, coverage is 80% or above, and the command exits 0.
 STD-001 AC-3: Given the backend source in `src/`, when `ruff check src/ && ruff format --check src/ && mypy src/ --strict` run in sequence, then each command exits 0 on the skeleton codebase.
-STD-001 AC-4: Given the CI pipeline in `.github/workflows/ci.yml`, when `bandit -r src/ -ll && pip-audit && detect-secrets scan` run, then each exits 0 with no high-severity findings, no known vulnerable dependencies, and no detected secrets.
+STD-001 AC-4: Given the CI pipeline in `.github/workflows/ci.yml`, when `bandit -r src/ -ll && pip-audit && detect-secrets scan` run, then each exits 0 with no medium or high level security findings, no known vulnerable dependencies, and no detected secrets.
 
 ## Test Scenarios
 - AC-1: Run `docker compose build app` on a clean environment; assert exit code 0 and image tag present.
