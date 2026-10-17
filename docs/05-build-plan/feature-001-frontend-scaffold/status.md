@@ -26,7 +26,7 @@ Tracks the build-phase progress of FEAT-001. Updated by the builder agent during
 - Branch: feature/FEAT-001-frontend-scaffold
 - Base commit: 3e81932
 - Started: 2026-10-17
-- PR: <draft PR link>
+- PR: https://github.com/Mohanasunder/aplx-ams/pull/5
 
 ## Progress
 - State: Approved — awaiting merge
