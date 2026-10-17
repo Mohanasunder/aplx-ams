@@ -1,5 +1,5 @@
-// FEAT-001 Mode A stub — no implementation logic.
-// Mode B will replace this with the real root component (renders <div>APLX AMS</div>).
-export default function App() {
-  return null;
+import React from 'react';
+
+export default function App(): React.JSX.Element {
+  return <div>APLX AMS</div>;
 }

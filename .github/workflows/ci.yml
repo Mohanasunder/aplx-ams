@@ -304,3 +304,37 @@ jobs:
 
       - name: Build Docker image (app service only, no push)
         run: docker compose build app
+
+      - name: Validate nginx config syntax
+        run: docker run --rm -v "$(pwd)/nginx/nginx.conf:/etc/nginx/conf.d/default.conf" nginx:stable nginx -t
+
+  # --------------------------------------------------------------------------
+  # Frontend — Node 24, Vitest (70% coverage gate), ESLint, tsc, Playwright
+  # --------------------------------------------------------------------------
+  frontend:
+    name: Frontend (Node 24)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install npm dependencies
+        run: npm --prefix src/frontend ci
+
+      - name: Build frontend
+        run: npm --prefix src/frontend run build
+
+      - name: Run Vitest tests with coverage (70% gate)
+        run: npm --prefix src/frontend run test -- --run --coverage
+
+      - name: Lint (ESLint)
+        run: npx --prefix src/frontend eslint src/frontend/src/ --max-warnings=0
+
+      - name: Type check (tsc --noEmit)
+        run: npx --prefix src/frontend tsc --noEmit --project src/frontend/tsconfig.json
+
+      - name: E2E placeholder (no tests yet — DEC-056, A-041)
+        run: npx --prefix src/frontend playwright test --pass-with-no-tests
