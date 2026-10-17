@@ -120,3 +120,50 @@ Neither finding constitutes a non-overridable Blocker under the automated-gates 
 - [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
 - [x] Assumptions and open questions are logged and linked
 - [x] Traceability links are present upstream and downstream
+
+---
+
+## SSR FEAT-001: Security Scan — Frontend Scaffold
+
+<!-- ssr_status: Pass (with decisions) -->
+<!-- ssr_author: security-scanner -->
+<!-- ssr_date: 2026-10-18 -->
+
+### Input References
+- FEAT-001 plan.md v0.2 (Approved 2026-10-17)
+- .ai/standards/automated-gates.md
+- .secrets.baseline (committed)
+
+### Gate Results
+
+| Gate | Command | Exit Code | Result |
+| --- | --- | --- | --- |
+| SAST | `bandit -r src/ -ll` | 0 | PASS — no MEDIUM or HIGH issues; 21 LOW below threshold |
+| Dependency scan (project) | `pip-audit -r requirements.txt` | 0 | PASS — no known vulnerabilities in APLX AMS packages |
+| Dependency scan (env) | `pip-audit` (bare) | 1 | ENVIRONMENTAL NOISE — flags Claude Code infrastructure packages (langchain-core, pyjwt, etc.) not in requirements.txt; accepted per DEC-065 |
+| Secrets scan | `detect-secrets scan` | 0 | PASS — all findings previously acknowledged in .secrets.baseline |
+
+### Manual Review — nginx/nginx.conf
+Fixed during scan cycle (Medium findings resolved):
+- `server_tokens off` added
+- Security headers (`X-Frame-Options`, `X-Content-Type-Options`, `Content-Security-Policy`, `Referrer-Policy`) added to server block for static-file responses
+- HSTS discrepancy resolved: middleware.py comment updated to clarify HSTS is a Phase 8 production Nginx concern
+
+### Manual Review — middleware.py
+
+| Finding | Status |
+| --- | --- |
+| `unsafe-inline` in `style-src` | Accepted per DEC-066 — MUI v6 Emotion requires inline styles; no unsafe-eval present |
+| session_start uninitialized (F-1) | Fixed per AIR FEAT-001 F-1 before this report saved |
+| Session timeouts | Correct (after F-1 fix) |
+
+### Manual Review — docker-compose.yml
+No plaintext secrets; Docker file secrets used. secrets/*.txt gitignored. Verified.
+
+### Overall Verdict
+**PASS with decisions.** All non-overridable gate commands pass against APLX AMS project packages. nginx.conf medium findings fixed. middleware.py CSP unsafe-inline accepted per DEC-066. session_start fix applied per AIR FEAT-001 F-1.
+
+### Traceability Links
+- Upstream: FEAT-001 plan.md v0.2; STD-001 v0.1; automated-gates.md; DEC-065; DEC-066
+- Downstream: PR FEAT-001 human review
+

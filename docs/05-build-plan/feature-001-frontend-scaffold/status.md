@@ -29,9 +29,9 @@ Tracks the build-phase progress of FEAT-001. Updated by the builder agent during
 - PR: <draft PR link>
 
 ## Progress
-- State: In progress
-- Assigned agents: builder
-- Last update: 2026-10-17
+- State: PR description written — ready for human review
+- Assigned agents: builder (implementation complete); documentation-writer (PR description written 2026-10-18)
+- Last update: 2026-10-18
 
 ## Blockers
 None.
@@ -43,8 +43,8 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: FEAT-001 plan.md; FEAT-001-ACC
-- Downstream: Phase 6 PR for FEAT-001
+- Upstream: FEAT-001 plan.md v0.2; FEAT-001-ACC v0.1; FEAT-001-TESTS v0.1
+- Downstream: PRD FEAT-001 (docs/06-build/pr-descriptions.md § PR FEAT-001); Phase 7 regression test suite
 
 ## Quality Checklist
 - [x] Every template section is filled, or marked "Not applicable - <reason>"

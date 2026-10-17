@@ -85,6 +85,7 @@ class TestAbsoluteSessionTimeoutMiddleware:
         response = mw(request)
         assert response.status_code == 200
         assert "last_activity" in request.session
+        assert "session_start" in request.session
 
     def test_authenticated_recent_activity_passes(self) -> None:
         mw = AbsoluteSessionTimeoutMiddleware(_get_response)

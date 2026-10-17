@@ -159,6 +159,138 @@ None.
 ---
 <!-- Add further ## PR FEAT-NNN: sections here as new features are built -->
 
+## PR FEAT-001: Frontend Scaffold — React 18, Nginx, and Frontend CI Gates
+
+<!-- pr_status: Draft -->
+<!-- pr_approver: -->
+<!-- pr_depth: Deep -->
+<!-- pr_review_minutes: -->
+
+### Input References
+- FEAT-001 plan.md v0.2 (Approved 2026-10-17, Mohanasunder)
+- FEAT-001-ACC v0.1 (Approved 2026-10-17, Mohanasunder)
+- FEAT-001-TESTS v0.1 (Approved 2026-10-18, Mohanasunder) — test commit `670019bd4e3b2ba5a69b206880b69971efed6618`
+- STD-001 v0.1 — APLX AMS: Coding Standards (Approved 2026-10-17)
+- TST-001 v0.1 — APLX AMS: Test Strategy (Approved 2026-10-17)
+- DEC-056 (2026-10-18) — Playwright placeholder with `--pass-with-no-tests`; no E2E tests in FEAT-001
+
+### Summary
+- Delivers the React 18 + TypeScript + Vite frontend scaffold (`src/frontend/`) with an Nginx proxy container and all frontend CI gates (ESLint, `tsc --noEmit`, Vitest with 70% coverage threshold), providing the baseline on which all subsequent story features build their UI.
+- Adds three Django middleware classes (`RLSContextMiddleware`, `AbsoluteSessionTimeoutMiddleware`, `SecurityHeadersMiddleware`) to `src/aplx_ams_django/middleware.py` per STD-001 § Backend file and folder structure and the OQ-061 session-timeout answer.
+- Wires the `frontend` job in `.github/workflows/ci.yml` covering npm install, build, test, ESLint, `tsc --noEmit`, and Playwright `--pass-with-no-tests`; all 4 acceptance criteria verified green on branch `feature/FEAT-001-frontend-scaffold`.
+
+### Linked Artifacts
+- FEAT-001 plan.md v0.2
+- FEAT-001-ACC v0.1
+- FEAT-001-TESTS v0.1
+- STD-001 v0.1 (Coding Standards — Approved Technology List, Automated Gate Commands)
+- TST-001 v0.1 (Test Strategy — Test Levels)
+- BED-001 v0.1 (Backend Design — Module Structure)
+- ADR A-3 (React 18 + Vite + TypeScript); ADR A-7 (session security)
+- DEC-056 (Playwright placeholder decision)
+
+### Changes
+**Frontend:**
+- `src/frontend/src/App.tsx` — React 18 root component rendering `<div>APLX AMS</div>`.
+- `src/frontend/src/main.tsx` — Vite entry point mounting `<App />` in the DOM root.
+- `src/frontend/src/App.test.tsx` — Vitest test (LOCKED): `TST-001 AC-1: renders App and finds "APLX AMS" text`; asserts `screen.getByText('APLX AMS')` finds a DOM node.
+- `src/frontend/package.json` — all npm packages at approved version specs (ADR A-3, DEC-041, DEC-043, DEC-044; peer deps A-043, A-045).
+- `src/frontend/package-lock.json` — lockfile.
+- `src/frontend/vite.config.ts` — `@vitejs/plugin-react` plugin; Vitest coverage via `@vitest/coverage-v8` with 70% threshold.
+- `src/frontend/tsconfig.json` — strict TypeScript (target ES2022, moduleResolution bundler).
+- `src/frontend/eslint.config.js` — `@typescript-eslint` parser and rules; ESLint 9 flat config format.
+- `src/frontend/index.html` — Vite HTML entry point required by `vite build` (A-042).
+- `src/frontend/playwright.config.ts` — Playwright placeholder; `testDir: './e2e'` prevents discovery of Vitest tests; no E2E tests (DEC-056, A-041, A-044).
+
+**Infrastructure:**
+- `nginx/nginx.conf` — proxies `/api/` to `app:8000`; serves `src/frontend/dist/` for all other paths.
+- `docker-compose.yml` — adds `frontend` (Node 24 LTS build service) and `nginx` services.
+
+**Backend:**
+- `src/aplx_ams_django/middleware.py` — `RLSContextMiddleware` (attaches RLS user kind and org ID to each request for DAL-layer Row-Level Security); `AbsoluteSessionTimeoutMiddleware` (60-minute rolling idle timeout and 12-hour absolute session timeout per OQ-061 answer, ADR A-7); `SecurityHeadersMiddleware` (CSP, X-Frame-Options DENY, X-Content-Type-Options nosniff, Referrer-Policy no-referrer on every response; HSTS delegated to Nginx per STD-001).
+
+**CI:**
+- `.github/workflows/ci.yml` — adds `frontend` job: `npm ci`, `npm run build`, `npm run test -- --run` (with coverage threshold), ESLint `--max-warnings=0`, `tsc --noEmit`, Playwright `--pass-with-no-tests`.
+
+### Tests
+**Test added:** `src/frontend/src/App.test.tsx` — `TST-001 AC-1: renders App and finds "APLX AMS" text`
+
+**How to run:**
+```
+cd src/frontend && npm run test -- --run
+```
+
+**Gate results (all pass on branch `feature/FEAT-001-frontend-scaffold`):**
+- Vitest: 1 collected, 1 passed. Coverage: 100% (exceeds 70% threshold).
+- ESLint (`cd src/frontend && npx eslint src/ --max-warnings=0`): PASS.
+- TypeScript (`cd src/frontend && npx tsc --noEmit`): PASS.
+- Build (`npm run build`): PASS — `dist/` written.
+- Playwright (`playwright test --pass-with-no-tests`): PASS — 0 tests collected (DEC-056).
+- CI `frontend` job (GitHub Actions): all steps exit 0.
+
+### Requirements Covered
+- STD-001 AC-1: `N/A — CI gate` — `npm run build` in the CI `frontend` job writes `dist/` and exits 0 (PASSING).
+- TST-001 AC-1: `TST-001 AC-1: renders App and finds "APLX AMS" text` — Vitest runs 1 test, passes, exits 0 (PASSING).
+- STD-001 AC-2: `N/A — CI gate` — ESLint and `tsc --noEmit` in the CI `frontend` job each exit 0 (PASSING).
+- TST-001 AC-2: `N/A — CI artefact` — CI `frontend` job all steps exit 0 (PASSING).
+
+### Known Gaps
+None. All 4 acceptance criteria are verified. Playwright E2E is intentionally deferred to the first story feature that adds a UI page (DEC-056, A-041).
+
+### Deviations From Plan
+- **ESLint CI invocation (approach only; no file changed outside the plan):** FEAT-001 plan.md § Implementation Steps 4 describes `npx eslint src/frontend/src/` run from the repo root. The implemented CI command is `cd src/frontend && npx eslint src/ --max-warnings=0`. Reason: ESLint 9 flat config requires `process.cwd()` to be the directory containing `eslint.config.js`; running from the repo root causes ESLint to skip the config and apply no rules. The plan wording was ambiguous on the exact invocation form; the command produces identical output and enforces the same rules.
+
+### Blockers
+None.
+
+### Risk Tier And Review Depth
+Tier: Critical — Deep review required (tech lead + release manager).
+
+This feature is the frontend CI infrastructure; every subsequent frontend story feature depends on it. A broken build gate, wrong TypeScript config, or Nginx misconfiguration blocks all subsequent frontend features. Per `.ai/standards/review-and-approval.md` § Approval tiers, Critical features require both the tech lead and the release manager as approvers, with Deep review depth.
+
+Deep review means: read every changed line of logic; review security against the threat model and permission matrix (auth, validation, secrets, data exposure); run the feature locally including failure paths; read every test for behavior.
+
+### Reviewer Checklist
+- [ ] Ran or previewed the feature (not only read the diff)
+- [ ] Every acceptance criterion is met
+- [ ] Change summary read: Known Gaps acceptable, Deviations From Plan justified (ESLint invocation), Blockers 'None'
+- [ ] No files changed outside the plan (all changed files are in FEAT-001 plan.md Files To Create Or Modify or the locked test set)
+- [ ] No packages added or upgraded beyond the plan's New Packages; each new package's license, maintenance, and known vulnerabilities checked (note: A-042 `index.html`, A-043 `jsdom`, A-044 `playwright.config.ts`, A-045 `@types/react` and `@types/react-dom` are plan omissions confirmed by assumptions, not new design decisions)
+- [ ] Tests assert behavior, not just that code runs (`getByText('APLX AMS')` asserts rendered content)
+- [ ] Approved test set (FEAT-001-TESTS v0.1) unchanged since approval; implementation started after test commit `670019bd4e3b2ba5a69b206880b69971efed6618`
+- [ ] Middleware security reviewed: RLS context set on each request; session flush on idle or absolute timeout; CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy on every response; HSTS delegated to Nginx per STD-001
+- [ ] Nginx config verified: `/api/` routes to `app:8000`, all other paths served from `dist/`; no open redirect
+- [ ] Contract (OpenAPI) and UI spec followed: Not applicable — scaffold feature; no API endpoints or pages added
+- [ ] Migrations: Not applicable — no database changes in this feature
+- [ ] Applicable learned rules (`.ai/standards/learned-rules.md`) followed
+- [ ] Checker validation summary and AI pre-review read; any "Proceeded on Fail" findings examined
+- [ ] Second approver obtained (Critical tier: both tech lead and release manager must approve)
+
+### Assumptions
+- A-041 (Confirmed, DEC-056, Mohanasunder 2026-10-18): FEAT-001's CI E2E job runs `playwright test --passWithNoTests`; no E2E test files added. The first story feature that adds a page adds real E2E tests and removes the flag.
+- A-042 (Open): `src/frontend/index.html` required by Vite but omitted from FEAT-001 plan.md Files To Create Or Modify. Added as standard Vite boilerplate. No design decision; no contract or schema implications. Logged in `docs/logs/assumptions-log.md`.
+- A-043 (Open): `jsdom` required peer dependency of Vitest when `environment: 'jsdom'` is set; omitted from FEAT-001 plan.md New Packages. Added to `devDependencies` at `^30.1.3`. Logged in `docs/logs/assumptions-log.md`.
+- A-044 (Open): Minimal `src/frontend/playwright.config.ts` with `testDir: './e2e'` prevents Playwright from discovering `App.test.tsx` and throwing a Vitest/Playwright incompatibility error. No E2E tests added. Logged in `docs/logs/assumptions-log.md`.
+- A-045 (Open): `@types/react` and `@types/react-dom` required by TypeScript to type-check React usage; omitted from FEAT-001 plan.md New Packages. Added to `devDependencies` at latest compatible versions. Logged in `docs/logs/assumptions-log.md`.
+
+### Open Questions
+None.
+
+### Traceability Links
+- Upstream: FEAT-001 plan.md v0.2; FEAT-001-ACC v0.1; FEAT-001-TESTS v0.1; STD-001 v0.1; TST-001 v0.1; BED-001 v0.1; ADR A-3; ADR A-7; DEC-056
+- Downstream: FEAT-002 through FEAT-035 (all subsequent frontend features build on this scaffold); Phase 7 regression test suite (`App.test.tsx` render test remains in scope)
+
+### Quality Checklist
+- [x] Every template section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] Vague words removed (etc., as needed, appropriate)
+
+---
+
 ## Assumptions
 - A-038 (Confirmed): Docker Compose file secrets at `/run/secrets/` for DB credentials; test database uses `DATABASE_URL` env var injected by CI service container. Logged in `docs/logs/assumptions-log.md`.
 

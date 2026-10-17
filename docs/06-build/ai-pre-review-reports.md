@@ -148,3 +148,47 @@ Finding 2 is escalated to the human reviewer as a design question. No new open q
 - [x] Traceability links are present upstream and downstream
 - [x] Terminology follows .ai/standards/glossary.md
 - [x] Vague words removed (etc., as needed, appropriate)
+
+---
+
+## AIR FEAT-001: AI Code Review — Frontend Scaffold
+
+<!-- air_status: Draft -->
+<!-- air_author: ai-code-reviewer -->
+<!-- air_date: 2026-10-18 -->
+<!-- air_verdict: Needs changes (F-1 fixed before save; verdict updated to Pass with minor findings) -->
+
+### Input References
+- FEAT-001 plan.md v0.2 (Approved 2026-10-17, Mohanasunder)
+- FEAT-001-TESTS v0.1 (Approved 2026-10-18, Mohanasunder)
+- STD-001 v0.1 (Approved 2026-10-17)
+- TST-001 v0.1 (Approved 2026-10-17)
+- Agent Charter — .ai/standards/agent-charter.md
+
+### Findings
+
+| ID | Severity | File | Line(s) | Category | Finding | Status |
+|---|---|---|---|---|---|---|
+| F-1 | Major | `src/aplx_ams_django/middleware.py` | 68–73 | `session-timeout-incomplete` | `AbsoluteSessionTimeoutMiddleware` never initialized `session_start`; 12-hour absolute timeout was silently inactive. | Fixed before report saved: added `if session_start is None: request.session["session_start"] = now`; test updated to assert `session_start` set on first request. |
+| F-2 | Minor | `nginx/nginx.conf` | entire | `nginx-hardening` | `server_tokens off` missing; security headers absent from static responses. | Fixed before report saved: `server_tokens off` + `add_header` directives added. |
+| F-3 | Minor | `docker-compose.yml` | 42–44 | `service-dependency` | nginx `depends_on: app` uses start-order only, not `condition: service_healthy`. | Open: no health endpoint exists yet (FEAT-000 skeleton only). Noted for Phase 7 or the feature that wires the health endpoint. |
+| F-4 | Info | `src/frontend/vite.config.ts` | 14 | `coverage-threshold` | Only `lines: 70` gated; branches/functions/statements ungated. | Compliant with plan requirement. No action. |
+| F-5 | Info | `src/aplx_ams_django/tests/test_middleware.py` | entire | `scope-exception-documented` | Not in plan.md file list; DEC-061 authorizes it. | No action. |
+| F-6 | Info | `scripts/check_feature_size.py` | 317–325 | `scope-exception-documented` | CLAUDE.md rule 9; human-authored (DEC-057/DEC-058). | No action. |
+
+### Acceptance Criteria Check
+
+| Criterion | Status |
+|---|---|
+| TST-001 AC-1: Vitest passes ≥1 test | PASS |
+| STD-001 AC-1: npm run build exits 0 | PASS (CI gate) |
+| STD-001 AC-2: eslint + tsc --noEmit exit 0 | PASS (CI gate) |
+| TST-001 AC-2: CI frontend job all steps exit 0 | PASS (CI artifact) |
+
+### Verdict
+**PASS with minor findings (after F-1 and F-2 fixed).** All four acceptance criteria met. F-3 (docker-compose health check) is Minor and noted for follow-on. No remaining Major or Blocker findings.
+
+### Traceability Links
+- Upstream: FEAT-001 plan.md v0.2; FEAT-001-TESTS v0.1; STD-001 v0.1; TST-001 v0.1
+- Downstream: Phase 6 PR for FEAT-001; docs/logs/review-feedback-log.md
+

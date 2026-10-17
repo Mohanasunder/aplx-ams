@@ -66,7 +66,9 @@ class AbsoluteSessionTimeoutMiddleware:
             return JsonResponse(_SESSION_EXPIRED_RESPONSE_BODY, status=401)
 
         session_start: int | None = request.session.get("session_start")
-        if session_start is not None and (now - session_start) > _ABSOLUTE_TIMEOUT_SECONDS:
+        if session_start is None:
+            request.session["session_start"] = now
+        elif (now - session_start) > _ABSOLUTE_TIMEOUT_SECONDS:
             request.session.flush()
             return JsonResponse(_SESSION_EXPIRED_RESPONSE_BODY, status=401)
 
@@ -78,8 +80,9 @@ class SecurityHeadersMiddleware:
     """
     Add required HTTP security headers to every response per STD-001 § HTTP security headers.
 
-    Note: Strict-Transport-Security is intentionally omitted — that header is
-    set by Nginx (STD-001 § HTTP security headers, last row).
+    Note: Strict-Transport-Security is intentionally omitted — it will be
+    set by the production Nginx config in Phase 8 (SSL termination required).
+    The development nginx.conf listens on HTTP only.
     """
 
     def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]) -> None:
