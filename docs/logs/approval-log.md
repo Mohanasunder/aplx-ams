@@ -232,3 +232,5 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-17 22:33 | SCR S-6 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | None |
 | 2026-10-17 22:33 | ADR-001 | 0.3 | Approve | Mohanasunder | Architect / tech lead | Pass with warnings | - | ADR A-18 approved: AssignTicketRequest field rename to engineer_id for glossary compliance per SCR S-6. |
 | 2026-10-17 22:34 | API-001 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass | - | API-001 v0.2: AssignTicketRequest field rename to engineer_id per SCR S-6 and ADR A-18. No behavioral change. |
+| 2026-10-17 23:10 | PRD FEAT-001 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | [review depth: Deep, tier Critical] [review: 14 min] |
+| 2026-10-17 23:11 | PRD FEAT-001 | 0.1 | Approve | Mohanasunder | Release manager / DevOps | n/a | - | [review depth: Deep, tier Critical] [review: 14 min] |

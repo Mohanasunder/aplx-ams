@@ -29,8 +29,8 @@ Tracks the build-phase progress of FEAT-001. Updated by the builder agent during
 - PR: <draft PR link>
 
 ## Progress
-- State: PR description written — ready for human review
-- Assigned agents: builder (implementation complete); documentation-writer (PR description written 2026-10-18)
+- State: Approved — awaiting merge
+- Assigned agents: builder (implementation complete); documentation-writer (PR description written 2026-10-18); governance-audit (post-approval audit 2026-10-18)
 - Last update: 2026-10-18
 
 ## Blockers

@@ -161,10 +161,10 @@ None.
 
 ## PR FEAT-001: Frontend Scaffold — React 18, Nginx, and Frontend CI Gates
 
-<!-- pr_status: Draft -->
-<!-- pr_approver: -->
+<!-- pr_status: Approved -->
+<!-- pr_approver: Mohanasunder -->
 <!-- pr_depth: Deep -->
-<!-- pr_review_minutes: -->
+<!-- pr_review_minutes: 14 -->
 
 ### Input References
 - FEAT-001 plan.md v0.2 (Approved 2026-10-17, Mohanasunder)
