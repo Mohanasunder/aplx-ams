@@ -6,6 +6,8 @@ Goal / KPI rule (Phase 2, 2026-10-17): the story's epic, then exactly the brief 
 
 Design column rule (Phase 4, 2026-10-17): `API-001`, `BED-001`, `UIS-001`, `PRM-001`, `TST-001` apply to all in-scope user stories (REQ S-1 to S-33). `DBD-001` is linked downstream from `BR-001` and `GLO-001`, and is covered transitively through `BED-001`. See cross-artifact link notes below.
 
+API-001 contract update (Phase 6, 2026-10-18): API-001 v0.2 Approved 2026-10-18 by Mohanasunder per SCR S-6 and ADR A-18. Field `AssignTicketRequest.assignee_id` renamed to `engineer_id` in both `api-spec.md` and `openapi.yaml`. API-001 v0.2 is upstream for any feature implementing `POST /api/tickets/{id}/assign/`.
+
 | REQ | Goal / KPI | Design (API, DBD, UIS) | Feature | PR | Test cases | Status |
 | --- | --- | --- | --- | --- | --- | --- |
 | REQ S-1 | EPC E-1; BRF-001 G-1, G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-011 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
@@ -50,19 +52,19 @@ Approved 2026-10-17 by Mohanasunder (Architect / tech lead + UX).
 
 | Upstream artifact | Downstream design artifacts |
 | --- | --- |
-| REQ-001 v0.3 (user stories S-1 to S-33) | API-001 v0.1, BED-001 v0.1, UIS-001 v0.1, PRM-001 v0.1, TST-001 v0.1 |
+| REQ-001 v0.3 (user stories S-1 to S-33) | API-001 v0.2, BED-001 v0.1, UIS-001 v0.1, PRM-001 v0.1, TST-001 v0.1 |
 | BR-001 v0.3 (business rules B-1 to B-24) | DBD-001 v0.1, BED-001 v0.1 |
 | NFR-001 v0.3 (N-1 to N-9) | STD-001 v0.1, TST-001 v0.1 |
-| GLO-001 v0.3 (domain glossary) | DBD-001 v0.1 |
-| SUM-003 v0.2 (Phase 3 architecture summary) | DBD-001 v0.1, API-001 v0.1, BED-001 v0.1, UIS-001 v0.1, STD-001 v0.1 |
+| GLO-001 v0.3 (domain glossary) | DBD-001 v0.1, API-001 v0.2 (via SCR S-6 / ADR A-18, Approved 2026-10-18) |
+| SUM-003 v0.2 (Phase 3 architecture summary) | DBD-001 v0.1, API-001 v0.2, BED-001 v0.1, UIS-001 v0.1, STD-001 v0.1 |
 
 ### Phase 4 Internal Links
 
 | Source | Downstream within Phase 4 |
 | --- | --- |
 | DBD-001 v0.1 | BED-001 v0.1, PRM-001 v0.1 |
-| API-001 v0.1 | BED-001 v0.1, UIS-001 v0.1, PRM-001 v0.1, TST-001 v0.1 |
-| openapi.yaml (companion to API-001 v0.1) | API-001 v0.1 |
+| API-001 v0.2 | BED-001 v0.1, UIS-001 v0.1, PRM-001 v0.1, TST-001 v0.1 |
+| openapi.yaml (companion to API-001 v0.2; AssignTicketRequest.engineer_id per ADR A-18) | API-001 v0.2 |
 
 ### Phase 4 → Phase 5 Downstream Links
 
@@ -71,7 +73,7 @@ All Phase 4 design artifacts feed Phase 5 feature slices. Approved 2026-10-17 by
 | Phase 4 artifact | Phase 5 features (downstream) |
 | --- | --- |
 | DBD-001 v0.1 | FEAT-000, FEAT-002, FEAT-003, FEAT-004, FEAT-005, FEAT-006, FEAT-007, FEAT-008, FEAT-009, FEAT-010, FEAT-011, FEAT-012, FEAT-013, FEAT-014, FEAT-015, FEAT-016, FEAT-017, FEAT-018, FEAT-019, FEAT-020, FEAT-021, FEAT-022, FEAT-023, FEAT-024, FEAT-025, FEAT-026, FEAT-027, FEAT-028, FEAT-029, FEAT-030, FEAT-031, FEAT-032, FEAT-033, FEAT-034 |
-| API-001 v0.1 | FEAT-002, FEAT-003, FEAT-004, FEAT-005, FEAT-006, FEAT-007, FEAT-008, FEAT-009, FEAT-010, FEAT-011, FEAT-012, FEAT-013, FEAT-014, FEAT-015, FEAT-016, FEAT-017, FEAT-018, FEAT-019, FEAT-020, FEAT-021, FEAT-022, FEAT-023, FEAT-024, FEAT-025, FEAT-026, FEAT-027, FEAT-028, FEAT-029, FEAT-030, FEAT-031, FEAT-032, FEAT-033, FEAT-034 |
+| API-001 v0.2 | FEAT-002, FEAT-003, FEAT-004, FEAT-005, FEAT-006, FEAT-007, FEAT-008, FEAT-009, FEAT-010, FEAT-011, FEAT-012, FEAT-013, FEAT-014, FEAT-015, FEAT-016, FEAT-017, FEAT-018, FEAT-019, FEAT-020, FEAT-021, FEAT-022, FEAT-023, FEAT-024, FEAT-025, FEAT-026, FEAT-027, FEAT-028, FEAT-029, FEAT-030, FEAT-031, FEAT-032, FEAT-033, FEAT-034 |
 | BED-001 v0.1 | FEAT-000, FEAT-002, FEAT-003, FEAT-004, FEAT-005, FEAT-006, FEAT-007, FEAT-008, FEAT-009, FEAT-010, FEAT-011, FEAT-012, FEAT-013, FEAT-014, FEAT-015, FEAT-016, FEAT-017, FEAT-018, FEAT-019, FEAT-020, FEAT-021, FEAT-022, FEAT-023, FEAT-024, FEAT-025, FEAT-026, FEAT-027, FEAT-028, FEAT-029, FEAT-030, FEAT-031, FEAT-032, FEAT-033, FEAT-034 |
 | UIS-001 v0.1 | FEAT-001, FEAT-002, FEAT-003, FEAT-004, FEAT-005, FEAT-006, FEAT-007, FEAT-008, FEAT-009, FEAT-010, FEAT-011, FEAT-012, FEAT-013, FEAT-014, FEAT-015, FEAT-016, FEAT-017, FEAT-018, FEAT-019, FEAT-020, FEAT-021, FEAT-022, FEAT-023, FEAT-024, FEAT-025, FEAT-026, FEAT-027, FEAT-028, FEAT-029, FEAT-030, FEAT-031, FEAT-032, FEAT-033, FEAT-034 |
 | PRM-001 v0.1 | FEAT-006, FEAT-007 |
@@ -140,6 +142,19 @@ Traceability chain: STD-001, TST-001 → FEAT-001-ACC → FEAT-001-TESTS
 | FEAT-001-TESTS v0.1 (Approved) | Approver: Mohanasunder (Tech lead), 2026-10-18; branch: feature/FEAT-001-frontend-scaffold; test commit: 670019b |
 
 Build status: FEAT-001-TESTS Approved (test-set gate passed; no PR yet — Mode B implementation not started).
+
+### Contract Update: SCR S-6 / ADR A-18 / API-001 v0.2 (Approved 2026-10-18)
+
+All three artifacts approved 2026-10-18 by Mohanasunder on branch `feature/FEAT-001-frontend-scaffold`.
+
+| Event | Detail |
+| --- | --- |
+| SCR S-6 Approved | Mohanasunder, 2026-10-18. Covers 35 glossary violations in Phase 4/5 artifacts. Upstream: GLO-001 v0.3. Downstream: ADR A-18, API-001 v0.2. |
+| ADR A-18 Approved | Mohanasunder, 2026-10-18. Decision: rename `AssignTicketRequest` request-body field `assignee_id` → `engineer_id` for GLO-001 glossary compliance. Upstream: SCR S-6. Downstream: API-001 v0.2, openapi.yaml. |
+| API-001 v0.1 → v0.2 | Approved by Mohanasunder, 2026-10-18. Contract updated per SCR S-6 / ADR A-18: `AssignTicketRequest.assignee_id` renamed to `engineer_id`. Upstream: GLO-001 v0.3 (via SCR S-6), ADR A-18. Downstream: any feature implementing `POST /api/tickets/{id}/assign/`. |
+| openapi.yaml updated | Companion to API-001 v0.2. `AssignTicketRequest.assignee_id` renamed to `engineer_id`. Upstream: ADR A-18. |
+
+Affected downstream features: all features that call `POST /api/tickets/{id}/assign/` must use `engineer_id` (not `assignee_id`) in the request body. Features not yet in Phase 6 will consume the updated spec at plan time. No features were in progress for this endpoint on 2026-10-18; no work needed to be stopped.
 
 ## Requirements with No Design ID
 

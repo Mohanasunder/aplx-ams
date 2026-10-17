@@ -547,7 +547,7 @@ Option 1. Values are generated on each server by the Release manager / DevOps fr
 ## ADR A-18: Rename AssignTicketRequest request-body field to engineer_id for glossary compliance
 
 ### Status And Date
-Proposed, 2026-10-18 (SCR S-6; proposed by Orchestrator to resolve non-overridable glossary gate)
+Approved, 2026-10-18 (via ADR-001 v0.3 collection approval by Mohanasunder; proposed to resolve non-overridable glossary gate per SCR S-6)
 
 ### Context
 - GLO-001 v0.3 defines 'Assigned support engineer' with a synonym in the Avoid list that the identifier-aware glossary checker (`scripts/glossary_check.py check`) detects inside compound identifiers; the gate is non-overridable.
