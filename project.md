@@ -53,7 +53,7 @@ pilot_target_rules_per_week:
 | 2 | Requirements | Approved | 2026-10-17 | Mohanasunder |
 | 3 | Solution architecture | Approved | 2026-10-17 | Mohanasunder |
 | 4 | Solution design | Approved | 2026-10-17 | Mohanasunder |
-| 5 | Build planning | Not started | | |
+| 5 | Build planning | Approved | 2026-10-17 | Mohanasunder |
 | 6 | Build (per feature) | Not started | | |
 | 7 | Testing | Not started | | |
 | 8 | Deployment | Not started | | |
