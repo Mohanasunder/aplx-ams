@@ -331,7 +331,7 @@ jobs:
         run: npm --prefix src/frontend run test -- --run --coverage
 
       - name: Lint (ESLint)
-        run: npx --prefix src/frontend eslint src/frontend/src/ --max-warnings=0
+        run: cd src/frontend && npx eslint src/ --max-warnings=0
 
       - name: Type check (tsc --noEmit)
         run: npx --prefix src/frontend tsc --noEmit --project src/frontend/tsconfig.json

@@ -1,4 +1,5 @@
 """Unit tests for APLX AMS middleware classes."""
+
 import time
 
 from django.http import HttpRequest, HttpResponse
