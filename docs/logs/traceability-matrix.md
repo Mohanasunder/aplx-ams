@@ -87,7 +87,7 @@ Approved 2026-10-17 by Mohanasunder (Architect / tech lead).
 | FEAT | Title | Depends on | Supplementary artifacts status |
 | --- | --- | --- | --- |
 | FEAT-000 | Walking Skeleton — Backend Scaffold and CI Pipeline | none (foundation) | FEAT-000-ACC, FEAT-000-TASKS, FEAT-000-STATUS Approved v0.1 (2026-10-18); FEAT-000-TESTS Approved v0.1 (2026-10-18, Mohanasunder, Tech lead); PR #4 Approved 2026-10-18 by Mohanasunder (Tech lead, Release manager); not yet merged |
-| FEAT-001 | Frontend Scaffold — React + Vite + Tailwind | FEAT-000 | FEAT-001-ACC, FEAT-001-TASKS, FEAT-001-STATUS Approved v0.1 (2026-10-18) |
+| FEAT-001 | Frontend Scaffold — React + Vite + Tailwind | FEAT-000 | FEAT-001-ACC, FEAT-001-TASKS, FEAT-001-STATUS Approved v0.1 (2026-10-18); FEAT-001-TESTS Approved v0.1 (2026-10-18, Mohanasunder, Tech lead) |
 | FEAT-035 | E2E CI Scaffold | FEAT-000, FEAT-001 | FEAT-035-ACC, FEAT-035-TASKS, FEAT-035-STATUS Approved v0.1 (2026-10-18) |
 
 These three features carry no REQ story (they are enabling features). They are linked to all Phase 4 design artifacts via STD-001 and TST-001.
@@ -127,6 +127,19 @@ Traceability chain: STD-001, TST-001 → FEAT-000-ACC → FEAT-000-TESTS
 | FEAT-000 PR #4 → GitHub | https://github.com/Mohanasunder/aplx-ams/pull/4; approved 2026-10-18 by Mohanasunder (Tech lead) and Mohanasunder (Release manager); all automated gates passed; coverage: TST-001 AC-2 (pytest), STD-001 AC-1, AC-3, AC-4 (CI gates); not yet merged |
 
 Build status: PR Approved (PR #4, https://github.com/Mohanasunder/aplx-ams/pull/4; approved 2026-10-18 by Mohanasunder, Tech lead and Release manager; all automated gates passed; not yet merged).
+
+### FEAT-001 Test Set (Approved 2026-10-18)
+
+Traceability chain: STD-001, TST-001 → FEAT-001-ACC → FEAT-001-TESTS
+
+| Link | Detail |
+| --- | --- |
+| STD-001 v0.1 → FEAT-001-TESTS | Coding standards CI gate criteria (STD-001 AC-1: `npm run build` exits 0; STD-001 AC-2: eslint + tsc --noEmit each exit 0) map to `frontend` CI job steps in FEAT-001-TESTS |
+| TST-001 v0.1 → FEAT-001-TESTS | Test strategy criterion TST-001 AC-1 maps to `TST-001 AC-1: renders App and finds "APLX AMS" text` in `src/frontend/src/App.test.tsx`; TST-001 AC-2 (CI `frontend` job all steps exit 0) is a CI-artifact check pending Mode B |
+| FEAT-001-ACC v0.1 → FEAT-001-TESTS | All four acceptance criteria covered: TST-001 AC-1 by Vitest (`App.test.tsx`); STD-001 AC-1, STD-001 AC-2, TST-001 AC-2 by CI gates (pending Mode B — `.github/workflows/ci.yml` frontend job not yet written at test commit) |
+| FEAT-001-TESTS v0.1 (Approved) | Approver: Mohanasunder (Tech lead), 2026-10-18; branch: feature/FEAT-001-frontend-scaffold; test commit: 670019b |
+
+Build status: FEAT-001-TESTS Approved (test-set gate passed; no PR yet — Mode B implementation not started).
 
 ## Requirements with No Design ID
 

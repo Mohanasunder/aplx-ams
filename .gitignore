@@ -8,9 +8,3 @@ __pycache__/
 *.pyc
 .DS_Store
 .claude/settings.local.json
-# Frontend build and test output (generated; not committed)
-src/frontend/dist/
-src/frontend/coverage/
-src/frontend/test-results/
-# Python coverage artifact
-.coverage

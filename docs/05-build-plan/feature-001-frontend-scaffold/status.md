@@ -23,13 +23,13 @@ validation: Pass
 Tracks the build-phase progress of FEAT-001. Updated by the builder agent during Phase 6.
 
 ## Branch And PR
-- Branch: <set by scripts/create-feature-branch.sh>
-- Base commit: <set by script>
-- Started: <set by script>
+- Branch: feature/FEAT-001-frontend-scaffold
+- Base commit: 3e81932
+- Started: 2026-10-17
 - PR: <draft PR link>
 
 ## Progress
-- State: Not started
+- State: In progress
 - Assigned agents: builder
 - Last update: 2026-10-17
 
