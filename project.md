@@ -51,7 +51,7 @@ pilot_target_rules_per_week:
 | 0 | Methodology setup | Approved | 2026-10-17 | Mohanasunder |
 | 1 | Business discovery | Approved | 2026-10-17 | Mohanasunder |
 | 2 | Requirements | Approved | 2026-10-17 | Mohanasunder |
-| 3 | Solution architecture | Not started | | |
+| 3 | Solution architecture | Approved | 2026-10-17 | Mohanasunder |
 | 4 | Solution design | Not started | | |
 | 5 | Build planning | Not started | | |
 | 6 | Build (per feature) | Not started | | |

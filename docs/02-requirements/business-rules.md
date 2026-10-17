@@ -2,7 +2,7 @@
 id: BR-001
 title: APLX AMS: Business Rules
 phase: 2
-version: 0.1
+version: 0.3
 template: business-rule
 template_version: 2.0
 status: Approved
@@ -26,10 +26,13 @@ validation: Pass with warnings
 - PRC-001 v0.2 § Process M-1 to M-3.
 - RSK-001 v0.2 § Risk R-4, § Risk R-5, § Risk R-6.
 - Answered open questions OQ-004, OQ-022, OQ-026 to OQ-028, OQ-034 to OQ-051 and decisions DEC-022, DEC-025, DEC-026 (`docs/logs/`).
+- SCR S-3 (`docs/logs/spec-changes.md`): password set, reset and change, decided by Mohanasunder (Product owner / BA), chat, 2026-10-17.
+- SCR S-4 (`docs/logs/spec-changes.md`): security events in the audit trail, OQ-062 answered by Mohanasunder (Product owner / BA), chat, 2026-10-17.
+- NFR-001 v0.3 § NFR N-5, § NFR N-6.
 
 ## Purpose And Scope
 <!-- guidance: What this artifact covers and what it does not -->
-Covers: the business rules of APLX AMS release 1: SLA targets, the business-hours calendar, SLA timer start, stop and pause, priority change, SLA timer states, the L1 escalation flag, hand-back and closure, the response % and resolution % formulas, MTTR, the monthly client report, contract and effort rules, the finance export, the client data boundary, roles and setup, and the audit trail. Terms follow the domain glossary GLO-001.
+Covers: the business rules of APLX AMS release 1: SLA targets, the business-hours calendar, SLA timer start, stop and pause, priority change, SLA timer states, the L1 escalation flag, hand-back and closure, the response % and resolution % formulas, MTTR, the monthly client report, contract and effort rules, the finance export, the client data boundary, roles and setup, the audit trail, password set, reset and change (B-23, SCR S-3), and security events in the audit trail (B-24, SCR S-4). Terms follow the domain glossary GLO-001.
 
 Does not cover: how rules are built (screens, colours, layout, endpoints, tables, technology; Phases 3 and 4), or NFR targets (NFR-001). Where a source left a value open, the rule names the open question and the labeled assumption (A-NNN) it uses.
 
@@ -323,26 +326,52 @@ REQ S-1, REQ S-2, REQ S-12, REQ S-14, REQ S-18, REQ S-22, REQ S-28, REQ S-29
 ## Rule B-21: Roles and setup ownership
 
 ### Rule
-Release 1 has four roles: L1 support engineer, L2/L3 support engineer, delivery manager, and client user. Every client user has the one client role (raise tickets, view their own client organization's tickets and statuses, add comments on their own client organization's tickets, and view their own client organization's published monthly client reports) and belongs to exactly one client organization. Finance has no role (OQ-038). Only the delivery manager sets up client organizations, SAP applications, contracts (including ending a contract) and user accounts, and maintains the company holiday list.
+Release 1 has four roles: L1 support engineer, L2/L3 support engineer, delivery manager, and client user. Every client user has the one client role (raise tickets, view their own client organization's tickets and statuses, add comments on their own client organization's tickets, and view their own client organization's published monthly client reports) and belongs to exactly one client organization. Finance has no role (OQ-038). Only the delivery manager sets up client organizations, SAP applications, contracts (including ending a contract) and user accounts, sets temporary passwords on user accounts (BR B-23), and maintains the company holiday list.
 
 ### Source
-INT-002 v0.1 Q8; OQ-022 answer (one client role); PER-001 v0.2 (PER P-1 to P-4); SCP-001 v0.2 § In Scope IS-4. Comments: OQ-045, DEC-026. Contract end: OQ-042. Company holiday list: OQ-041. No finance role: OQ-038 (all answered by Mohanasunder, 2026-10-17, chat).
+INT-002 v0.1 Q8; OQ-022 answer (one client role); PER-001 v0.2 (PER P-1 to P-4); SCP-001 v0.2 § In Scope IS-4. Comments: OQ-045, DEC-026. Contract end: OQ-042. Company holiday list: OQ-041. No finance role: OQ-038 (all answered by Mohanasunder, 2026-10-17, chat). Temporary passwords: SCR S-3 (Mohanasunder, 2026-10-17, chat).
 
 ### Applies To
-REQ S-18, REQ S-19, REQ S-20, REQ S-21, REQ S-24, REQ S-27, REQ S-28, REQ S-29
+REQ S-18, REQ S-19, REQ S-20, REQ S-21, REQ S-24, REQ S-27, REQ S-28, REQ S-29, REQ S-30
 
 ---
 
 ## Rule B-22: Audit trail
 
 ### Rule
-Every change to a ticket's status, priority, assignment, or effort entries (an effort entry saved, changed or deleted) is recorded in the audit trail with the user who made it, the date and time, the old value and the new value (old and new value: assumption A-016). Internal users can view the audit trail; client users cannot. No user can edit or delete an audit entry (A-016).
+Every change to a ticket's status, priority, assignment, or effort entries (an effort entry saved, changed or deleted) is recorded in the audit trail with the user who made it, the date and time, the old value and the new value (old and new value: assumption A-016). Internal users can view the audit trail; client users cannot. No user can edit or delete an audit entry (A-016). Security events are also recorded in the audit trail; their content and who views them follow BR B-24.
 
 ### Source
 INT-002 v0.1 Q11. Old and new value and read-only entries: A-016. Effort entry changes and deletions audited: OQ-048 answered (Mohanasunder, 2026-10-17, chat).
 
 ### Applies To
-REQ S-2, REQ S-4, REQ S-5, REQ S-7, REQ S-8, REQ S-15, REQ S-23, REQ S-25, REQ S-26
+REQ S-2, REQ S-4, REQ S-5, REQ S-7, REQ S-8, REQ S-15, REQ S-23, REQ S-25, REQ S-26, REQ S-32, REQ S-33
+
+---
+
+## Rule B-23: Password set, reset and change
+
+### Rule
+The delivery manager sets a temporary password on each user account when creating it. A user who forgets their password asks the delivery manager outside APLX AMS, and the delivery manager sets a new temporary password on that user account, which replaces the previous password. Any signed-in user (internal user or client user) can change their own password, after entering their current password (OQ-053), and no other user's password. When the delivery manager sets a new temporary password on a user account locked after 5 failed sign-ins, the lock clears at once and the user can sign in immediately (OQ-054; NFR N-5). Every temporary password and every changed password meets the password policy (NFR N-5). No user is asked or forced to change their password, at first sign-in or after the delivery manager sets a new temporary password (lower security chosen knowingly). Release 1 has no password reset by email and no self-service password reset.
+
+### Source
+Binding source: SCR S-3 human decision (a) to (d), Mohanasunder (Product owner / BA), chat, 2026-10-17 (option C on VAL-013 F-1). Context: the behaviour was raised in the Phase 3 interview (INT-003 Q8). Password policy: NFR-001 v0.3 N-5 (OQ-044). OQ-053 and OQ-054 answered (Mohanasunder, 2026-10-17, chat).
+
+### Applies To
+REQ S-30, REQ S-31, REQ S-32
+
+---
+
+## Rule B-24: Security events in the audit trail
+
+### Rule
+Five security events are recorded in the audit trail, like other audit entries: a successful sign-in, a failed sign-in (every refused sign-in: wrong password, account name that matches no user account, deactivated user account or locked user account; OQ-065), a user account lockout (after 5 failed sign-ins, NFR N-5), a temporary password set by the delivery manager (BR B-23), and a user changing their own password (BR B-23). Each audit entry holds the event, the user who did it, the user account it concerns (for a failed sign-in with an account name that matches no user account: the account name as typed, OQ-065), and the date and time. No audit entry holds a password value (a password entered, a temporary password, a previous password or a new password); it records only that the event happened, who, when and which user account. The delivery manager can view all security events, per user account; each internal user can view their own security events; client users cannot view security events (OQ-064; for security events this replaces the BR B-22 rule that every internal user views the audit trail). No user can edit or delete a security event (as BR B-22). No other event is a security event in release 1 (user account deactivation is not one), and there is no alerting on security events and no new reporting.
+
+### Source
+Binding source: OQ-062 answered by Mohanasunder (Product owner / BA), chat, 2026-10-17 (SCR S-4), including that no password value is recorded. Viewing: OQ-064; refused sign-ins and unknown account names: OQ-065 (both answered by Mohanasunder, 2026-10-17, chat). Context: raised by the Phase 3 threat model (THR-001 Draft, T-3, T-5).
+
+### Applies To
+REQ S-32, REQ S-33
 
 ---
 
@@ -363,12 +392,14 @@ Logged in `docs/logs/assumptions-log.md`; Open unless marked Confirmed:
 <!-- guidance: Each labeled OQ-NNN and logged in docs/logs/open-questions-log.md -->
 Logged in `docs/logs/open-questions-log.md`, owner Mohanasunder:
 - Answered 2026-10-17 (Mohanasunder, chat) and applied: OQ-037 (BR B-9, B-11), OQ-038 (B-18, B-21), OQ-039 (B-13), OQ-040 (B-1), OQ-041 (B-2, B-21), OQ-042 (B-15, B-16), OQ-043 (B-18), OQ-045 (B-6, B-21), OQ-046 (B-4, B-7), OQ-047 (B-14), OQ-048 (B-15, B-22).
-- Answered 2026-10-17 (Mohanasunder, chat) and applied: OQ-049 (BR B-13), OQ-050 (B-2), OQ-051 (B-6). No open question remains for these rules.
+- Answered 2026-10-17 (Mohanasunder, chat) and applied: OQ-049 (BR B-13), OQ-050 (B-2), OQ-051 (B-6). 
+- Raised by SCR S-3 and Answered 2026-10-17 (Mohanasunder, chat) and applied: OQ-053 (BR B-23, current password on change), OQ-054 (BR B-23, temporary password clears the lock). No open question remains for these rules.
+- SCR S-4: OQ-062 Answered 2026-10-17 (Mohanasunder, chat) and applied (BR B-24). Raised by SCR S-4 and Answered 2026-10-17 (Mohanasunder, chat) and applied: OQ-064 (BR B-24, who views security events), OQ-065 (BR B-24, every refused sign-in is a failed sign-in; unknown account name as typed). No open question remains for these rules.
 
 ## Traceability Links
 <!-- guidance: Upstream and downstream IDs, or 'Not applicable - reason'.
      Cite individual rules downstream as BR B-N (e.g. BR B-2). -->
-- Upstream: PIB-002 v0.1; INT-002 v0.1; SUM-001 v0.3; BRF-001 v0.2 (G-1, G-2); SCP-001 v0.2 (IS-1 to IS-5, OS-1, OS-2); PER-001 v0.2; PRC-001 v0.2 (M-1 to M-3); RSK-001 v0.2 (R-4, R-5, R-6).
+- Upstream: PIB-002 v0.1; INT-002 v0.1; SCR S-3; SCR S-4; NFR-001 v0.3 (N-5, N-6); SUM-001 v0.3; BRF-001 v0.2 (G-1, G-2); SCP-001 v0.2 (IS-1 to IS-5, OS-1, OS-2); PER-001 v0.2; PRC-001 v0.2 (M-1 to M-3); RSK-001 v0.2 (R-4, R-5, R-6).
 - Related Phase 2: REQ-001 (stories cite BR B-N), NFR-001, GLO-001, PRS-001, EPC-001.
 - Downstream: Phase 4 backend design and UI spec; Phase 5 feature acceptance (not yet created).
 
@@ -389,7 +420,7 @@ Logged in `docs/logs/open-questions-log.md`, owner Mohanasunder:
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Product owner / BA |
-| Version | 0.1 |
+| Version | 0.3 |
 | Conditions | None |
-| Comments | Reviewed after validation run 4; all open questions answered; R4 findings fixed. |
-| Timestamp | 2026-10-17 08:46 UTC |
+| Comments | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| Timestamp | 2026-10-17 10:59 UTC |

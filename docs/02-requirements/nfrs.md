@@ -2,7 +2,7 @@
 id: NFR-001
 title: APLX AMS: Non-Functional Requirements
 phase: 2
-version: 0.1
+version: 0.3
 template: nfr
 template_version: 2.0
 status: Approved
@@ -22,10 +22,12 @@ validation: Pass with warnings
 - SUM-001 v0.3 § Constraints Set (desktop web browser only; existing on-prem servers; names and emails only).
 - SCP-001 v0.2 § In Scope IS-5, § Out Of Scope OS-4.
 - RSK-001 v0.2 § Risk R-6; DEC-022.
+- SCR S-3 (`docs/logs/spec-changes.md`): N-5 lockout cleared by a new temporary password (OQ-054 answered, Mohanasunder, 2026-10-17, chat).
+- SCR S-4 (`docs/logs/spec-changes.md`): N-6 security events in the audit trail (OQ-062 answered, Mohanasunder, 2026-10-17, chat).
 
 ## Purpose And Scope
 <!-- guidance: What this artifact covers and what it does not -->
-Covers: measurable non-functional requirements for APLX AMS release 1: availability, performance, backup and recovery, data retention, sign-in and password policy, audit trail, client data separation, browser support, and personal data limited to names and emails (N-9). Release 1 scale: about 10 engineers, about 20 client users, up to about 10 SAP applications, one pilot client organization (SUM-001 v0.3 § Decisions).
+Covers: measurable non-functional requirements for APLX AMS release 1: availability, performance, backup and recovery, data retention, sign-in and password policy, audit trail (ticket changes and security events, SCR S-4), client data separation, browser support, and personal data limited to names and emails (N-9). Release 1 scale: about 10 engineers, about 20 client users, up to about 10 SAP applications, one pilot client organization (SUM-001 v0.3 § Decisions).
 
 Does not cover: technology, hosting design or monitoring tools (Phases 3 and 8). Q7 (no MFA) and Q10 (weekly backup, RPO 7 days) are human decisions recorded as stated; their risks are RSK-002 R-1 and R-2.
 
@@ -104,10 +106,10 @@ Security
 Every user (staff and client users) signs in with an APLX AMS user account and a password that meets the password policy. No multi-factor authentication (MFA) in release 1 (human security decision, INT-002 Q7). Policy values: OQ-044 answered (Mohanasunder, 2026-10-17, chat); they replace assumption A-012 (Rejected). The answer names no password expiry rule.
 
 ### Measurable Target
-Password at least 8 characters, with at least 1 upper-case letter, 1 lower-case letter and 1 digit; a user account is locked for 30 minutes after 5 failed sign-ins; 0 second factors required; 100% of sign-ins use a user account.
+Password at least 8 characters, with at least 1 upper-case letter, 1 lower-case letter and 1 digit; a user account is locked for 30 minutes after 5 failed sign-ins, unless the delivery manager sets a new temporary password, which clears the lock at once (BR B-23, OQ-054); 0 second factors required; 100% of sign-ins use a user account.
 
 ### Verification Method
-Phase 6 feature tests and Phase 7 security tests: a password of 7 characters is refused; 8-character passwords lacking an upper-case letter, a lower-case letter or a digit are each refused; "Abcdefg1" is accepted; the 6th sign-in within 30 minutes after 5 failures is refused even with the correct password, and the correct password is accepted after 30 minutes; sign-in succeeds with no second factor. Risk RSK-002 R-1.
+Phase 6 feature tests and Phase 7 security tests: a password of 7 characters is refused; 8-character passwords lacking an upper-case letter, a lower-case letter or a digit are each refused; "Abcdefg1" is accepted; the 6th sign-in within 30 minutes after 5 failures is refused even with the correct password, and the correct password is accepted after 30 minutes; a new temporary password set by the delivery manager on a locked user account is accepted at once (OQ-054); sign-in succeeds with no second factor. Risk RSK-002 R-1.
 
 ---
 
@@ -117,13 +119,13 @@ Phase 6 feature tests and Phase 7 security tests: a password of 7 characters is 
 Security (audit)
 
 ### Requirement
-Every change to a ticket's status, priority, assignment or effort entries creates an audit entry (BR B-22), visible to internal users only.
+Every change to a ticket's status, priority, assignment or effort entries creates an audit entry (BR B-22), visible to internal users only. Every security event (successful sign-in, failed sign-in, user account lockout, temporary password set by the delivery manager, user changing their own password) also creates an audit entry, with no value entered in a password field in it (BR B-24; OQ-062 answered, SCR S-4). Every refused sign-in is a failed sign-in (wrong password, unknown account name recorded as typed, deactivated or locked user account; OQ-065). The delivery manager views all security events, each internal user their own, client users none (OQ-064).
 
 ### Measurable Target
-100% of status, priority, assignment and effort changes have an audit entry with user, date and time to the second, old value and new value; 0 audit entries editable or deletable by any user.
+100% of status, priority, assignment and effort changes have an audit entry with user, date and time to the second, old value and new value; 100% of security events of the 5 types have an audit entry with the event, the user who did it, the user account it concerns (or the account name as typed) and the date and time to the second; 100% of refused sign-ins of the 4 kinds (wrong password, unknown account name, deactivated, locked) have a failed sign-in entry; 0 security events visible to a client user, and 0 security events of another user account visible to an internal user who is not the delivery manager; 0 audit entries hold a value entered in a password field (a password entered at sign-in, a temporary password, a current or new password); a password typed into the account name field is recorded as typed (OQ-065) and is not covered by this target (risk RSK-003 R-10); 0 audit entries editable or deletable by any user.
 
 ### Verification Method
-Phase 6 feature tests per change type and a Phase 7 system test that makes each of the 4 change types and compares the changes made with the audit entries. Source: INT-002 Q11.
+Phase 6 feature tests per change type and per security event type, and a Phase 7 system test that makes each of the 4 change types and each of the 5 security event types (failed sign-ins of all 4 kinds) and compares the actions made with the audit entries; the same test searches every audit entry for every value entered in a password field during the test (passwords entered at sign-in, temporary, current and new passwords) and expects 0 matches; it also views security events as the delivery manager, an L1 support engineer and a client user and compares what is shown with OQ-064. Source: INT-002 Q11; OQ-062, OQ-064, OQ-065 answered (Mohanasunder, 2026-10-17, chat).
 
 ---
 
@@ -184,13 +186,17 @@ Phase 4 design review of every data field held for user accounts, client organiz
 ## Open Questions
 <!-- guidance: Each labeled OQ-NNN and logged in docs/logs/open-questions-log.md -->
 - OQ-044 (Answered, Mohanasunder, 2026-10-17): password policy values (NFR N-5).
+- OQ-054 (Answered, Mohanasunder, 2026-10-17, chat; SCR S-3): a new temporary password set by the delivery manager clears the lock at once (NFR N-5).
 - OQ-041 (Answered, Mohanasunder, 2026-10-17): the Applexus company holiday list, maintained by the delivery manager (NFR N-1 business hours).
+- OQ-062 (Answered, Mohanasunder, 2026-10-17, chat; SCR S-4): the 5 security event types are recorded in the audit trail, with no password value (NFR N-6).
+- OQ-064 (Answered, Mohanasunder, 2026-10-17, chat; SCR S-4): the delivery manager views all security events, each internal user their own, client users none (NFR N-6).
+- OQ-065 (Answered, Mohanasunder, 2026-10-17, chat; SCR S-4): every refused sign-in is a failed sign-in; an unknown account name is recorded as typed (NFR N-6).
 
 ## Traceability Links
 <!-- guidance: Upstream and downstream IDs, or 'Not applicable - reason'.
      Cite individual NFRs downstream as NFR N-N (e.g. NFR N-2). -->
-- Upstream: PIB-002 v0.1; INT-002 v0.1 (Q7, Q9, Q9a, Q10, Q10a, Q11); SUM-001 v0.3; SCP-001 v0.2 (IS-5, OS-4, § Constraints Data); INT-001 v0.1 Q15; RSK-001 v0.2 (R-6).
-- Related Phase 2: REQ-001 (stories cite NFR N-N); BR-001 (B-2, B-20, B-22); RSK-002 (R-1, R-2).
+- Upstream: SCR S-3; SCR S-4; PIB-002 v0.1; INT-002 v0.1 (Q7, Q9, Q9a, Q10, Q10a, Q11); SUM-001 v0.3; SCP-001 v0.2 (IS-5, OS-4, § Constraints Data); INT-001 v0.1 Q15; RSK-001 v0.2 (R-6).
+- Related Phase 2: REQ-001 (stories cite NFR N-N; N-6 by REQ S-23, S-32, S-33); BR-001 (B-2, B-20, B-22, B-24); RSK-002 (R-1, R-2).
 - Downstream: Phase 3 architecture and threat model; Phase 7 NFR test report (not yet created).
 
 ## Quality Checklist
@@ -211,7 +217,7 @@ Phase 4 design review of every data field held for user accounts, client organiz
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Product owner / BA |
-| Version | 0.1 |
+| Version | 0.3 |
 | Conditions | None |
-| Comments | Reviewed after validation run 4; all open questions answered; R4 findings fixed. |
-| Timestamp | 2026-10-17 08:46 UTC |
+| Comments | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| Timestamp | 2026-10-17 10:59 UTC |

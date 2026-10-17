@@ -2,7 +2,7 @@
 id: GLO-001
 title: APLX AMS: Domain Glossary
 phase: 2
-version: 0.1
+version: 0.3
 template: domain-glossary
 template_version: 2.0
 status: Approved
@@ -24,6 +24,9 @@ validation: Pass with warnings
 - PIB-002 v0.1 § Interview Answers, § Constraints (glossary candidates listed under Producer pointers).
 - INT-002 v0.1 § Questions And Answers.
 - Answers to OQ-037 to OQ-051 and the Phase 2 review answers, 2026-10-17 (Mohanasunder, 2026-10-17, chat); DEC-026.
+- SCR S-3 (`docs/logs/spec-changes.md`): password set, reset and change, decided by Mohanasunder (Product owner / BA), chat, 2026-10-17.
+- SCR S-4 (`docs/logs/spec-changes.md`): security events in the audit trail, OQ-062 answered by Mohanasunder (Product owner / BA), chat, 2026-10-17.
+- NFR-001 v0.3 § NFR N-5, § NFR N-6.
 
 ## Purpose And Scope
 <!-- guidance: Business terms of this product, so each has one meaning for people and agents. Methodology terms stay in .ai/standards/glossary.md -->
@@ -41,9 +44,11 @@ Does not cover: methodology terms (epic, story, feature, NFR, gate), which stay 
 | L1 support engineer | AMS team member at level L1 who acknowledges, triages, changes priority, escalates, resolves and closes tickets; PER P-1. | - | The L1 support engineer closes the Resolved ticket. | PER-001 P-1 |
 | L2/L3 support engineer | AMS team member at level L2 or L3 who resolves tickets escalated by L1; PER P-2. | - | The L2/L3 support engineer sets the ticket to Resolved. | PER-001 P-2 |
 | Support engineer | An L1 support engineer or an L2/L3 support engineer. | - | Each support engineer records their own effort. | PER-001 P-1, P-2 |
-| Delivery manager | Internal user who sets up client organizations, SAP applications, contracts (and ends them) and user accounts, maintains the company holiday list, monitors SLA, generates and publishes monthly client reports, reviews and corrects effort entries, and downloads the finance export to email to finance; PER P-3. | - | The delivery manager publishes the September 2026 report. | PER-001 P-3; INT-002 Q8; OQ-038, OQ-041, OQ-042, OQ-047, OQ-048 |
+| Delivery manager | Internal user who sets up client organizations, SAP applications, contracts (and ends them) and user accounts, sets temporary passwords on user accounts, maintains the company holiday list, monitors SLA, generates and publishes monthly client reports, reviews and corrects effort entries, and downloads the finance export to email to finance; PER P-3. | - | The delivery manager publishes the September 2026 report. | PER-001 P-3; INT-002 Q8; OQ-038, OQ-041, OQ-042, OQ-047, OQ-048; BR-001 B-23 |
 | Internal user | An L1 support engineer, L2/L3 support engineer or delivery manager; not a client user. | - | Internal users see every client organization's tickets. | INT-002 Q11; BR-001 B-20 |
-| User account | The APLX AMS sign-in account of one person (staff or client user), with a password and a role; a client user's account belongs to one client organization. Created, changed and deactivated only by the delivery manager. INT-002 Q7 calls it an "app account"; Phase 2 uses "user account". | - | The delivery manager deactivates a user account. | BR-001 B-21; INT-002 Q7, Q8 |
+| User account | The APLX AMS sign-in account of one person (staff or client user), with a password and a role; a client user's account belongs to one client organization. Created, changed and deactivated only by the delivery manager, who also sets its temporary password; the user can change their own password (BR-001 B-23). INT-002 Q7 calls it an "app account"; Phase 2 uses "user account". | - | The delivery manager deactivates a user account. | BR-001 B-21, B-23; INT-002 Q7, Q8 |
+| Temporary password | A password the delivery manager sets on a user account when creating it, or when the user has told the delivery manager outside APLX AMS that they forgot their password. It meets the password policy, replaces the previous password, clears a lock after 5 failed sign-ins at once (OQ-054), and stays the user's password until the user changes it or the delivery manager sets a new one; the user is not asked to change it (SCR S-3 decision (d)). | - | The delivery manager sets temporary password "Abcdefg1" on a new user account. | BR-001 B-23; REQ-001 S-30; SCR S-3; OQ-054 |
+| Password policy | The rule every password in APLX AMS meets: at least 8 characters, with at least 1 upper-case letter, 1 lower-case letter and 1 digit (OQ-044). | - | "Abcdefg1" meets the password policy; "abcdefg1" does not. | NFR-001 N-5; OQ-044; BR-001 B-23 |
 | Role | The set of tasks a user account may do. Release 1 has four roles: L1 support engineer, L2/L3 support engineer, delivery manager and client user (one client role). | - | A user account with role client user. | BR-001 B-21; INT-002 Q8; OQ-022 |
 | SAP application | An SAP application of a client organization that the AMS team supports; every ticket is for one SAP application. | - | A P1 incident on the client organization's SAP application. | SCP-001 IS-1; BRF-001 Constraints |
 | Ticket | A record of one incident or one service request raised by a client user for one SAP application. | issue | Ticket raised 10:00 IST, priority P2. | SCP-001 IS-1; REQ-001 S-1 |
@@ -93,7 +98,10 @@ Does not cover: methodology terms (epic, story, feature, NFR, gate), which stay 
 | Fixed fee | Contract type where effort hours are recorded for visibility only and do not count against a balance. | fixed price, retainer | 12 hours shown, no balance. | BR-001 B-17; INT-002 Q14a |
 | Effort entry | Hours a support engineer records on one ticket assigned to them for one date. The support engineer may change or delete their own effort entry until the end of the calendar month of its date (A-025, Confirmed); the delivery manager can correct (change, not delete) any effort entry; every save, change and deletion is in the audit trail. | timesheet | 1.5 hours on 2026-11-02. | BR-001 B-15; INT-002 Q14; OQ-048 |
 | Finance export | The monthly Excel or CSV file for finance with one row per effort entry: client organization, contract, ticket, engineer, date, hours, remaining hours bank balance (the balance at the end of the export month). The delivery manager downloads it and emails it to finance outside APLX AMS. | - | October 2026 finance export. | BR-001 B-18; INT-002 Q14; OQ-038, OQ-043 |
-| Audit trail | The record of every change to a ticket's status, priority, assignment and effort entries, with user, date and time; visible to internal users only. | - | Priority P3 to P1 by an L1 support engineer at 11:00 IST. | BR-001 B-22; INT-002 Q11 |
+| Audit trail | The record of every change to a ticket's status, priority, assignment and effort entries, with user, date and time, visible to internal users only; it also records every security event, which the delivery manager views for all user accounts, each internal user for their own user account, and client users not at all (SCR S-4; OQ-064). | - | Priority P3 to P1 by an L1 support engineer at 11:00 IST. | BR-001 B-22, B-24; INT-002 Q11; OQ-062, OQ-064 |
+| Account name | The name a person types at sign-in to identify their user account; when it matches no user account, a failed sign-in records it as typed (OQ-065). | - | A sign-in with account name "user.unknown" is refused and recorded as typed. | BR-001 B-24; REQ-001 S-21, S-32; OQ-065 |
+| Audit entry | One record in the audit trail: a ticket change (user, date and time, old value and new value) or a security event (event, user, user account or the account name as typed, date and time). No user can edit or delete an audit entry, and no audit entry holds a password value. | - | A failed sign-in entry for a user account at 10:01:10 IST. | BR-001 B-22, B-24; NFR-001 N-6 |
+| Security event | One of 5 events recorded in the audit trail, each on a user account or, for a failed sign-in with an account name that matches no user account, on the account name as typed: a successful sign-in, a failed sign-in (any refused sign-in: wrong password, account name that matches no user account, deactivated or locked user account; OQ-065), a user account lockout, a temporary password set by the delivery manager, or a user changing their own password. No other event is a security event in release 1; there is no alerting on security events. | - | The delivery manager sets a temporary password on a user account: one security event. | BR-001 B-24; REQ-001 S-32, S-33; OQ-062, OQ-065; SCR S-4 |
 | Client data boundary | The rule that a client user sees and acts only on their own client organization's data. | - | A client user of A cannot open B's ticket. | BR-001 B-20; SCP-001 IS-5 |
 | Portal | APLX AMS as used by client users to raise tickets; the only ticket intake in release 1. | - | Tickets are raised in the portal only. | INT-002 Q5; BR-001 B-19 |
 
@@ -110,6 +118,7 @@ Does not cover: methodology terms (epic, story, feature, NFR, gate), which stay 
 - SLA clock: earlier wording in Approved INT-002 (Q2, Q3) and PIB-002 (Q3); same meaning as "SLA timer" (preferred, SCP-001 IS-1, INT-002 Q12). Not listed under Avoid because Approved artifacts, including the human's own interview wording, use it; Phase 2 drafts use "SLA timer" only. The two SLA timers are named "response clock" and "resolution clock" (INT-002 Q3).
 - App account: earlier wording in Approved INT-002 (Q7) and PIB-002 (Q7); same meaning as "user account" (preferred). Not listed under Avoid for the same reason; Phase 2 drafts use "user account" only.
 - MTTR: settled by Mohanasunder, 2026-10-17 (OQ-039 answered; A-009 Confirmed): business time from raise to Resolved, paused time excluded, in business days of 9 business hours; monthly mean over tickets Resolved in the month. The 3-day BRF-001 G-2 baseline was in business days, like-for-like (OQ-049 answered, 2026-10-17).
+- One-time temporary password: wording raised in the Phase 3 interview (INT-003 Q8, context only). Binding source: SCR S-3 human decision (d), Mohanasunder (Product owner / BA), chat, 2026-10-17: no forced password change at first sign-in or after a reset, so a temporary password stays the user's password until the user changes it or the delivery manager sets a new one; Phase 2 uses "temporary password". Not listed under Avoid because it is the human's own interview wording.
 - India holiday list: earlier wording in Approved INT-002 (Q2) and PIB-002 (Q2). Settled by Mohanasunder, 2026-10-17 (OQ-041 answered): it is the Applexus company holiday list; Phase 2 drafts use "company holiday list". Not listed under Avoid because Approved artifacts use the earlier wording.
 
 ## Assumptions
@@ -125,11 +134,13 @@ Does not cover: methodology terms (epic, story, feature, NFR, gate), which stay 
 ## Open Questions
 <!-- guidance: Each labeled OQ-NNN and logged in docs/logs/open-questions-log.md -->
 - Answered 2026-10-17 (Mohanasunder, chat): OQ-037 (Closed), OQ-038 (Finance export), OQ-039 (MTTR), OQ-040 (Business day), OQ-041 (Company holiday list), OQ-042 (Contract, Active contract, Hours bank balance), OQ-043 (Finance export), OQ-045 (Awaiting client, Comment), OQ-046 (Acknowledgement), OQ-047 (Monthly client report), OQ-048 (Effort entry).
-- Also answered 2026-10-17: OQ-049 (MTTR), OQ-050 (Company holiday list), OQ-051 (Comment). No open question remains for these terms.
+- Also answered 2026-10-17: OQ-049 (MTTR), OQ-050 (Company holiday list), OQ-051 (Comment). 
+- Raised by SCR S-3 and Answered 2026-10-17 (Mohanasunder, chat): OQ-053 (changing a password needs the current password), OQ-054 (Temporary password clears the lock). No open question remains for these terms.
+- SCR S-4: OQ-062 Answered 2026-10-17 (Mohanasunder, chat) (terms Audit trail, Audit entry, Security event). Raised by SCR S-4 and Answered 2026-10-17 (Mohanasunder, chat): OQ-064 (who views security events; term Audit trail), OQ-065 (every refused sign-in is a failed sign-in, unknown account name as typed; terms Security event, Audit entry). No open question remains for these terms.
 
 ## Traceability Links
 <!-- guidance: Upstream and downstream IDs, or 'Not applicable - reason' -->
-- Upstream: BRF-001 v0.2; PER-001 v0.2; SCP-001 v0.2; PRC-001 v0.2; PIB-002 v0.1; INT-002 v0.1.
+- Upstream: BRF-001 v0.2; PER-001 v0.2; SCP-001 v0.2; PRC-001 v0.2; PIB-002 v0.1; INT-002 v0.1; SCR S-3; SCR S-4; NFR-001 v0.3 (N-5, N-6).
 - Related Phase 2: REQ-001, BR-001, NFR-001, EPC-001, BKL-001, PRS-001 (all use these terms).
 - Downstream: agent charter (`.ai/standards/agent-charter.md`, built from the Approved glossary); Phase 4 API and schema naming; checked by `scripts/glossary_check.py`.
 
@@ -150,7 +161,7 @@ Does not cover: methodology terms (epic, story, feature, NFR, gate), which stay 
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Product owner / BA |
-| Version | 0.1 |
+| Version | 0.3 |
 | Conditions | None |
-| Comments | Reviewed after validation run 4; all open questions answered; R4 findings fixed. |
-| Timestamp | 2026-10-17 08:46 UTC |
+| Comments | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| Timestamp | 2026-10-17 10:59 UTC |

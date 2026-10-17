@@ -2,7 +2,7 @@
 id: PRS-001
 title: APLX AMS: Product Requirement Specification
 phase: 2
-version: 0.1
+version: 0.3
 template: product-requirement-specification
 template_version: 1.0
 status: Approved
@@ -25,6 +25,8 @@ validation: Pass with warnings
 - PIB-002 v0.1 § Interview Answers (Q1 to Q16, Q9a, Q12a, Q14a), § Constraints.
 - INT-002 v0.1 § Questions And Answers (evidence record).
 - PER-001 v0.2 § Persona P-1 to P-4; PRC-001 v0.2 § Process M-1 to M-3.
+- SCR S-3 (`docs/logs/spec-changes.md`): password set, reset and change, decided by Mohanasunder (Product owner / BA), chat, 2026-10-17.
+- SCR S-4 (`docs/logs/spec-changes.md`): security events in the audit trail, OQ-062 answered by Mohanasunder (Product owner / BA), chat, 2026-10-17.
 - Decisions DEC-018 (PRS required in Phase 2), DEC-022 (two-organization data boundary) and DEC-026 (client comments) in `docs/logs/decision-log.md`; answers to OQ-037 to OQ-051 and the Phase 2 review answers, 2026-10-17 (Mohanasunder, 2026-10-17, chat).
 
 ## Purpose And Scope
@@ -74,7 +76,7 @@ Does not cover: story detail (REQ-001), business rules (BR-001), NFRs (NFR-001),
 - Effort entries against one active contract per client organization (hours bank or fixed fee) and the monthly finance export as Excel or CSV (IS-3): PRS F-5.
 - Delivery manager setup of client organizations, SAP applications, contracts and user accounts; sign-in with user accounts (IS-4; INT-002 Q7, Q8): PRS F-6.
 - Client data boundary built and tested with two client organizations (IS-5; DEC-022): PRS F-7.
-- Audit trail of status, priority, assignment and effort changes (INT-002 Q11): PRS F-8.
+- Audit trail of status, priority, assignment and effort changes (INT-002 Q11) and of security events (OQ-062, SCR S-4): PRS F-8.
 
 ### Out Of Scope
 <!-- guidance: Bulleted exclusions for this product release -->
@@ -171,7 +173,7 @@ REQ S-15, REQ S-16, REQ S-17, REQ S-19, REQ S-25, REQ S-26, REQ S-27
 ## Feature F-6: Setup and sign-in
 
 ### Description
-The delivery manager sets up client organizations, SAP applications and user accounts with one role each; every user signs in with a user account and a password policy (at least 8 characters with an upper-case letter, a lower-case letter and a digit; locked 30 minutes after 5 failed sign-ins; OQ-044), without MFA.
+The delivery manager sets up client organizations, SAP applications and user accounts with one role each; every user signs in with a user account and a password policy (at least 8 characters with an upper-case letter, a lower-case letter and a digit; locked 30 minutes after 5 failed sign-ins; OQ-044), without MFA. The delivery manager sets a temporary password on a new user account and a new temporary password for a user who forgot their password (asked outside APLX AMS); any signed-in user changes their own password; no forced password change (SCR S-3).
 
 ### Priority
 Must: no ticket can be raised or reported before setup and sign-in exist (INT-002 Q1, Q7, Q8).
@@ -180,7 +182,7 @@ Must: no ticket can be raised or reported before setup and sign-in exist (INT-00
 PRS G-4
 
 ### Linked Stories
-REQ S-18, REQ S-20, REQ S-21
+REQ S-18, REQ S-20, REQ S-21, REQ S-30, REQ S-31
 
 ---
 
@@ -203,7 +205,7 @@ REQ S-22
 ## Feature F-8: Audit trail
 
 ### Description
-Every change to a ticket's status, priority, assignment or effort entries is recorded with user and time and is visible to internal users only.
+Every change to a ticket's status, priority, assignment or effort entries is recorded with user and time and is visible to internal users only. Security events (successful sign-ins, failed sign-ins, user account lockouts, temporary passwords set by the delivery manager, users changing their own password) are also recorded in the audit trail with the user, the user account and the time, and no password value; no alerting and no new reporting (SCR S-4; OQ-062). Every refused sign-in is a failed sign-in, and an unknown account name is recorded as typed (OQ-065). The delivery manager views all security events, per user account; each internal user views their own; client users view none (OQ-064).
 
 ### Priority
 Must: the human named the audit content for release 1 (INT-002 Q1, Q11).
@@ -212,7 +214,7 @@ Must: the human named the audit content for release 1 (INT-002 Q1, Q11).
 PRS G-3
 
 ### Linked Stories
-REQ S-23
+REQ S-23, REQ S-32, REQ S-33
 
 ---
 
@@ -232,13 +234,15 @@ REQ S-23
 - OQ-037 to OQ-048 Answered (Mohanasunder, 2026-10-17, chat) and applied to PRS G-2 and F-1 to F-6.
 - OQ-049 to OQ-051 Answered (Mohanasunder, 2026-10-17, chat): MTTR baseline in business days (PRS G-2); holiday list changes apply from the change onward (PRS F-3); internal users add comments visible to the client user, not clearing awaiting client (PRS F-2, REQ S-29).
 - Decided: client users add comments in release 1, part of IS-4 (DEC-026, Mohanasunder, 2026-10-17).
+- Decided: password set, reset and change (SCR S-3, Mohanasunder, 2026-10-17; PRS F-6, REQ S-30, S-31). OQ-053 (current password needed to change a password) and OQ-054 (a new temporary password clears the lock) Answered (Mohanasunder, 2026-10-17, chat).
+- Decided: security events recorded in the audit trail (OQ-062 answered, SCR S-4, Mohanasunder, 2026-10-17; PRS F-8, REQ S-32, S-33). OQ-064 (who views security events) and OQ-065 (every refused sign-in is a failed sign-in) Answered (Mohanasunder, 2026-10-17, chat).
 - Decided: the 80% baseline of PRS G-1 stands as stated, although not like-for-like with resolution % (DEC-025, Mohanasunder, 2026-10-17; BR B-12; RSK R-4).
 
 ## Traceability Links
 <!-- guidance: Upstream and downstream IDs, or 'Not applicable - reason'.
      Cite product goals as PRS G-N, non-goals as PRS NG-N, features as PRS F-N. -->
 - Upstream: BRF-001 v0.2 (G-1 to G-4); SCP-001 v0.2 (IS-1 to IS-5, OS-1 to OS-4); SUM-001 v0.3; PIB-002 v0.1; INT-002 v0.1.
-- Related Phase 2: EPC-001 (E-1 to E-5); REQ-001 (S-1 to S-29); BKL-001; BR-001; NFR-001; RSK-002.
+- Related Phase 2: EPC-001 (E-1 to E-5); REQ-001 (S-1 to S-33); BKL-001; BR-001; NFR-001; RSK-002.
 - Feature to epic: F-1, F-2 to EPC E-1; F-3 to E-2; F-4 to E-3; F-5 to E-4; F-6, F-7, F-8 to E-5.
 - Downstream: Phase 3 architecture; Phase 5 feature breakdown (not yet created).
 
@@ -267,7 +271,7 @@ REQ S-23
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Product owner / BA |
-| Version | 0.1 |
+| Version | 0.3 |
 | Conditions | None |
-| Comments | Reviewed after validation run 4; all open questions answered; R4 findings fixed. |
-| Timestamp | 2026-10-17 08:46 UTC |
+| Comments | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
+| Timestamp | 2026-10-17 10:59 UTC |
