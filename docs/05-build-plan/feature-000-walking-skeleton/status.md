@@ -27,12 +27,12 @@ Tracks the build-phase progress of FEAT-000. Updated by the builder agent during
 - Branch: feature/FEAT-000-walking-skeleton
 - Base commit: b1f4bb1
 - Started: 2026-10-17
-- PR: <draft PR link>
+- PR: https://github.com/Mohanasunder/aplx-ams/pull/4
 
 ## Progress
-- State: In progress
+- State: In review
 - Assigned agents: builder
-- Last update: 2026-10-17
+- Last update: 2026-10-18
 
 ## Blockers
 None.
