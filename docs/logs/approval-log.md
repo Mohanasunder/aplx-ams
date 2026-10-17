@@ -224,3 +224,5 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-17 18:47 | FEAT-035-TASKS | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | - |
 | 2026-10-17 18:47 | FEAT-035-STATUS | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | - |
 | 2026-10-17 19:43 | FEAT-000-TESTS | 0.1 | Approve | Mohanasunder | Tech lead | Pass with warnings | - | Test set approved for FEAT-000 walking skeleton. Mode B may begin. |
+| 2026-10-17 20:31 | PRD FEAT-000 | 0.1 | Approve | Mohanasunder | Tech lead | n/a | - | [review depth: Deep, tier Critical] [review: 20 min] |
+| 2026-10-17 20:32 | PRD FEAT-000 | 0.1 | Approve | Mohanasunder | Release manager | n/a | - | [review depth: Deep, tier Critical] [review: 5 min] |

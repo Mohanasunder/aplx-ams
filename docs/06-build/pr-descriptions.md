@@ -29,10 +29,10 @@ Collection file holding one PR description section per Phase 6 feature. Sections
 
 ## PR FEAT-000: Walking Skeleton — Backend Scaffold and CI Pipeline
 
-<!-- pr_status: Draft -->
-<!-- pr_approver: -->
+<!-- pr_status: Approved -->
+<!-- pr_approver: Mohanasunder -->
 <!-- pr_depth: Deep -->
-<!-- pr_review_minutes: -->
+<!-- pr_review_minutes: 5 -->
 
 ### Input References
 - FEAT-000 plan.md v0.1 (Approved 2026-10-17, Mohanasunder)
