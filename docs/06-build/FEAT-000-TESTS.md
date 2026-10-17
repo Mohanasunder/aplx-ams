@@ -47,10 +47,19 @@ Defines the tests for FEAT-000 (Walking Skeleton — Backend Scaffold and CI Pip
 ## Red Run Evidence
 Command: `python -m pytest src/aplx_ams_django/tests/test_health.py -v`
 Date: 2026-10-18
-Result: pytest not installed in the local Python 3.12.9 environment. Red run confirmed in CI: `test_health_returns_200` will fail because `urlpatterns = []` means `/api/health/` is not routed (Django returns 404), and `health_check` raises `NotImplementedError` if reached. Failure is from missing behavior, not import or syntax errors.
+Result: 1 collected, 1 FAILED. Output:
+```
+FAILED src/aplx_ams_django/tests/test_health.py::test_health_returns_200
+AssertionError: assert 404 == 200
+ +  where 404 = <HttpResponseNotFound status_code=404, ...>.status_code
+WARNING django.request: Not Found: /api/health/
+```
+Failure is behavioral: `urlpatterns = []` means `/api/health/` is not routed; Django returns 404. Not a syntax, import, or setup error.
+
+Note: `@pytest.mark.django_db` was removed from the test (no database access needed for a pure view) and the test re-committed at `6586f38`. The behavioral failure mode is unchanged.
 
 ## Test Commit
-`0a06484` on branch `feature/FEAT-000-walking-skeleton`
+`6586f38` on branch `feature/FEAT-000-walking-skeleton`
 
 ## Assumptions
 - A-038 (Confirmed): Docker Compose file secrets at `/run/secrets/` for DB credentials; test database uses `DATABASE_URL` env var injected by CI service container.
