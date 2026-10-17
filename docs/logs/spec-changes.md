@@ -459,9 +459,9 @@ Not applicable — no architecture or contract artifact changes. DEC-056 and DEC
 
 ## SCR S-6: Glossary terminology violations in Phase 4/5 design artifacts
 
-<!-- scr_status: Open -->
+<!-- scr_status: Approved -->
 <!-- scr_date: 2026-10-18 -->
-<!-- scr_approver: -->
+<!-- scr_approver: Mohanasunder -->
 
 ### Input References
 - GLO-001 v0.3 — APLX AMS: Domain Glossary (Approved 2026-10-17) § Terms: 'Priority' (avoid: severity); 'Assigned support engineer' (avoid: assignee).

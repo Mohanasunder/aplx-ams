@@ -607,10 +607,10 @@ Option 1. Rename the `AssignTicketRequest` request-body field to `engineer_id` i
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Approve |
-| Approver | Mohanasunder |
-| Role | Architect / tech lead |
+| Decision | Approve; Approve |
+| Approver | Mohanasunder; Mohanasunder |
+| Role | Architect / tech lead; Architect / tech lead |
 | Version | 0.3 |
-| Conditions | None |
-| Comments | Reviewed after validation run 6; gate decisions DEC-027 to DEC-038 applied; THR-001 envelope-opening log proposal adopted as DEC-039. |
-| Timestamp | 2026-10-17 11:25 UTC |
+| Conditions | None; None |
+| Comments | Reviewed after validation run 6; gate decisions DEC-027 to DEC-038 applied; THR-001 envelope-opening log proposal adopted as DEC-039.; ADR A-18 approved: AssignTicketRequest field rename to engineer_id for glossary compliance per SCR S-6. |
+| Timestamp | 2026-10-17 11:25 UTC; 2026-10-17 22:33 UTC |

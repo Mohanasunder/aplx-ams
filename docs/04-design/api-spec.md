@@ -5,7 +5,7 @@ phase: 4
 version: 0.2
 template: api-spec
 template_version: 2.0
-status: In review
+status: Approved
 author_agent: api-designer
 approver: Mohanasunder
 date: 2026-10-17
@@ -280,20 +280,10 @@ None raised by this artifact. Inherited open assumptions A-008, A-026 to A-029, 
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Approve |
-| Approver | Mohanasunder |
-| Role | Architect / tech lead + UX |
-| Version | 0.1 |
-| Conditions | None |
-| Comments | Phase 4 design package approved. |
-| Timestamp | 2026-10-17 14:04 UTC |
-
-| Field | Value |
-| --- | --- |
-| Decision | Pending |
-| Approver | Mohanasunder |
-| Role | Architect / tech lead |
+| Decision | Approve; Approve |
+| Approver | Mohanasunder; Mohanasunder |
+| Role | Architect / tech lead; Architect / tech lead |
 | Version | 0.2 |
-| Conditions | None |
-| Comments | v0.2: AssignTicketRequest request-body field renamed to engineer_id per SCR S-6 / ADR A-18. |
-| Timestamp | Pending |
+| Conditions | None; None |
+| Comments | v0.2: AssignTicketRequest request-body field renamed to engineer_id per SCR S-6 / ADR A-18.; API-001 v0.2: AssignTicketRequest field rename to engineer_id per SCR S-6 and ADR A-18. No behavioral change. |
+| Timestamp | 2026-10-18 UTC; 2026-10-17 22:34 UTC |
