@@ -21,6 +21,16 @@ export default function App(): React.JSX.Element {
               </UserContext.Provider>
             }
           />
+          {/* /tickets placeholder — full implementation in a later feature */}
+          <Route
+            path="/tickets"
+            element={
+              <div style={{ padding: '2rem' }}>
+                <h1>Tickets</h1>
+                <p>Ticket management coming soon.</p>
+              </div>
+            }
+          />
           {/* Default route: show Login for unmatched paths including / */}
           <Route path="*" element={<Login />} />
         </Routes>
