@@ -71,7 +71,7 @@ class UserViewSet(viewsets.GenericViewSet):
             user = dal.get_user_by_id(pk)
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = UserUpdateSerializer(data=request.data)
+        serializer = UserUpdateSerializer(instance=user, data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         updatable = ("name", "email", "role", "client_org_id")
