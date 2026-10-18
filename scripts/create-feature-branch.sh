@@ -49,10 +49,10 @@ if [[ "$max" =~ ^[0-9]+$ ]]; then
   [ "$open" -lt "$max" ] || fail "$open open feature branches; limit is $max (review capacity)"
 fi
 
-# 5. Clean tree, fresh main
+# 5. Clean tree, fresh master
 git diff --quiet && git diff --cached --quiet || fail "working tree has uncommitted changes"
 if git remote | grep -q .; then git fetch origin --quiet; fi
-git switch main --quiet
+git switch master --quiet
 if git remote | grep -q .; then git pull --ff-only --quiet; fi
 
 # 6. Create branch (and optionally push)
@@ -65,5 +65,5 @@ today="$(date -u +%Y-%m-%d)"
 sed -i.bak -e "s|^- Branch:.*|- Branch: $branch|" -e "s|^- Base commit:.*|- Base commit: $base|" \
   -e "s|^- Started:.*|- Started: $today|" -e "s|^- State:.*|- State: In progress|" "$folder/status.md" && rm -f "$folder/status.md.bak"
 
-echo "Created $branch from main@$base"
-echo "Next: builders commit only to this branch; open a draft PR; never merge or push to main."
+echo "Created $branch from master@$base"
+echo "Next: builders commit only to this branch; open a draft PR; never merge or push to master."
