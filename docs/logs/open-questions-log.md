@@ -74,3 +74,16 @@ Owned by the Discovery analyst in Phase 1; every later agent adds questions in i
 | OQ-068 | Should `SECRET_KEY` in `settings/base.py` raise `ImproperlyConfigured` when no secret file or env var is present, or is the insecure literal fallback acceptable for local development with CI enforcing a real secret? | If the fallback goes unnoticed in a non-dev environment, Django runs with a known insecure key; session tokens and CSRF tokens are compromised | SSR FEAT-000 security-scanner | security-scanner | Mohanasunder (Architect / tech lead) | High | Open | | Fix before any production-bound feature uses the settings module |
 | OQ-069 | Should `ALLOWED_HOSTS` in `settings/production.py` be set to a specific hostname, or should it be injected via environment variable at deploy time? | `ALLOWED_HOSTS: ["*"]` in production accepts requests with any Host header, enabling DNS-rebinding attacks | SSR FEAT-000 security-scanner | security-scanner | Mohanasunder (Architect / tech lead) | High | Answered | Injected via `ALLOWED_HOSTS` env var, comma-split, defaulting to `localhost`. Fixed in FEAT-000 production.py (DEC-055, 2026-10-18) | None |
 | OQ-070 | Should all GitHub Actions workflows (currently `ci.yml` and `e2e.yml`) add an explicit `permissions: contents: read` block to enforce least-privilege GITHUB_TOKEN access? | Without explicit permissions, GITHUB_TOKEN may inherit write access to contents, creating unnecessary attack surface for compromised third-party actions | SSR FEAT-035 (security-scanner); AIR FEAT-035 (ai-code-reviewer) | security-scanner | Mohanasunder (Architect / tech lead) | Low | Answered | Yes — added to both `e2e.yml` (commit f741aa2) and `ci.yml` (DEC-067, FEAT-035 PR branch, 2026-10-18) | - |
+
+OQ-20261018-001: pip-audit gate should use -r requirements.txt scope
+
+**Raised by:** Orchestrator (FEAT-002 gate run, 2026-10-18)
+**Status:** Open
+
+**Question:** Should automated-gates.md update the pip-audit command from bare pip-audit to pip-audit -r requirements.txt?
+
+**Context:** Running bare pip-audit scans the entire Python environment including Claude Code system tools (mcp, msal, botocore/requests). Their transitive dependencies (PyJWT 2.13.0, urllib3 2.7.0) have known CVEs that do not affect the project. Running pip-audit -r requirements.txt returns clean. Scoping to requirements.txt is the standard practice for project audits.
+
+**Impact if not resolved:** Every feature's pip-audit gate will fail on system-tool vulnerabilities unrelated to the project, requiring DEC entries each time.
+
+**Proposed resolution:** Update automated-gates.md gate command to pip-audit -r requirements.txt. Requires standards-author to draft the change and tech lead to approve.
