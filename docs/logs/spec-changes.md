@@ -888,3 +888,53 @@ None.
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-11: FEAT-035-TESTS — record v0.2 Test Commit SHA for baseURL fix (DEC-068)
+
+<!-- scr_status: Approved -->
+<!-- scr_date: 2026-10-18 -->
+<!-- scr_approver: Mohanasunder -->
+
+### Input References
+- FEAT-035-TESTS v0.1 (Approved 2026-10-18, Mohanasunder) — artifact being amended
+- DEC-068 (2026-10-18, Mohanasunder, Tech lead) — authorization for the baseURL change
+
+### Purpose And Scope
+Formalizes the FEAT-035-TESTS v0.1 → v0.2 transition. Commit 4310adb updated scaffold.spec.ts (baseURL http://nginx:80 → http://localhost, authorized by DEC-068) and bumped FEAT-035-TESTS to v0.2, but no spec change record was created at that time. This SCR adds the record required by spec_impact.py records and also adds the v0.2 commit SHA (4310adb) to the Test Commit section of FEAT-035-TESTS.md so locked_tests.py uses the post-fix SHA. No requirements, contracts, architecture, or feature scope changes.
+
+### Changed Artifact
+FEAT-035 v0.1 → v0.2; `docs/06-build/FEAT-035-TESTS.md`
+
+### Trigger
+spec_impact.py records gate failure during FEAT-005 automated gate run (2026-10-18): "FEAT-035: v0.2 changes an approved version (v0.1) but no spec change record names 'FEAT-035 vOLD -> v0.2'".
+
+### Impact
+- FEAT-035-TESTS.md: Test Commit section updated to list v0.2 SHA (4310adb) first so locked_tests.py uses the current lock point.
+- No other artifacts, features, or contracts affected.
+
+### Assumptions
+None.
+
+### Open Questions
+None.
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes.
+
+### Traceability Links
+- Upstream: FEAT-035-TESTS v0.1; DEC-068; DEC-069
+- Downstream: FEAT-035-TESTS v0.2 Test Commit section; `locked_tests.py check` CI gate
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact

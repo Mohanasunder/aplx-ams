@@ -71,8 +71,8 @@ Failure is `Expected: "http://nginx:80", Received: undefined` — the behavior i
 TST-001 AC-5 red state: `.github/workflows/e2e.yml` does not exist on the branch as of test commit `13a976b`; the CI E2E job cannot run.
 
 ## Test Commit
+v0.2: `4310adb` — `FEAT-035 fix: E2E baseURL http://nginx:80 → http://localhost (DEC-068)` — master — 2026-10-18
 v0.1: `13a976b` — `FEAT-035: tests (frontend)` — branch `feature/FEAT-035-e2e-ci-scaffold` — 2026-10-18
-v0.2: see fix/FEAT-035-baseurl-localhost branch (DEC-068: baseURL corrected to http://localhost)
 
 ## Assumptions
 None beyond those logged in docs/logs/assumptions-log.md.
