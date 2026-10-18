@@ -1,29 +1,28 @@
 """
-FEAT-002 stub: organizations models.
+FEAT-002: organizations models.
 
-The database-builder adds fields to these models in a concurrent session.
-The full field list (name, is_active for ClientOrg; name, sid, org FK for
-SAPApplication) is defined in DBD-001 v0.1 § Module: organizations.
+Implements ClientOrg and SAPApplication as defined in DBD-001 v0.1.
 """
 
 from django.db import models
 
 
 class ClientOrg(models.Model):
-    """Represents a client organization whose SAP applications AMS supports.
+    """Represents a client organization whose SAP applications AMS supports."""
 
-    Fields are added by the database-builder in Mode B (FEAT-002).
-    """
+    name = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "organizations_clientorg"
+        pass
 
 
 class SAPApplication(models.Model):
-    """Represents an SAP application belonging to one client organization.
+    """Represents an SAP application belonging to one client organization."""
 
-    Fields are added by the database-builder in Mode B (FEAT-002).
-    """
+    client_org = models.ForeignKey(ClientOrg, on_delete=models.CASCADE, related_name="sap_applications")
+    name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "organizations_sapapplication"
+        unique_together = [("client_org", "name")]

@@ -1,12 +1,11 @@
 """
-FEAT-002 initial migration: stub ClientOrg and SAPApplication tables.
+FEAT-002 initial migration: create ClientOrg and SAPApplication tables.
 
-The database-builder adds fields in a concurrent session. This migration
-creates the tables with only the Django-generated primary key column;
-subsequent schema changes will be applied via separate migrations.
+Matches DBD-001 v0.1 schema. Reversible (no RunSQL; all fields via ORM).
 """
 
-from django.db import migrations
+import django.db.models.deletion
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -14,39 +13,48 @@ class Migration(migrations.Migration):
 
     dependencies: list[tuple[str, str]] = []
 
-    operations: list[migrations.Operation] = [
+    operations = [
         migrations.CreateModel(
             name="ClientOrg",
             fields=[
                 (
                     "id",
-                    migrations.AutoField(
+                    models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
                         verbose_name="ID",
                     ),
                 ),
+                ("name", models.CharField(max_length=255, unique=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
-            options={
-                "db_table": "organizations_clientorg",
-            },
         ),
         migrations.CreateModel(
             name="SAPApplication",
             fields=[
                 (
                     "id",
-                    migrations.AutoField(
+                    models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
                         verbose_name="ID",
                     ),
                 ),
+                (
+                    "client_org",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sap_applications",
+                        to="organizations.clientorg",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
             options={
-                "db_table": "organizations_sapapplication",
+                "unique_together": {("client_org", "name")},
             },
         ),
     ]
