@@ -236,3 +236,4 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-17 23:11 | PRD FEAT-001 | 0.1 | Approve | Mohanasunder | Release manager / DevOps | n/a | - | [review depth: Deep, tier Critical] [review: 14 min] |
 | 2026-10-18 08:38 | FEAT-035 | 0.1 | Approve | Mohanasunder | Tech lead | Pass | - | None |
 | 2026-10-18 09:13 | PRD FEAT-035 | 0.1 | Approve | Mohanasunder | Tech lead | n/a | - | [review depth: Deep, tier Critical] [review: 4 min] |
+| 2026-10-18 09:15 | PRD FEAT-035 | 0.1 | Approve | Mohanasunder | Release manager | n/a | - | [review depth: Deep, tier Critical] [review: 4 min] |
