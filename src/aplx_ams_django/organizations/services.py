@@ -52,9 +52,7 @@ def create_contract(org_id: int, data: dict[str, Any]) -> Contract:
     try:
         return dal.create_contract_for_org(org_id=org_id, data=data)
     except IntegrityError as exc:
-        raise ValidationError(
-            "An active contract already exists for this organization."
-        ) from exc
+        raise ValidationError("An active contract already exists for this organization.") from exc
 
 
 def get_active_contract(org_id: int) -> Contract | None:

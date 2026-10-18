@@ -133,9 +133,7 @@ class ContractViewSet(viewsets.GenericViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
-            contract = services.create_contract(
-                org_id=org_id, data=serializer.validated_data
-            )
+            contract = services.create_contract(org_id=org_id, data=serializer.validated_data)
         except ValidationError:
             return Response(
                 {"detail": "An active contract already exists for this organization."},
