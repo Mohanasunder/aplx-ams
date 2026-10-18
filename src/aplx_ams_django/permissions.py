@@ -23,7 +23,7 @@ class HasRolePermission(BasePermission):
     def __init__(self, required_roles: list[str] | None = None) -> None:
         self._required_roles = required_roles
 
-    def has_permission(self, request: Request, view: object) -> bool:  # type: ignore[override]
+    def has_permission(self, request: Request, view: object) -> bool:
         user = request.user
         if not user or not getattr(user, "is_authenticated", False):
             return False
