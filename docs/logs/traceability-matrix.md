@@ -27,7 +27,7 @@ API-001 contract update (Phase 6, 2026-10-18): API-001 v0.2 Approved 2026-10-18 
 | REQ S-15 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-027 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-16 | EPC E-4; BRF-001 G-3, G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-028 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-17 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-029 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
-| REQ S-18 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-002 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-18 | EPC E-5; BRF-001 G-4 | API-001 v0.2, DBD-001 v0.1, BED-001, UIS-001, PRM-001, TST-001 | FEAT-002 | PR #14 | test_models.py, test_api.py, OrgManagement.test.tsx | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18); PRD FEAT-002 Approved 2026-10-18 by Mohanasunder (Human developer reviewer) |
 | REQ S-19 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-003 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-20 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-005 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-21 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-006 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
@@ -158,6 +158,22 @@ Traceability chain: STD-001, TST-001 → FEAT-035-ACC → FEAT-035-TESTS
 
 Build status: PR Approved (PR #9, https://github.com/Mohanasunder/aplx-ams/pull/9; approved 2026-10-18 by Mohanasunder (Tech lead) and Mohanasunder (Release manager); HEAD commit: 5485683; all automated gates passed).
 
+### FEAT-002 Test Set and PR (Approved 2026-10-18)
+
+Traceability chain: REQ-001 v0.3 § S-18 → API-001 v0.2, DBD-001 v0.1 → FEAT-002 → PR #14 → test_models.py, test_api.py, OrgManagement.test.tsx
+
+| Link | Detail |
+| --- | --- |
+| REQ-001 v0.3 § S-18 → FEAT-002 | User story S-18 (org and SAP setup) implemented by FEAT-002 |
+| API-001 v0.2 → FEAT-002 | FEAT-002 consumes updated contract (AssignTicketRequest.engineer_id per ADR A-18) |
+| DBD-001 v0.1 → FEAT-002 | FEAT-002 implements the org/SAP data models defined in the database design |
+| FEAT-002 → PR #14 | https://github.com/Mohanasunder/aplx-ams/pull/14; approved 2026-10-18 by Mohanasunder (Human developer reviewer); all automated gates passed |
+| FEAT-002 → test_models.py | Backend model tests for org/SAP entities |
+| FEAT-002 → test_api.py | Backend API integration tests |
+| FEAT-002 → OrgManagement.test.tsx | Frontend component tests for org management UI |
+
+Build status: PR Approved (PR #14; approved 2026-10-18 by Mohanasunder (Human developer reviewer); PRD FEAT-002 Approved 2026-10-18; all automated gates passed).
+
 ### Contract Update: SCR S-6 / ADR A-18 / API-001 v0.2 (Approved 2026-10-18)
 
 All three artifacts approved 2026-10-18 by Mohanasunder on branch `feature/FEAT-001-frontend-scaffold`.
@@ -175,9 +191,9 @@ Affected downstream features: all features that call `POST /api/tickets/{id}/ass
 
 None. All 33 in-scope stories (REQ S-1 to S-33, Priority: Must / Should / Could) are covered by API-001, BED-001, UIS-001, PRM-001, and TST-001. DBD-001 is linked to user stories transitively via BED-001.
 
-## `scripts/traceability.py report` Output (Phase 6 update, 2026-10-18)
+## `scripts/traceability.py report` Output (Phase 6 update, 2026-10-18, post FEAT-002 PR approval)
 
-Note: `python3` is not available in the CI/agent shell on this machine (Windows Store alias only; no Python runtime installed). Script could not be re-run on 2026-10-18. The Phase 5 output below remains the last valid run. Feature, Test cases, and Status columns for FEAT-000 are updated manually from FEAT-000-TESTS.md front matter (status: Approved, confirmed directly). The Orchestrator should re-run `python3 scripts/traceability.py report` from a Python-enabled environment to regenerate this section.
+Run: `python scripts/traceability.py report` (2026-10-18). Notable change from Phase 5 run: REQ S-18 AC-1 to AC-3 (FEAT-002) now show State "In review" (feature branch in review). PR #14 and test file columns are sourced from artifact front matter scan (the script tracks criterion-to-feature links and state; PR numbers and test filenames are recorded from the artifact itself).
 
 ## `scripts/traceability.py report` Output (Phase 5, run 2026-10-17)
 
@@ -220,9 +236,9 @@ Note: `python3` is not available in the CI/agent shell on this machine (Windows 
 | REQ S-17 AC-2 | FEAT-029 | Not started | no | none | - | - |
 | REQ S-17 AC-3 | FEAT-029 | Not started | no | none | - | - |
 | REQ S-17 AC-4 | FEAT-029 | Not started | no | none | - | - |
-| REQ S-18 AC-1 | FEAT-002 | Not started | no | none | - | - |
-| REQ S-18 AC-2 | FEAT-002 | Not started | no | none | - | - |
-| REQ S-18 AC-3 | FEAT-002 | Not started | no | none | - | - |
+| REQ S-18 AC-1 | FEAT-002 | In review | no | none | - | - |
+| REQ S-18 AC-2 | FEAT-002 | In review | no | none | - | - |
+| REQ S-18 AC-3 | FEAT-002 | In review | no | none | - | - |
 | REQ S-19 AC-1 | FEAT-003 | Not started | no | none | - | - |
 | REQ S-19 AC-2 | FEAT-003 | Not started | no | none | - | - |
 | REQ S-19 AC-3 | FEAT-003 | Not started | no | none | - | - |
@@ -319,7 +335,7 @@ Note: `python3` is not available in the CI/agent shell on this machine (Windows 
 
 Note: REQ S-18 has 3 acceptance criteria (AC-1 to AC-3); all other stories have 4. Total: 131 criteria across 33 stories linked to 33 story-level features (FEAT-002 to FEAT-034, excluding enabling features FEAT-000, FEAT-001, FEAT-035). PR and Test cases columns remain empty pending Phase 6 build.
 
-## `scripts/traceability.py check --phase 5` Output (Phase 5 gate, run 2026-10-17)
+## `scripts/traceability.py check --phase 5` Output (re-run 2026-10-18, post FEAT-002 PR approval)
 
 ```
 Traceability (phase 5 gate): 33 stories, 131 story criteria, 36 features, 0 orphan(s).
@@ -327,4 +343,4 @@ Traceability (phase 5 gate): 33 stories, 131 story criteria, 36 features, 0 orph
 
 Phase 5 gate: PASS. 0 orphans. All 33 in-scope stories have a feature assignment. 36 approved feature plans exist (FEAT-000 through FEAT-035). No requirements are missing a feature ID.
 
-Note (2026-10-18): Phase 7 gate (`--phase 7`) has not yet been run; project is in Phase 6 (Build). The Phase 5 check result above remains valid. `python3` is not available in the agent shell on 2026-10-18; re-run from a Python-enabled environment when Phase 6 completes.
+Note: Phase 7 gate (`--phase 7`) has not yet been run; project is in Phase 6 (Build). The Phase 5 check result above remains valid. Re-run using `python scripts/traceability.py check --phase 5` (Windows: `python`, not `python3`).
