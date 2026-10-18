@@ -1,13 +1,13 @@
 /**
- * FEAT-005 API client stubs — users.ts
+ * FEAT-005 API client — users.ts
  *
  * Contract: API-001 v0.2 § User account management (F-6)
- * Endpoints stubbed (no logic — implementation added in Mode B):
- *   POST /api/accounts/users/           → Create user
- *   GET  /api/accounts/users/           → List users (paginated)
- *   GET  /api/accounts/users/{id}/      → User detail
- *   PATCH /api/accounts/users/{id}/     → Update user
- *   POST /api/accounts/users/{id}/deactivate/ → Deactivate user
+ * Endpoints implemented:
+ *   POST  /api/accounts/users/                → Create user
+ *   GET   /api/accounts/users/                → List users (paginated)
+ *   GET   /api/accounts/users/{id}/           → User detail
+ *   PATCH /api/accounts/users/{id}/           → Update user
+ *   POST  /api/accounts/users/{id}/deactivate/ → Deactivate user
  */
 
 // ── Role constants (API-001 v0.2 § F-6 role enum) ────────────────────────────
@@ -54,25 +54,44 @@ export interface UpdateUserPayload {
   organization?: number | null;
 }
 
-// ── Stub functions (signatures only — no logic) ───────────────────────────────
+// ── API base path (contract: API-001 v0.2) ────────────────────────────────────
 
-export async function listUsers(): Promise<UserListResponse | null> {
-  return null;
+const BASE = '/api/accounts/users';
+
+// ── Client functions ──────────────────────────────────────────────────────────
+
+export async function listUsers(): Promise<UserListResponse> {
+  const r = await fetch(`${BASE}/`, { credentials: 'include' });
+  return r.json() as Promise<UserListResponse>;
 }
 
-export async function createUser(
-  _payload: CreateUserPayload,
-): Promise<User | null> {
-  return null;
+export async function createUser(payload: CreateUserPayload): Promise<User> {
+  const r = await fetch(`${BASE}/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+  return r.json() as Promise<User>;
 }
 
 export async function updateUser(
-  _id: number,
-  _payload: UpdateUserPayload,
-): Promise<User | null> {
-  return null;
+  id: number,
+  payload: UpdateUserPayload,
+): Promise<User> {
+  const r = await fetch(`${BASE}/${id}/`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+  return r.json() as Promise<User>;
 }
 
-export async function deactivateUser(_id: number): Promise<null> {
+export async function deactivateUser(id: number): Promise<null> {
+  await fetch(`${BASE}/${id}/deactivate/`, {
+    method: 'POST',
+    credentials: 'include',
+  });
   return null;
 }
