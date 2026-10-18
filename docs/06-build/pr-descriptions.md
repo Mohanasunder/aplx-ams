@@ -565,6 +565,180 @@ Standard review means: check every acceptance criterion against the running or p
 - [x] Vague words removed (etc., as needed, appropriate)
 
 ---
+
+## PR FEAT-003: S-19 — Delivery Manager Sets Up Client Organization Contract
+
+<!-- pr_status: Draft -->
+<!-- pr_approver: -->
+<!-- pr_depth: Deep -->
+<!-- pr_review_minutes: -->
+
+### Input References
+- FEAT-003 plan.md v0.1 (Approved 2026-10-17, Mohanasunder)
+- FEAT-003-ACC v0.1 (Approved 2026-10-17, Mohanasunder)
+- FEAT-003-TESTS v0.1 (Approved 2026-10-18, Mohanasunder) — test commit `b4b18a1`
+- REQ-001 v0.3 § S-19 — acceptance criteria source (Approved 2026-10-17)
+- API-001 v0.2 — endpoint contracts (Approved 2026-10-17)
+- DBD-001 v0.1 § Module: organizations — table definitions (Approved 2026-10-17)
+- UIS-001 v0.1 — UI Specification (Approved 2026-10-17)
+- STD-001 v0.1 — APLX AMS: Coding Standards (Approved 2026-10-17)
+- TST-001 v0.1 — APLX AMS: Test Strategy (Approved 2026-10-17)
+- PRM-001 v0.1 — Permission Matrix (Approved 2026-10-17)
+- DEC-072 (2026-10-18) — Formatting-only fixes applied to locked test files; test commit SHA updated
+- DEC-073 (2026-10-18) — Scope gate exception for test_api.py (FEAT-002 file, formatting fix only)
+
+### Summary
+Implements REQ S-19 end-to-end: Django `Contract` model (type: `hours_bank` or `fixed_fee`, nullable `contracted_hours`, `is_active`, `started_at`, `monthly_close_at`, `ended_at`, FK to `ClientOrg`) with migration `0002_contract`; a partial unique index on `(client_org_id)` where `is_active = true` enforcing BR B-15; `ContractSerializer` with `coerce_to_string=False` on decimal fields; `create_contract` and `get_active_contract` service functions with org existence pre-check and duplicate-active-contract guard; contract DAL queries; `ContractViewSet` with `HasRolePermission` (P3-only write) returning 201, 409, and 403 as specified in API-001 v0.2; contract endpoints registered in `urls.py`; React `ContractSetup` component with MUI form for contract type and contracted hours (conditional); `contracts.ts` API client making real fetch calls to `POST /api/organizations/{orgId}/contracts/` and `GET /api/organizations/{orgId}/contracts/active/`. All 22 new locked tests pass; 52 total tests run; all CI gates exit 0.
+
+### Linked Artifacts
+- FEAT-003 plan.md v0.1
+- FEAT-003-ACC v0.1
+- FEAT-003-TESTS v0.1
+- REQ-001 v0.3 § S-19 (acceptance criteria)
+- API-001 v0.2 § Contract management (F-4, F-5)
+- DBD-001 v0.1 § Module: organizations (table definitions)
+- UIS-001 v0.1 § REQ S-19 — Delivery manager sets up a contract
+- STD-001 v0.1 (Coding Standards — naming, structure, gate commands)
+- TST-001 v0.1 (Test Strategy — test levels)
+- PRM-001 v0.1 § Contract management (F-4, F-5)
+- BR B-15 (one-active-contract business rule)
+- DEC-072, DEC-073 (test formatting and scope deviations, approved by tech lead)
+
+### Changes
+**Database:**
+- `src/aplx_ams_django/organizations/models.py` — added `Contract(models.Model)`: `client_org` (ForeignKey to ClientOrg, CASCADE), `contract_type` (CharField: `hours_bank` / `fixed_fee`), `contracted_hours` (DecimalField, null=True, blank=True), `is_active` (BooleanField, default=True), `started_at` (DateTimeField), `monthly_close_at` (DateTimeField, null=True), `ended_at` (DateTimeField, null=True), `created_at` (DateTimeField, auto_now_add=True); `Meta.constraints`: `UniqueConstraint` on `client_org` filtered to `is_active=True` (BR B-15); `CheckConstraint` requiring `contracted_hours IS NOT NULL` when `contract_type = 'hours_bank'`.
+- `src/aplx_ams_django/organizations/migrations/0002_contract.py` — creates `contract` table with all fields, partial unique index, and check constraint per DBD-001. Depends on `0001_initial`.
+
+**Backend:**
+- `src/aplx_ams_django/organizations/dal.py` — added `get_contract_by_id()`, `get_active_contract_for_org()`, `create_contract()` DAL functions.
+- `src/aplx_ams_django/organizations/serializers.py` — added `ContractSerializer` with all Contract fields; `contracted_hours` and `hours_bank_balance` use `coerce_to_string=False`; read-only `hours_bank_balance` computed from `contracted_hours` for `hours_bank` type contracts.
+- `src/aplx_ams_django/organizations/services.py` — added `create_contract()` (checks org existence via `dal.get_org_by_id()`; checks no active contract via `dal.get_active_contract_for_org()`; raises `ConflictError` on duplicate; calls `dal.create_contract()`) and `get_active_contract()`.
+- `src/aplx_ams_django/organizations/views.py` — added `ContractViewSet` with `permission_classes = [HasRolePermission]`; `create` action returns 201; catches `ClientOrg.DoesNotExist` → 404; catches `ConflictError` → 409; `active` action returns active contract or 404; `org_id` asserted non-None from URL kwargs.
+- `src/aplx_ams_django/organizations/urls.py` — registered `POST /api/organizations/{org_id}/contracts/` and `GET /api/organizations/{org_id}/contracts/active/` per API-001 v0.2.
+
+**Frontend:**
+- `src/frontend/src/pages/ContractSetup.tsx` — MUI form with contract type selector (`hours_bank` / `fixed_fee`); contracted hours `TextField` shown only for `hours_bank`; Create Contract button visible for P3 (DM) only; access-denied sentinel rendered for non-P3; calls `contracts.ts` on submit; shows error message on 409 response. `org_id` hardcoded to `1` (Known Gap — pending FEAT-006).
+- `src/frontend/src/api/contracts.ts` — typed API client: `createContract()` calls `POST /api/organizations/{orgId}/contracts/` with JSON body; `getActiveContract()` calls `GET /api/organizations/{orgId}/contracts/active/`; TypeScript `Contract` interface matches `ContractSerializer` fields.
+
+**Tests (locked from FEAT-003-TESTS v0.1):**
+- `src/aplx_ams_django/organizations/tests/test_contract_models.py` — 11 database model tests (locked).
+- `src/aplx_ams_django/organizations/tests/test_contract_api.py` — 7 backend API tests (locked; formatting fix applied per DEC-072).
+- `src/frontend/src/pages/ContractSetup.test.tsx` — 4 frontend component tests (locked).
+
+### Tests
+**Tests added (22 locked from FEAT-003-TESTS v0.1):**
+
+Database (`src/aplx_ams_django/organizations/tests/test_contract_models.py`): `test_create_hours_bank_contract_sets_contracted_hours`, `test_second_active_contract_same_org_raises_integrity_error`, `test_second_inactive_contract_same_org_succeeds`, `test_create_fixed_fee_contract_without_contracted_hours_succeeds`, `test_contract_has_client_org_fk`, `test_contract_has_contract_type_field`, `test_contract_has_contracted_hours_field_nullable`, `test_contract_has_is_active_field_with_default_true`, `test_contract_has_started_at_field`, `test_contract_has_created_at_field`, `test_hours_bank_without_contracted_hours_raises_integrity_error`
+
+Backend (`src/aplx_ams_django/organizations/tests/test_contract_api.py`): `test_dm_can_create_hours_bank_contract`, `test_hours_bank_contract_balance_shows_100`, `test_second_active_contract_returns_409`, `test_fixed_fee_contract_has_no_contracted_hours`, `test_p1_cannot_create_contract`, `test_p2_cannot_create_contract`, `test_p4_cannot_create_contract`
+
+Frontend (`src/frontend/src/pages/ContractSetup.test.tsx`): `FEAT-003 AC-1: renders Create Contract button for DM role`, `FEAT-003 AC-2: shows error on 409 conflict`, `FEAT-003 AC-3: does not show contracted hours field for fixed fee`, `FEAT-003 AC-4: does not show create controls for non-DM role`
+
+**How to run:**
+```
+pytest src/ --cov=src --cov-fail-under=80 --timeout=600
+cd src/frontend && npm run test -- --run
+```
+
+**Gate results (all pass on branch `feature/FEAT-003-contract-setup`):**
+
+| Gate | Result |
+|---|---|
+| ruff check + format | Pass (0 errors) |
+| mypy --strict | Pass (0 errors) |
+| pytest | Pass (52 collected, 52 passed; coverage >= 80%) |
+| bandit -ll | Pass (exit 0; B101 in test files, expected) |
+| pip-audit -r requirements.txt | Pass (0 known vulnerabilities) |
+| detect-secrets | Pass (exit 0) |
+| tsc --noEmit | Pass (0 errors) |
+| eslint --max-warnings=0 | Pass (0 errors) |
+| vitest coverage | Pass (>= 70% threshold) |
+| check_feature_size | Pass (0 violations) |
+
+### Requirements Covered
+- REQ-019 AC-1: `test_create_hours_bank_contract_sets_contracted_hours` (database), `test_dm_can_create_hours_bank_contract`, `test_hours_bank_contract_balance_shows_100` (backend), `FEAT-003 AC-1: renders Create Contract button for DM role` (frontend) — all PASSING.
+- REQ-019 AC-2: `test_second_active_contract_same_org_raises_integrity_error`, `test_second_inactive_contract_same_org_succeeds` (database), `test_second_active_contract_returns_409` (backend), `FEAT-003 AC-2: shows error on 409 conflict` (frontend) — all PASSING.
+- REQ-019 AC-3: `test_create_fixed_fee_contract_without_contracted_hours_succeeds` (database), `test_fixed_fee_contract_has_no_contracted_hours` (backend), `FEAT-003 AC-3: does not show contracted hours field for fixed fee` (frontend) — all PASSING.
+- REQ-019 AC-4: `test_contract_has_client_org_fk`, `test_contract_has_contract_type_field`, `test_contract_has_contracted_hours_field_nullable`, `test_contract_has_is_active_field_with_default_true`, `test_contract_has_started_at_field`, `test_contract_has_created_at_field`, `test_hours_bank_without_contracted_hours_raises_integrity_error` (database), `test_p1_cannot_create_contract`, `test_p2_cannot_create_contract`, `test_p4_cannot_create_contract` (backend), `FEAT-003 AC-4: does not show create controls for non-DM role` (frontend) — all PASSING.
+
+### Known Gaps
+1. `ContractSetup.tsx` hardcodes `org_id=1` (AIR F-5). Pending FEAT-006 (routing/navigation integration) which will pass the real org ID from context. Not a blocker for this feature.
+2. `COERCE_DECIMAL_TO_STRING` not set explicitly in DRF settings (SSR M-2). Field-level `coerce_to_string=False` on `contracted_hours` and `hours_bank_balance` overrides the DRF default per field. All 52 backend tests pass numeric comparisons through the serializer layer. Accepted.
+
+### Deviations From Plan
+- **AIR F-1 (integrity-error-too-broad) — fixed:** `services.py` originally caught `IntegrityError` broadly, returning misleading 409 for a non-existent org. Fixed in commit `33d5444`: org existence checked via `dal.get_org_by_id()` before DAL create; `ClientOrg.DoesNotExist` caught in view → 404.
+- **AIR F-2 (incomplete-frontend-api) — fixed:** `contracts.ts` originally returned mock data with no HTTP call. Fixed in commits `86aa8f9` and `33d5444`: real `fetch` call implemented to `POST /api/organizations/{orgId}/contracts/` and `GET /api/organizations/{orgId}/contracts/active/`.
+- **AIR F-3 (out-of-scope-model-fields) — void:** `monthly_close_at` and `ended_at` flagged as potentially out-of-scope. Verified as present in approved DBD-001 and BED-001. No change required.
+- **AIR F-4 (api-contract-field-mismatch) — fixed:** TypeScript `Contract` interface mismatched `ContractSerializer` fields. Fixed in commit `33d5444`: interface aligned to match serializer output.
+- **DEC-072 (2026-10-18, Mohanasunder):** Formatting-only fix applied to locked test files — removed one extra blank line after imports in `test_contract_api.py` (ruff I001) and applied `ruff format` to `test_api.py` (pre-existing FEAT-002 issue). No test logic changed. Test Commit SHA in `FEAT-003-TESTS` and `FEAT-002-TESTS` updated to `b4b18a1`. Authorized by tech lead.
+- **DEC-073 (2026-10-18, Mohanasunder):** Scope gate exception granted for `test_api.py` (`src/aplx_ams_django/organizations/tests/test_api.py`), a FEAT-002 locked file touched by the formatting fix above. No logic change; exception recorded in decision log.
+
+### Blockers
+None.
+
+### Commits
+```
+33d5444 FEAT-003: fix AIR findings F-1 F-2 F-4
+86aa8f9 FEAT-003: implement contracts.ts with real fetch call (fix SSR M-6)
+2cab546 FEAT-003: log DEC-073 scope gate exception for test_api.py formatting fix
+3e410d4 FEAT-003: update test commit SHAs after formatting fix; log DEC-072
+b4b18a1 FEAT-003: fix ruff formatting in test files (blank lines only, no logic change)
+9134408 FEAT-003: fix mypy strict errors (ClassVar list type args, org_id assertion)
+474f550 FEAT-003: fix ruff format (line length) in services.py and views.py
+a6e8ddc FEAT-003: restore package-lock.json to master state (cosmetic npm normalization)
+baf1751 FEAT-003: fix Test Files list format to match locked_tests.py parser
+0be18b6 FEAT-003: implement contract API (backend Mode B)
+f8d8ee5 FEAT-003: implement ContractSetup frontend component
+b44f040 FEAT-003: implement Contract model and migration (database)
+6f6cf3d FEAT-003: set validation Pass on test set
+27e1e2d FEAT-003: compile test set
+8b8914d FEAT-003: tests (backend)
+6824848 FEAT-003: tests (frontend)
+5ef96df FEAT-003: tests (database)
+```
+
+### Risk Tier And Review Depth
+Tier: High — Deep review required (tech lead + one reviewer).
+
+Contract data governs effort billing and hours bank balance; an incorrect constraint allowing two active contracts for the same organization corrupts financial data. Per `.ai/standards/review-and-approval.md` § Approval tiers, High features require the tech lead plus one human developer reviewer, with Deep review depth.
+
+Deep review means: read every changed line of logic; review security against the threat model and permission matrix (auth, validation, secrets, data exposure); run the feature locally including failure paths; check migrations and rollback; read every test for behavior.
+
+### Reviewer Checklist
+- [ ] Ran or previewed the feature (not only read the diff)
+- [ ] Every acceptance criterion is met
+- [ ] Change summary read: Known Gaps acceptable (org_id hardcode deferred to FEAT-006; decimal coercion accepted per DRF field-level override), Deviations From Plan justified (AIR fixes, formatting-only DEC-072/DEC-073), Blockers 'None'
+- [ ] No files changed outside the plan (AIR fixes and formatting changes within plan files; DEC-072 and DEC-073 approved by tech lead)
+- [ ] No packages added or upgraded beyond the plan's New Packages (New Packages: None)
+- [ ] Tests assert behavior, not just that code runs (assertions: field existence and constraints, HTTP status codes, DOM element presence, role-based 403 responses, 409 on duplicate active contract)
+- [ ] Approved test set (FEAT-003-TESTS v0.1) unchanged in logic since approval; test commit `b4b18a1` (formatting fix only, authorized by DEC-072)
+- [ ] Auth, permissions, input validation, secrets, and data handling checked (`HasRolePermission` returns 403 for P1, P2, P4; P3-only POST enforced at view layer; org existence checked before contract creation; duplicate-active-contract blocked at service and DB layers)
+- [ ] Migrations reversible and consistent with the schema design (`0002_contract` creates Contract table with partial unique index and check constraint per DBD-001; reversible)
+- [ ] Contract (OpenAPI) and UI spec followed (endpoints per API-001 v0.2 § F-4/F-5; ContractSetup layout per UIS-001 v0.1 § S-19)
+- [ ] Applicable learned rules (`.ai/standards/learned-rules.md`) followed
+- [ ] Checker validation summary and AI pre-review read; AIR findings F-1, F-2, F-4 fixed; F-3 voided; F-5 and M-2 documented as Known Gaps
+- [ ] Second approver obtained (High tier: tech lead + one reviewer)
+
+### Assumptions
+None beyond those logged in `docs/logs/assumptions-log.md`.
+
+### Open Questions
+None.
+
+### Traceability Links
+- Upstream: S-19 (REQ-001 v0.3 § S-19); API-001 v0.2; DBD-001 v0.1; UIS-001 v0.1; STD-001 v0.1; PRM-001 v0.1; FEAT-003 plan.md v0.1; FEAT-003-ACC v0.1; FEAT-003-TESTS v0.1; BR B-15; DEC-072; DEC-073
+- Downstream: FEAT-004 (contract end and replacement; depends on Contract model); FEAT-027 (effort recording against a contract); FEAT-028 (hours bank balance review); FEAT-029 (finance export); Phase 7 system testing
+
+### Quality Checklist
+- [x] Every template section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] Vague words removed (etc., as needed, appropriate)
+
+---
 <!-- Add further ## PR FEAT-NNN: sections here as new features are built -->
 
 ## Assumptions

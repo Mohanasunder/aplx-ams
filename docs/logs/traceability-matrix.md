@@ -28,7 +28,7 @@ API-001 contract update (Phase 6, 2026-10-18): API-001 v0.2 Approved 2026-10-18 
 | REQ S-16 | EPC E-4; BRF-001 G-3, G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-028 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-17 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-029 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-18 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-002 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
-| REQ S-19 | EPC E-4; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-003 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-19 | EPC E-4; BRF-001 G-3 | API-001 v0.2, DBD-001 v0.1, BED-001, UIS-001, PRM-001, TST-001 | FEAT-003 | - | test_contract_models.py (11), test_contract_api.py (7), ContractSetup.test.tsx (4) | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18); TESTS Approved v0.1 (2026-10-18, Mohanasunder, Architect / tech lead) |
 | REQ S-20 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-005 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-21 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-006 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-22 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-007 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
@@ -157,6 +157,22 @@ Traceability chain: STD-001, TST-001 → FEAT-035-ACC → FEAT-035-TESTS
 | PRD FEAT-035 → GitHub PR #9 | https://github.com/Mohanasunder/aplx-ams/pull/9; approved 2026-10-18 by Mohanasunder (Tech lead) and Mohanasunder (Release manager); HEAD commit: 5485683; all automated gates passed |
 
 Build status: PR Approved (PR #9, https://github.com/Mohanasunder/aplx-ams/pull/9; approved 2026-10-18 by Mohanasunder (Tech lead) and Mohanasunder (Release manager); HEAD commit: 5485683; all automated gates passed).
+
+### FEAT-003 Test Set (Approved 2026-10-18)
+
+Traceability chain: REQ-001 v0.3 § S-19 → API-001 v0.2, DBD-001 v0.1 → FEAT-003-ACC → FEAT-003-TESTS
+
+| Link | Detail |
+|---|---|
+| REQ-001 v0.3 § S-19 → FEAT-003-TESTS | All 4 acceptance criteria (AC-1 to AC-4) mapped to tests across three layers |
+| API-001 v0.2 → FEAT-003-TESTS | Contract endpoints and permission roles (P1–P4) drive backend and frontend tests |
+| DBD-001 v0.1 → FEAT-003-TESTS | Partial unique index (BR B-15) and check constraint drive database model tests |
+| FEAT-003-ACC v0.1 → FEAT-003-TESTS | AC-1 (hours bank creation, balance); AC-2 (single active contract constraint, 409); AC-3 (fixed fee, no contracted_hours); AC-4 (field presence, role-based access) |
+| FEAT-003-TESTS v0.1 (Approved) | Approver: Mohanasunder (Architect / tech lead), 2026-10-18; branch: feature/FEAT-003-contract-setup; test commits: 5ef96df (DB), 8b8914d (backend), 6824848 (frontend) |
+| Test files | `src/aplx_ams_django/organizations/tests/test_contract_models.py` (11 tests); `src/aplx_ams_django/organizations/tests/test_contract_api.py` (7 tests); `src/frontend/src/pages/ContractSetup.test.tsx` (4 tests) |
+| Red run | All 22 tests failed on stub code (2026-10-18); FEAT-002 tests remained green (no regression) |
+
+Build status: TESTS Approved (FEAT-003-TESTS v0.1, approved 2026-10-18 by Mohanasunder, Architect / tech lead). Implementation not yet started.
 
 ### Contract Update: SCR S-6 / ADR A-18 / API-001 v0.2 (Approved 2026-10-18)
 

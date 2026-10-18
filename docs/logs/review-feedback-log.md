@@ -15,3 +15,6 @@ Category: kebab-case slug; reuse an existing one when it fits (see `.ai/standard
 
 | 2026-10-18 | FEAT-002 | ai-code-reviewer | api-contract-violation | Major | OrgViewSet inherits UpdateModelMixin adding uncontracted PUT /api/organizations/{pk}/; API-001 v0.2 only contracts PATCH | ai-code-reviewer |
 | 2026-10-18 | FEAT-002 | ai-code-reviewer | missing-input-validation | Major | SAPApplicationViewSet.create passes request.data unvalidated; data["name"] raises unhandled KeyError (500) on missing name; OrgViewSet.create correctly calls is_valid(raise_exception=True) | ai-code-reviewer |
+
+| 2026-10-18 | FEAT-003 | ai-code-reviewer | integrity-error-too-broad | Major | services.create_contract caught all IntegrityError including FK violations; a non-existent org_id returned 409 Conflict instead of 404 Not Found — fixed by adding org existence check (dal.get_org_by_id) before DAL call and ClientOrg.DoesNotExist handler in view | ai-code-reviewer |
+| 2026-10-18 | FEAT-003 | ai-code-reviewer | incomplete-frontend-api | Major | contracts.ts returned stub/mock data (Mode A stub not replaced); no HTTP call to backend — fixed by implementing real fetch calls to POST /api/organizations/{orgId}/contracts/ and GET active/ | ai-code-reviewer |
