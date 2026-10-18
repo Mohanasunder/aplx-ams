@@ -636,8 +636,9 @@ None.
 ---
 
 ## SCR S-8: FEAT-003-STATUS stale tracking fields after PR approval
+<!-- scr_approver: Mohanasunder -->
 
-<!-- scr_status: Draft -->
+<!-- scr_status: Approved -->
 <!-- scr_author: orchestrator -->
 <!-- scr_date: 2026-10-18 -->
 
