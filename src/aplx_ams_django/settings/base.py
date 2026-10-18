@@ -35,6 +35,9 @@ AUTH_USER_MODEL = "accounts.User"
 
 MIDDLEWARE: list[str] = [
     "django.contrib.sessions.middleware.SessionMiddleware",  # FEAT-006: session management
+    # FEAT-006: AuthenticationMiddleware reads the session and sets request.user
+    # for every request; required for session-based login/logout to work.
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
 ]
 
 ROOT_URLCONF = "aplx_ams_django.urls"
@@ -79,6 +82,15 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.Argon2PasswordHasher",
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
 ]
+
+# FEAT-006: DRF uses SameSiteSessionAuthentication (no CSRF token required;
+# SameSite=Lax cookie provides protection).  The class returns a non-empty
+# authenticate_header so DRF sends HTTP 401 (not 403) for unauthenticated requests.
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "aplx_ams_django.accounts.authentication.SameSiteSessionAuthentication",
+    ],
+}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

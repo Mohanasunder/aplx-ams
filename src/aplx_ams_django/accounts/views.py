@@ -20,8 +20,10 @@ Permission matrix (PRM-001 v0.1 § Authentication F-5):
 
 from __future__ import annotations
 
+from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from rest_framework import status, viewsets
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -105,48 +107,59 @@ class UserViewSet(viewsets.GenericViewSet):
 
 
 # ---------------------------------------------------------------------------
-# FEAT-006 auth views — Mode A stubs (all return 501 Not Implemented)
-# Logic is added in Mode B.
+# FEAT-006 auth views — Mode B implementation
 # ---------------------------------------------------------------------------
+
+_INVALID_CREDENTIALS = {"detail": "Invalid credentials."}
 
 
 class LoginView(APIView):
     """POST /api/auth/login/ — authenticate and start a session (AC-1, AC-2, AC-4).
 
     Public endpoint: no authentication required.
-    Mode A stub: returns 501 Not Implemented for all requests.
+    Permission matrix: AllowAny (PRM-001 v0.1 § Authentication F-5).
     """
 
-    permission_classes: list[object] = []
+    permission_classes = [AllowAny]
 
     def post(self, request: Request) -> Response:
-        """Stub: returns 501. Implemented in Mode B."""
-        return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
+        """Authenticate with username + password; start a session on success."""
+        username = request.data.get("username", "")
+        password = request.data.get("password", "")
+
+        user = authenticate(request, username=username, password=password)
+        if user is None:
+            return Response(_INVALID_CREDENTIALS, status=status.HTTP_401_UNAUTHORIZED)
+
+        login(request, user)
+        org_name = user.client_org.name if user.client_org else None
+        return Response({"role": user.role, "org": org_name}, status=status.HTTP_200_OK)
 
 
 class LogoutView(APIView):
     """POST /api/auth/logout/ — invalidate the current session.
 
     Requires an active authenticated session (own session only per PRM-001 v0.1).
-    Mode A stub: returns 501 Not Implemented for all requests.
     """
 
-    permission_classes: list[object] = []
+    permission_classes = [IsAuthenticated]
 
     def post(self, request: Request) -> Response:
-        """Stub: returns 501. Implemented in Mode B."""
-        return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
+        """Invalidate the session and return HTTP 200."""
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
 
 
 class MeView(APIView):
     """GET /api/auth/me/ — return the authenticated user's role and org (AC-1).
 
     Requires authentication; returns the authenticated user's own record.
-    Mode A stub: returns 501 Not Implemented for all requests.
     """
 
-    permission_classes: list[object] = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        """Stub: returns 501. Implemented in Mode B."""
-        return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
+        """Return role and org for the authenticated user."""
+        user = request.user
+        org_name = user.client_org.name if user.client_org else None
+        return Response({"role": user.role, "org": org_name}, status=status.HTTP_200_OK)
