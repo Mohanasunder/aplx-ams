@@ -419,3 +419,31 @@ None.
 
 - Upstream: FEAT-005 plan; FEAT-005-TESTS v0.1; automated-gates.md; DEC-079; DEC-065; PRM-001 v0.1
 - Downstream: PR FEAT-005 human review
+
+## SSR FEAT-005 (re-scan): S-20 Delivery Manager Manages User Accounts — Post-Fix Security Scan
+
+<!-- ssr_status: Draft -->
+<!-- ssr_author: security-scanner -->
+<!-- ssr_date: 2026-10-18 -->
+<!-- ssr_verdict: Pass -->
+
+### Scan Tools And Results
+
+| Tool | Command | Exit Code |
+| --- | --- | --- |
+| bandit | `python -m bandit -r src/ -ll` | 0 — No MEDIUM or HIGH findings |
+| pip-audit | `python -m pip_audit -r requirements.txt` | 0 — No known vulnerabilities in project packages |
+| detect-secrets | `python -m detect_secrets scan --baseline .secrets.baseline` | 0 — No new secrets beyond committed baseline |
+
+### Key Changes Reviewed
+- F-1 (M-1 resolved): `partial_update` now routes through `UserUpdateSerializer`; `validated_data` applied instead of raw `request.data`
+- F-2: All three pk-based actions wrap DAL/service calls in `try/except User.DoesNotExist` → 404
+- F-8: `r.ok` check before every `r.json()` — prevents UI treating error payloads as valid data
+- `temporary_password` excluded from API payload (form state only for locked-test compat)
+
+### Verdict
+**Pass.** All three non-overridable gate commands exited 0. The sole Minor advisory M-1 from the initial SSR FEAT-005 (partial_update bypassing UserUpdateSerializer) is resolved by commit `853d731`. No security regressions introduced by builder fixes. No Blockers.
+
+### Traceability Links
+- Upstream: FEAT-005 plan; FEAT-005-TESTS v0.3; automated-gates.md; DEC-079; DEC-081; prior SSR FEAT-005 (initial, HEAD `02e32a5`)
+- Downstream: PR FEAT-005 human review

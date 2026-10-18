@@ -764,9 +764,11 @@ None.
 - DEC-077 (2026-10-18) — SCR S-10 governance
 - DEC-078 (2026-10-18) — Scope gate override: 8 out-of-plan Django boilerplate files
 - DEC-079 (2026-10-18) — pip-audit gate override: pre-existing vulnerabilities
+- DEC-080 (2026-10-18) — Native HTML approved for UserManagement.tsx; resolves OQ-20261018-002
+- DEC-081 (2026-10-18) — Accept locked-test partial-application deviations F-4, F-5, F-7
 
 ### Summary
-Implements REQ S-20 end-to-end: Django `accounts` app (`User` model extending `AbstractBaseUser` with `UserRole` TextChoices, 4 DB constraints, `0001_initial` migration, DAL, services, serializers, `UserViewSet` enforcing `delivery_manager`-only access via `HasRolePermission`) and React `UserManagement` page (user list with Deactivated chip, native-HTML create dialog with role select and org validation, deactivate confirm flow). All 35 locked tests from FEAT-005-TESTS v0.3 pass (13 model, 16 API, 6 frontend). All CI gates pass; pre-existing scope (DEC-078) and pip-audit (DEC-079) gates were overridden by Mohanasunder.
+Implements REQ S-20 end-to-end: Django `accounts` app (`User` model extending `AbstractBaseUser` with `UserRole` TextChoices, 4 DB constraints, `0001_initial` migration, DAL, services, serializers, `UserViewSet` enforcing `delivery_manager`-only access via `HasRolePermission`) and React `UserManagement` page (user list with Deactivated chip, native-HTML create dialog with role select and org validation, deactivate confirm flow). All 35 locked tests from FEAT-005-TESTS v0.3 pass (13 model, 16 API, 6 frontend). All CI gates pass; pre-existing scope (DEC-078) and pip-audit (DEC-079) gates were overridden by Mohanasunder. Five Major AIR findings were resolved post-initial-build: backend fixes (partial_update validation, DoesNotExist 404, role dedup) in commit `853d731`; frontend fixes (API client field names, list shape, username field, temp-pw scope, r.ok check) in commit `6bbf5c8`. Three partial-application deviations accepted per DEC-081 (locked-test constraint).
 
 ### Linked Artifacts
 - FEAT-005 plan.md v0.2
@@ -780,7 +782,7 @@ Implements REQ S-20 end-to-end: Django `accounts` app (`User` model extending `A
 - TST-001 v0.1 (Test Strategy — test levels)
 - PRM-001 v0.1 § User account management (F-6)
 - SCR S-9; SCR S-10
-- DEC-075, DEC-076, DEC-077, DEC-078, DEC-079
+- DEC-075, DEC-076, DEC-077, DEC-078, DEC-079, DEC-080, DEC-081
 
 ### Changes
 **Database:**
@@ -843,12 +845,16 @@ cd src/frontend && npm run test -- --run
 
 ### Known Gaps
 1. REQ S-20 AC-3 partial: The acceptance criterion states "that user can no longer sign in." DB persistence (`is_active=False`) is tested at database and backend layers in this feature. The sign-in refusal test (HTTP 401 on sign-in attempt with a deactivated account) is deferred to FEAT-006, which owns the sign-in endpoint (FEAT-005 plan.md § Out Of Scope; FEAT-005-TESTS v0.3 § Purpose And Scope). FEAT-006-TESTS must close this gap.
+2. AIR F-4 partial (DEC-081): `UserManagement.tsx` dispatches `setUsers(Array.isArray(data) ? data : [])` instead of `setUsers(res)`. The guard is production-safe and defensive. Locked tests (FEAT-005-TESTS v0.3) do not assert the Array.isArray guard behavior; removing it to match the simpler form would alter component behavior beyond what the tests constrain. Accepted per DEC-081.
+3. AIR F-5 partial (DEC-081): `username` field is present in the create-user form but no client-side disabled/validation is applied when the username field is empty. Locked tests do not assert empty-username disable behavior; adding the guard would change component behavior in a way the locked test cannot verify. Accepted per DEC-081; FEAT-005-TESTS v0.3 cannot be modified without a Mode A re-run.
+4. AIR F-7 partial (DEC-081): `temporary_password` field is rendered in the create-user dialog UI but is not included in the API payload sent to the backend. The field will be wired to the temp-password workflow in FEAT-008. Locked tests do not cover the temporary_password field behavior in FEAT-005. Accepted per DEC-081.
 
 ### Deviations From Plan
 - **DEC-078 (2026-10-18, Mohanasunder):** Scope gate overridden for 8 out-of-plan files: Django app boilerplate (`accounts/__init__.py`, `accounts/admin.py`, `accounts/apps.py`, `accounts/migrations/__init__.py`, `accounts/tests/__init__.py`, `accounts/tests/conftest.py`) auto-created by Django; `pyproject.toml` for ruff/mypy tooling config (gate-required); `plan.md` amended via approved SCR S-9.
 - **DEC-079 (2026-10-18, Mohanasunder):** pip-audit gate overridden. Pre-existing PyJWT, python-dotenv, python-jose, and urllib3 vulnerabilities flagged by bare pip-audit pre-date FEAT-005 and are not introduced by this feature. Dependency upgrades tracked as a separate backlog item.
 - **SCR S-9 (Approved 2026-10-18, Mohanasunder; DEC-075, DEC-076):** `src/aplx_ams_django/settings/base.py` added to FEAT-005 plan.md file scope (v0.2). Required for `AUTH_USER_MODEL = "accounts.User"` and `INSTALLED_APPS` configuration.
-- **UIS-001 deviation — native HTML instead of MUI DataGrid/Dialog/Select:** plan.md step 9 specifies "MUI DataGrid; DM-only create/deactivate." Implementation uses a native HTML `<table>`, `<dialog>`, and `<select>` for React 18 ARIA compliance with Vitest ARIA queries. No DEC entry was found in the decision log covering this choice. See OQ-20261018-002.
+- **DEC-080 (2026-10-18, Mohanasunder) — native HTML instead of MUI DataGrid/Dialog/Select:** plan.md step 9 specifies "MUI DataGrid; DM-only create/deactivate." Implementation uses a native HTML `<table>`, `<dialog>`, and `<select>`. Approved by Mohanasunder (DEC-080): native HTML is required for ARIA compatibility with Vitest/Testing Library ARIA queries (`getByRole`, `getByLabelText`); MUI components add complexity without test-tooling support in the current stack. UIS-001 v0.1 specifies MUI but the implementation choice is overridden for FEAT-005 by the test harness constraint. Resolves OQ-20261018-002.
+- **DEC-081 (2026-10-18, Mohanasunder) — locked-test partial-application deviations F-4, F-5, F-7:** Three AIR findings (F-4 Array.isArray guard, F-5 no empty-username validation, F-7 temporary_password kept in form UI until FEAT-008) could not be fully applied because doing so would alter component behavior in ways the locked tests (FEAT-005-TESTS v0.3) cannot verify. Accepted by Mohanasunder; deviations are safe and within plan scope. See Known Gaps 2, 3, 4.
 
 ### Blockers
 None.
@@ -863,14 +869,14 @@ Deep review means: read every changed line of logic; review security against the
 ### Reviewer Checklist
 - [ ] Ran or previewed the feature (not only read the diff)
 - [ ] Every acceptance criterion is met
-- [ ] Change summary read: Known Gaps acceptable (AC-3 sign-in refusal is a documented scope boundary deferred to FEAT-006), Deviations From Plan justified (DEC-078 boilerplate, DEC-079 pre-existing CVEs, SCR S-9 settings/base.py, HTML-vs-MUI OQ-20261018-002), Blockers 'None'
+- [ ] Change summary read: Known Gaps acceptable (AC-3 sign-in refusal deferred to FEAT-006; DEC-081 partial-application deviations accepted), Deviations From Plan justified (DEC-078 boilerplate, DEC-079 pre-existing CVEs, SCR S-9 settings/base.py, DEC-080 native HTML, DEC-081 locked-test deviations), Blockers 'None'
 - [ ] No files changed outside the plan (boilerplate additions recorded as DEC-078; settings/base.py added via SCR S-9; see Deviations From Plan)
 - [ ] No packages added or upgraded beyond the plan's New Packages (New Packages: None)
 - [ ] Tests assert behavior, not just that code runs (assertions: field existence and constraints, HTTP status codes, DOM element presence, DB persistence, permission refusals)
 - [ ] Approved test set (FEAT-005-TESTS v0.3) unchanged in logic since approval; implementation started after test commit `fe4e56f` (SHA ordering fix authorized by DEC-077)
 - [ ] Auth, permissions, input validation, secrets, and data handling checked (`HasRolePermission` returns 403 for all non-DM roles before any DB access; `client_org_id` required for `client_user` role enforced at serializer and DB constraint layers; `is_active=False` blocks sign-in via FEAT-006)
 - [ ] Migrations reversible and consistent with the schema design (`0001_initial` creates `accounts_user` table with 4 constraints per DBD-001; reversible; depends on `organizations/0002_contract`)
-- [ ] Contract (OpenAPI) and UI spec followed (endpoints per API-001 v0.2 § F-6; UIS-001 deviation logged as OQ-20261018-002 — native HTML vs MUI components requires human decision)
+- [ ] Contract (OpenAPI) and UI spec followed (endpoints per API-001 v0.2 § F-6; UIS-001 native-HTML deviation approved by Mohanasunder as DEC-080; OQ-20261018-002 resolved)
 - [ ] Applicable learned rules (`.ai/standards/learned-rules.md`) followed
 - [ ] Checker validation summary and AI pre-review read; any "Proceeded on Fail" findings examined
 - [ ] Second approver obtained (High tier: tech lead + one reviewer) — Mohanasunder holds both Tech lead and Human developer reviewer roles; single-approver pilot accepted per DEC-020
@@ -879,10 +885,10 @@ Deep review means: read every changed line of logic; review security against the
 None beyond those logged in docs/logs/assumptions-log.md.
 
 ### Open Questions
-- OQ-20261018-002 (Open, 2026-10-18): Is the FEAT-005 `UserManagement.tsx` native-HTML implementation (`<table>`, `<dialog>`, `<select>`) instead of MUI DataGrid, MuiDialog, and MuiSelect a formally approved deviation from UIS-001 v0.1 § S-20 and plan.md step 9? No DEC entry was found in the decision log for this choice. If not approved, an SCR is required. Logged in docs/logs/open-questions-log.md.
+- OQ-20261018-002 (Resolved, 2026-10-18): Native-HTML implementation of `UserManagement.tsx` approved by Mohanasunder as DEC-080 (2026-10-18). No SCR required; FEAT-005-specific implementation choice. Logged in docs/logs/open-questions-log.md.
 
 ### Traceability Links
-- Upstream: REQ-001 v0.3 § S-20; API-001 v0.2 § F-6; DBD-001 v0.1 § Module: accounts; UIS-001 v0.1 § S-20; FEAT-005 plan.md v0.2; FEAT-005-ACC v0.1; FEAT-005-TESTS v0.3; STD-001 v0.1; TST-001 v0.1; PRM-001 v0.1 § F-6; SCR S-9; SCR S-10; DEC-075; DEC-076; DEC-077; DEC-078; DEC-079
+- Upstream: REQ-001 v0.3 § S-20; API-001 v0.2 § F-6; DBD-001 v0.1 § Module: accounts; UIS-001 v0.1 § S-20; FEAT-005 plan.md v0.2; FEAT-005-ACC v0.1; FEAT-005-TESTS v0.3; STD-001 v0.1; TST-001 v0.1; PRM-001 v0.1 § F-6; SCR S-9; SCR S-10; DEC-075; DEC-076; DEC-077; DEC-078; DEC-079; DEC-080; DEC-081
 - Downstream: FEAT-006 (sign-in; must check `is_active`; closes AC-3 sign-in gap); FEAT-007 (RLS policies on accounts); FEAT-030/FEAT-031 (temporary password, change own password); Phase 7 regression test suite
 
 ### Quality Checklist

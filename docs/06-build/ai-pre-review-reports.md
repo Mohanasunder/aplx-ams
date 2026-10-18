@@ -406,3 +406,52 @@ Five Major findings must be resolved before merge:
 
 - Upstream: FEAT-005 plan.md v0.2; FEAT-005-ACC v0.1; FEAT-005-TESTS v0.3; API-001 v0.2 § F-6; DBD-001 v0.1; PRM-001 v0.1; STD-001 v0.1
 - Downstream: Human PR review of `feature/FEAT-005-user-accounts`; `docs/logs/review-feedback-log.md` (5 Major findings)
+
+## AIR FEAT-005 (re-review): S-20 Delivery Manager Manages User Accounts
+
+<!-- air_status: Draft -->
+<!-- air_author: ai-code-reviewer -->
+<!-- air_date: 2026-10-18 -->
+<!-- air_verdict: Needs changes -->
+
+### Input References
+- FEAT-005 plan.md v0.2 (Approved 2026-10-18, Mohanasunder)
+- FEAT-005-TESTS v0.3 (Approved 2026-10-18, Mohanasunder)
+- API-001 v0.2 / openapi.yaml (Approved 2026-10-17) — `docs/04-design/openapi.yaml`
+- DEC-080, DEC-081 — decision-log.md entries recorded 2026-10-18
+- Commits reviewed: `853d731` (backend), `6bbf5c8` (frontend)
+
+### Purpose And Scope
+Re-review of four files changed by builder fix commits in response to the initial AIR FEAT-005 Major findings. Scope: `views.py`, `serializers.py`, `users.ts`, `UserManagement.tsx`.
+
+### Resolved Findings
+
+| Finding | Status | Evidence |
+|---|---|---|
+| F-2: DoesNotExist not caught | Resolved | views.py lines 60-63, 69-72, 87-89 — all three actions wrap the DAL/service call in `try/except User.DoesNotExist` returning HTTP 404 |
+| F-3: full_name / organization field names | Resolved | users.ts lines 31-38 — `User.name`, `User.client_org_id`; component reads `user.name` throughout |
+| F-4: listUsers() return type mismatch | Resolved per DEC-081 | users.ts — `Promise<User[]>`; component uses `Array.isArray` guard for locked-test mock compatibility |
+| F-5: username missing from CreateUserPayload | Resolved per DEC-081 | users.ts — `username: string` in payload; form state and dialog updated |
+| F-7: temporary_password in API payload | Resolved per DEC-081 | Removed from `CreateUserPayload`; kept in form UI only (locked-test constraint) |
+| F-8: r.json() called before r.ok check | Resolved | `if (!r.ok) throw new Error(...)` before every `r.json()` call |
+| F-10: _VALID_ROLES as literal list | Resolved | `_VALID_ROLES = [r.value for r in UserRole]` derives from the TextChoices enum |
+
+### F-1 Status: Partially Resolved — Major Finding Remains Open
+
+The fix applied `UserUpdateSerializer(data=request.data)` and gates on `is_valid()`. However, `UserUpdateSerializer` has no `validate()` method. A PATCH payload of `{"role": "client_user"}` without `client_org_id` passes serializer validation and reaches `user.save()`, which hits the DB-level `chk_client_user_has_org` constraint → unhandled `IntegrityError` → HTTP 500. The OpenAPI spec (openapi.yaml line 1216) requires HTTP 400 in this case.
+
+### New Findings
+
+| Severity | File | Line | Category | Issue |
+|---|---|---|---|---|
+| Major | `src/aplx_ams_django/accounts/serializers.py` | 46-56 | `missing-input-validation` | `UserUpdateSerializer` has no `validate()` method. A PATCH `{"role": "client_user"}` without `client_org_id` passes serializer validation; DB constraint fires → HTTP 500. Fix: add `validate()` mirroring `UserCreateSerializer.validate()` scoped to partial-update case. |
+| Major | `src/aplx_ams_django/accounts/views.py` | 80 | `unhandled-exception-500` | `user.save()` in `partial_update` is unprotected. Any `IntegrityError` results in HTTP 500. Fix: wrap in `try/except IntegrityError` returning HTTP 400, or rely on serializer-level fix as primary gate. |
+| Observation | `src/aplx_ams_django/accounts/serializers.py` | 66 | `api-contract-field-mismatch` | `UserDetailSerializer` serializes FK as `client_org_id`; OpenAPI `UserAccount` schema uses `client_organization_id`. Pre-existing — not introduced by fixes. |
+| Observation | `src/aplx_ams_django/accounts/views.py` | 46-47 | `api-contract-violation` | `list` action returns flat JSON array; OpenAPI spec defines `PaginatedUserAccountList`. Pre-existing — not introduced by fixes. |
+
+### Verdict
+**Needs changes.** F-1 is not fully resolved. All other original findings (F-2 through F-10) are resolved or appropriately deferred under DEC-081. Two pre-existing observations noted for traceability.
+
+### Traceability Links
+- Upstream: FEAT-005 plan.md v0.2; FEAT-005-TESTS v0.3; API-001 v0.2; DEC-080; DEC-081
+- Downstream: FEAT-005 PR; `docs/logs/review-feedback-log.md` (2 new Major findings NF-1 NF-2)
