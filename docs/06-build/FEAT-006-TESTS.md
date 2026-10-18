@@ -9,7 +9,7 @@ status: Draft
 author_agent: documentation-writer
 approver: Mohanasunder
 date: 2026-10-19
-validation: Pending
+validation: Fail
 ---
 # FEAT-006: S-21: User Signs In with a User Account — Test Set
 

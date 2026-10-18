@@ -24,7 +24,7 @@ Tracks the build-phase progress of FEAT-006. Updated by the builder agent during
 
 ## Branch And PR
 - Branch: feature/FEAT-006-sign-in-auth
-- Base commit: d296213
+- Base commit: 065a921
 - Started: 2026-10-18
 - PR: <draft PR link>
 
