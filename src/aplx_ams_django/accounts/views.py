@@ -122,7 +122,7 @@ class LoginView(APIView):
     Permission matrix: AllowAny (PRM-001 v0.1 § Authentication F-5).
     """
 
-    permission_classes: ClassVar[list] = [AllowAny]
+    permission_classes: ClassVar[list[type]] = [AllowAny]
 
     def post(self, request: Request) -> Response:
         """Authenticate with username + password; start a session on success."""
@@ -144,7 +144,7 @@ class LogoutView(APIView):
     Requires an active authenticated session (own session only per PRM-001 v0.1).
     """
 
-    permission_classes: ClassVar[list] = [IsAuthenticated]
+    permission_classes: ClassVar[list[type]] = [IsAuthenticated]
 
     def post(self, request: Request) -> Response:
         """Invalidate the session and return HTTP 200."""
@@ -158,7 +158,7 @@ class MeView(APIView):
     Requires authentication; returns the authenticated user's own record.
     """
 
-    permission_classes: ClassVar[list] = [IsAuthenticated]
+    permission_classes: ClassVar[list[type]] = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
         """Return role and org for the authenticated user."""
