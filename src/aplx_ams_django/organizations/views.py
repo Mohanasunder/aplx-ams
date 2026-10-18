@@ -130,6 +130,7 @@ class ContractViewSet(viewsets.GenericViewSet):
 
         Returns 201 on success, 409 when an active contract already exists.
         """
+        assert org_id is not None
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
@@ -146,6 +147,7 @@ class ContractViewSet(viewsets.GenericViewSet):
 
         Returns 200 with the contract body, or 404 if no active contract exists.
         """
+        assert org_id is not None
         contract = services.get_active_contract(org_id=org_id)
         if contract is None:
             return Response(

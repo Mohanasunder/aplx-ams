@@ -56,7 +56,7 @@ class Contract(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        constraints: ClassVar[list] = [
+        constraints: ClassVar[list[models.BaseConstraint]] = [
             models.CheckConstraint(
                 check=~Q(contract_type="hours_bank") | Q(contracted_hours__isnull=False),
                 name="chk_hours_bank_requires_contracted_hours",

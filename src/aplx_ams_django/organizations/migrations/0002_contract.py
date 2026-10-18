@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         ("organizations", "0001_initial"),
     ]
 
-    operations: ClassVar[list] = [
+    operations: ClassVar[list[migrations.Operation]] = [
         migrations.CreateModel(
             name="Contract",
             fields=[
