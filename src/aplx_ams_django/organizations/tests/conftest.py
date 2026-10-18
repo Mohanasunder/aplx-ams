@@ -12,14 +12,15 @@ This file is NOT part of the locked test set (only test_models.py is locked).
 from __future__ import annotations
 
 from collections.abc import Generator
+from typing import Any
 
 import pytest
 
 
 @pytest.fixture(scope="session")
-def django_db_setup(  # type: ignore[override]
+def django_db_setup(
     django_test_environment: None,
-    django_db_blocker: pytest.FixtureRequest,
+    django_db_blocker: Any,
 ) -> Generator[None, None, None]:
     """Replace PostgreSQL with SQLite in-memory before setting up the test DB.
 
@@ -61,7 +62,7 @@ def django_db_setup(  # type: ignore[override]
 
 
 @pytest.fixture(autouse=True)
-def _enable_db_for_all(db: None) -> None:  # type: ignore[override]
+def _enable_db_for_all(db: None) -> None:
     """Grant database access to every test in this directory.
 
     test_api.py tests call the API over DRF's test client which requires DB
