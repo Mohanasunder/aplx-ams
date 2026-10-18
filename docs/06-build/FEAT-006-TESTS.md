@@ -5,7 +5,7 @@ phase: 6
 version: 0.1
 template: feature-test-set
 template_version: 1.0
-status: Draft
+status: Approved
 author_agent: documentation-writer
 approver: Mohanasunder
 date: 2026-10-19
@@ -118,6 +118,7 @@ Failure reason: stub `Login` component returns `null`; no DOM elements are rende
 - Final test commit (HEAD of Mode A; both test files at approved state): `9ececb7`
 
 ## Assumptions
+- A-056: Test set written against plan v0.3 (Approved 2026-10-18). Plan v0.4 (SCR S-14, 2026-10-18) added `src/frontend/package.json` to file scope and corrected New Packages machine-readable format. No test content change required; tests exercise the same acceptance criteria.
 - A-019: A refused sign-in does not say whether the account name or the password was wrong. Tests `test_ac2_wrong_password_and_unknown_username_have_same_error_body` (backend) and `REQ-021 AC-4: HTTP 401 for locked account shows 'Invalid credentials.' (generic message)` (frontend) exercise this assumption. Logged in `docs/logs/assumptions-log.md`. Confirmed by Mohanasunder, 2026-10-17 (DEC-041).
 
 ## Open Questions
@@ -142,9 +143,10 @@ Failure reason: stub `Login` component returns `null`; no DOM elements are rende
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Architect / tech lead |
+| Version | 0.1 |
 | Conditions | None |
-| Comments | None |
-| Timestamp | Pending |
+| Comments | Tests cover all 4 AC including edge cases (lockout, error body consistency, rate-limit message) |
+| Timestamp | 2026-10-18 20:25 UTC |

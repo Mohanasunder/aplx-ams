@@ -9,7 +9,7 @@ status: Draft
 author_agent: documentation-writer
 approver: Human developer reviewer
 date: 2026-10-18
-validation: Pending
+validation: Pass
 ---
 # Phase 6 PR Descriptions
 
@@ -929,6 +929,7 @@ FEAT-006: S-21: User Signs In with a User Account
 - DEC-042 — nginx rate limit 10 req/min for /api/auth/login/
 - DEC-084 (2026-10-19) — react-router-dom @^7.18.4 approved as new package (SCR S-13)
 - DEC-086 (2026-10-19) — test_auth_api.py added to ruff format.exclude in pyproject.toml
+- DEC-087 (2026-10-19) — serializers.py ruff-format side-effect accepted (formatting-only; scope gate did not flag)
 
 ### Summary
 Implements REQ S-21 end-to-end: `SessionAuthBackend` with Argon2id verification, `locked_until` DB-persisted lockout after 5 failures (AC-4), `UppercaseLowercaseDigitValidator` (AC-3), `LoginView`/`LogoutView`/`MeView` (POST /api/auth/login/, POST /api/auth/logout/, GET /api/auth/me/), and a React MUI Login page with loading state, error alerts, Required validation, and `AuthProvider` context. The backend closes the FEAT-005-TESTS AC-3 sign-in gap by refusing deactivated accounts (HTTP 401). All 30 locked tests from FEAT-006-TESTS v0.1 pass; all CI gates exit 0 on branch `feature/FEAT-006-sign-in-auth`.
@@ -979,7 +980,8 @@ cd src/frontend && npm run test -- --run Login.test
 |---|---|
 | ruff check + format | Pass |
 | mypy --strict | Pass |
-| pytest (30 new; 117 total) | Pass |
+| pytest — backend (17 new; 94 total) | Pass |
+| vitest — frontend (13 new; 27 total) | Pass |
 | bandit -ll | Pass |
 | pip-audit -r requirements.txt | Pass |
 | detect-secrets | Pass |
@@ -996,6 +998,7 @@ cd src/frontend && npm run test -- --run Login.test
 
 ### Known Gaps
 - `window.location.href` navigation in Login.tsx rather than React Router's `useNavigate` (frontend test uses `window.location` stubbing; OQ-072 noted that useNavigate requires MemoryRouter in tests; this is a documented trade-off).
+- AuthContext user is always null in this branch: `setUser()` is never called after `me()` succeeds (AIR F-04). The `/tickets` route does not yet exist; successful login navigation lands on the catch-all route. Both gaps are deferred to the feature implementing routing and user-context propagation.
 - OQ-072 open: scope and packages gates use `--base main`; needs standards-author to update automated-gates.md to `--base master`.
 
 ### Deviations From Plan
@@ -1003,6 +1006,7 @@ cd src/frontend && npm run test -- --run Login.test
 - `AuthenticationMiddleware` added to MIDDLEWARE in `settings/base.py`: required for session auth to work on subsequent requests. Within plan scope.
 - `REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES']` configured in `settings/base.py`: within plan scope.
 - `pyproject.toml` modified (ruff format.exclude): not in plan file list; required to resolve ruff-format / locked-tests gate conflict; consistent with existing exclusion for test_models.py (DEC-086).
+- `src/aplx_ams_django/accounts/serializers.py` — formatting-only change: ruff format rewrapped the effective_org assignment in the existing `validate()` method; no logic change. Scope gate (`--base master`) did not flag. DEC-087 (2026-10-19, Mohanasunder) records the decision to accept.
 
 ### Blockers
 None.
@@ -1031,7 +1035,7 @@ Deep review checklist:
 - [ ] Ran or previewed the feature (not only read the diff)
 - [ ] Every acceptance criterion is met
 - [ ] Change summary read: Known Gaps acceptable, Deviations From Plan justified (SameSiteSessionAuthentication, AuthenticationMiddleware, REST_FRAMEWORK config, pyproject.toml DEC-086), Blockers 'None'
-- [ ] No files changed outside the plan (pyproject.toml addition recorded as DEC-086; see Deviations From Plan)
+- [ ] No files changed outside the plan (pyproject.toml addition recorded as DEC-086; serializers.py formatting-only ruff-format side-effect recorded as DEC-087; see Deviations From Plan)
 - [ ] No packages added or upgraded beyond the plan's New Packages (react-router-dom @^7.18.4 approved via SCR S-13, DEC-084)
 - [ ] Tests assert behavior, not just that code runs (assertions: HTTP status codes, session cookie, response body fields, DOM element presence, lockout DB state, error message text, button state)
 - [ ] Approved test set (FEAT-006-TESTS v0.1) unchanged since approval; implementation started after test commits `9ececb7` (backend) and `8bd2f25` (frontend)
@@ -1050,7 +1054,7 @@ Deep review checklist:
 - OQ-072 (Open, 2026-10-19): Scope and packages gates use `--base main`; repo uses `master`. Needs standards-author to update automated-gates.md to `--base master`. Logged in `docs/logs/open-questions-log.md`.
 
 ### Traceability Links
-- Upstream: REQ-001 v0.3 § S-21; API-001 v0.2 § F-5; DBD-001 v0.1 § Module: accounts; UIS-001 v0.1 § S-21; FEAT-006 plan.md v0.4; FEAT-006-ACC v0.1; FEAT-006-TESTS v0.1; STD-001 v0.1; TST-001 v0.1; PRM-001 v0.1 § F-5; FEAT-005 (accounts.User model); SCR S-13; SCR S-14; DEC-042; DEC-084; DEC-086
+- Upstream: REQ-001 v0.3 § S-21; API-001 v0.2 § F-5; DBD-001 v0.1 § Module: accounts; UIS-001 v0.1 § S-21; FEAT-006 plan.md v0.4; FEAT-006-ACC v0.1; FEAT-006-TESTS v0.1; STD-001 v0.1; TST-001 v0.1; PRM-001 v0.1 § F-5; FEAT-005 (accounts.User model); SCR S-13; SCR S-14; DEC-042; DEC-084; DEC-086; DEC-087
 - Downstream: FEAT-007 (RLS policies; session context); FEAT-008 (temporary password workflow); FEAT-009 (change own password); FEAT-033 (security event recording); Phase 7 regression test suite
 
 ### Quality Checklist
