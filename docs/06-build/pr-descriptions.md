@@ -293,10 +293,10 @@ None.
 
 ## PR FEAT-035: E2E CI Scaffold
 
-<!-- pr_status: Draft -->
-<!-- pr_approver: -->
+<!-- pr_status: Approved -->
+<!-- pr_approver: Mohanasunder -->
 <!-- pr_depth: Deep -->
-<!-- pr_review_minutes: -->
+<!-- pr_review_minutes: 4 -->
 
 ### Input References
 - FEAT-035 plan.md v0.1 (Approved 2026-10-17, Mohanasunder)
