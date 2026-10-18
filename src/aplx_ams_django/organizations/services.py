@@ -1,26 +1,32 @@
 """
-FEAT-002 stub: organizations service layer.
+FEAT-002: organizations service layer.
 
-create_org() and add_sap_application() are stubs; DM role enforcement
-and all business logic are added in Mode B (FEAT-002).
+Thin orchestration layer between views and the data access layer (DAL).
+No role-enforcement logic lives here; that is handled by HasRolePermission
+in views (PRM-001 v0.1).
 """
 
 from typing import Any
 
+from aplx_ams_django.organizations import dal
 from aplx_ams_django.organizations.models import ClientOrg, SAPApplication
 
 
 def create_org(name: str) -> ClientOrg:
     """Create and return a new client organization.
 
-    DM role check and full implementation added in Mode B (FEAT-002).
+    Raises django.db.IntegrityError if an org with the same name already exists.
     """
-    raise NotImplementedError
+    return ClientOrg.objects.create(name=name)
 
 
 def add_sap_application(org_id: int, data: dict[str, Any]) -> SAPApplication:
     """Add a SAP application to a client organization and return it.
 
-    DM role check and full implementation added in Mode B (FEAT-002).
+    Only 'name' is consumed from data; extra keys (e.g. 'sid') are ignored.
+    Raises ClientOrg.DoesNotExist if the org is not found.
+    Raises django.db.IntegrityError if the same name already exists for that org.
     """
-    raise NotImplementedError
+    org = dal.get_org_by_id(org_id)
+    name: str = data["name"]
+    return SAPApplication.objects.create(client_org=org, name=name)

@@ -58,3 +58,14 @@ def django_db_setup(  # type: ignore[override]
 
     with django_db_blocker.unblock():
         teardown_databases(db_cfg, verbosity=0)
+
+
+@pytest.fixture(autouse=True)
+def _enable_db_for_all(db: None) -> None:  # type: ignore[override]
+    """Grant database access to every test in this directory.
+
+    test_api.py tests call the API over DRF's test client which requires DB
+    writes but do not carry @pytest.mark.django_db themselves (Mode A design).
+    This autouse fixture satisfies that requirement without touching locked
+    test files.
+    """

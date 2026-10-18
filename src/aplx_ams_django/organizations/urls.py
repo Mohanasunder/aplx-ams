@@ -1,11 +1,24 @@
 """
-FEAT-002 stub: organizations URL configuration.
+FEAT-002: organizations URL configuration.
 
-urlpatterns is empty in Mode A so that every API call returns 404 (the
-correct red-run failure). The router registration is added in Mode B
-(FEAT-002) once the viewsets have their full implementation.
+Registers:
+  organizations/                             -> OrgViewSet (list, create)
+  organizations/{pk}/                        -> OrgViewSet (retrieve, partial_update)
+  organizations/{org_id}/sap-applications/  -> SAPApplicationViewSet (list, create)
 """
 
-from django.urls import URLPattern
+from django.urls import path
+from rest_framework.routers import DefaultRouter
 
-urlpatterns: list[URLPattern] = []
+from aplx_ams_django.organizations.views import OrgViewSet, SAPApplicationViewSet
+
+router = DefaultRouter()
+router.register("organizations", OrgViewSet, basename="clientorg")
+
+urlpatterns = router.urls + [
+    path(
+        "organizations/<int:org_id>/sap-applications/",
+        SAPApplicationViewSet.as_view({"get": "list", "post": "create"}),
+        name="org-sap-applications",
+    ),
+]
