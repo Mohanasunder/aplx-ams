@@ -1,8 +1,8 @@
 """
-FEAT-005 accounts service layer — STUB (Mode A: tests first).
+FEAT-005 accounts service layer — Mode B implementation.
 
-create_user and deactivate_user are empty stubs. Business logic, input
-validation, and role enforcement are added in Mode B.
+create_user: persists a new User with an unusable password placeholder (AC-1).
+deactivate_user: sets is_active=False on an existing user (AC-3).
 
 Named per STD-001 v0.1 § Naming And Structure.
 """
@@ -12,24 +12,48 @@ from __future__ import annotations
 from typing import Any
 
 
-def create_user(data: dict[str, Any]) -> None:
-    """Stub: create a new user account and return it.
+def create_user(data: dict[str, Any]):
+    """Create and persist a new user account.
 
-    Mode B will: validate role enum, enforce client_org_id requirement for
-    client_user role (DBD-001 v0.1 constraint), hash the temporary password,
-    and persist the user via the DAL.
+    Sets an unusable password (the password is managed by a separate
+    credential flow; see FEAT-006).
 
-    Returns None in stub; Mode B returns the created User instance.
+    Args:
+        data: validated fields from UserCreateSerializer — username, name,
+              email, role, and optionally client_org_id.
+
+    Returns:
+        The saved User instance.
     """
-    return None
+    from aplx_ams_django.accounts.models import User
+
+    user = User(
+        username=data["username"],
+        name=data["name"],
+        email=data["email"],
+        role=data["role"],
+        client_org_id=data.get("client_org_id"),
+    )
+    user.set_unusable_password()
+    user.save()
+    return user
 
 
-def deactivate_user(user_id: int) -> None:
-    """Stub: deactivate the user with the given primary key.
+def deactivate_user(user_id: int):
+    """Set is_active=False on the user identified by user_id.
 
-    Mode B will: fetch the user via the DAL, set is_active=False, and save.
-    Raises User.DoesNotExist if the user is not found (→ 404 in view).
+    Args:
+        user_id: primary key of the target User.
 
-    Returns None in stub; Mode B returns the updated User instance.
+    Returns:
+        The updated User instance.
+
+    Raises:
+        User.DoesNotExist: if no user with that pk exists (→ 404 in view).
     """
-    return None
+    from aplx_ams_django.accounts.models import User
+
+    user = User.objects.get(pk=user_id)
+    user.is_active = False
+    user.save()
+    return user

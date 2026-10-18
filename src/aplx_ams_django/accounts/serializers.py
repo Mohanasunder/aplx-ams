@@ -1,8 +1,11 @@
 """
-FEAT-005 accounts serializers — STUB (Mode A: tests first).
+FEAT-005 accounts serializers — Mode B implementation.
 
-UserCreateSerializer, UserUpdateSerializer, UserDetailSerializer are empty
-stubs. Fields and validation logic are added in Mode B.
+UserCreateSerializer: validates role choices and enforces client_org_id
+requirement for client_user role (AC-2, DBD-001 v0.1 chk_client_user_has_org).
+
+UserDetailSerializer: exposes id, role, client_org_id, is_active, and
+remaining read-only fields (AC-1, AC-3).
 
 Named per STD-001 v0.1 § Naming And Structure.
 """
@@ -11,26 +14,73 @@ from __future__ import annotations
 
 from rest_framework import serializers
 
+from aplx_ams_django.accounts.models import User
+
+_VALID_ROLES = [
+    "l1_support_engineer",
+    "l2_l3_support_engineer",
+    "delivery_manager",
+    "client_user",
+]
+
 
 class UserCreateSerializer(serializers.Serializer):
-    """Stub: fields and create validation added in Mode B.
+    """Deserializes and validates POST /api/accounts/users/ payloads.
 
-    Mode B will add: username, name, email, role, client_org_id (required for
-    client_user role per DBD-001 v0.1 constraint chk_client_user_has_org).
+    Enforces:
+    - role must be one of the four valid values (AC-1).
+    - client_org_id is required when role is client_user (AC-2).
     """
+
+    username = serializers.CharField(max_length=150)
+    name = serializers.CharField(max_length=150)
+    email = serializers.EmailField(max_length=254)
+    role = serializers.ChoiceField(choices=_VALID_ROLES)
+    client_org_id = serializers.IntegerField(required=False, allow_null=True)
+
+    def validate(self, attrs: dict) -> dict:  # noqa: D102
+        if attrs.get("role") == "client_user" and not attrs.get("client_org_id"):
+            raise serializers.ValidationError(
+                {
+                    "client_org_id": (
+                        "Client organization is required for client user accounts."
+                    )
+                }
+            )
+        return attrs
 
 
 class UserUpdateSerializer(serializers.Serializer):
-    """Stub: fields and update validation added in Mode B.
+    """Deserializes and validates PATCH /api/accounts/users/{id}/ payloads.
 
-    Mode B will add: name, email, role, client_org_id (updatable fields per
-    API-001 v0.2 § F-6 endpoint #7).
+    All fields are optional (partial update); role and client_org_id may be
+    updated when the same cross-field rules apply.
     """
 
+    name = serializers.CharField(max_length=150, required=False)
+    email = serializers.EmailField(max_length=254, required=False)
+    role = serializers.ChoiceField(choices=_VALID_ROLES, required=False)
+    client_org_id = serializers.IntegerField(required=False, allow_null=True)
 
-class UserDetailSerializer(serializers.Serializer):
-    """Stub: read fields added in Mode B.
 
-    Mode B will add: id, username, name, email, role, client_org_id,
-    is_active, date_joined.
+class UserDetailSerializer(serializers.ModelSerializer):
+    """Read-only serializer for User instances returned by the API.
+
+    Exposes id, username, name, email, role, client_org_id (raw FK int or
+    null), is_active, and date_joined.
     """
+
+    client_org_id = serializers.IntegerField(read_only=True, allow_null=True)
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "name",
+            "email",
+            "role",
+            "client_org_id",
+            "is_active",
+            "date_joined",
+        ]
