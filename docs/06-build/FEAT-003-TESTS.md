@@ -5,9 +5,9 @@ phase: 6
 version: 0.1
 template: feature-test-set
 template_version: 1.0
-status: Draft
+status: Approved
 author_agent: documentation-writer
-approver: Human developer reviewer
+approver: Mohanasunder
 date: 2026-10-18
 validation: Pass
 ---
@@ -67,11 +67,9 @@ Tier: High. Contract data governs effort billing and hours bank balance; an inco
 | REQ S-19 AC-4 | `FEAT-003 AC-4: does not show create controls for non-DM role` | Frontend | P1 context; no Create Contract button; access-denied sentinel is visible |
 
 ## Test Files
-The following test files were created for this feature and are locked once this artifact is Approved:
-
-1. `src/aplx_ams_django/organizations/tests/test_contract_models.py` — 11 database model tests (commit 5ef96df)
-2. `src/aplx_ams_django/organizations/tests/test_contract_api.py` — 7 backend API tests (commit 8b8914d)
-3. `src/frontend/src/pages/ContractSetup.test.tsx` — 4 frontend component tests (commit 6824848)
+- `src/aplx_ams_django/organizations/tests/test_contract_models.py` — locked once this artifact is Approved
+- `src/aplx_ams_django/organizations/tests/test_contract_api.py` — locked once this artifact is Approved
+- `src/frontend/src/pages/ContractSetup.test.tsx` — locked once this artifact is Approved
 
 ## Stubs Created
 The following production files were created as empty signatures so tests compile and resolve imports. They contain no business logic:
@@ -133,9 +131,10 @@ None.
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Architect / tech lead |
+| Version | 0.1 |
 | Conditions | None |
-| Comments | None |
-| Timestamp | Pending |
+| Comments | Tests cover all 4 ACs including constraint edge cases and role-based refusal. |
+| Timestamp | 2026-10-18 12:58 UTC |
