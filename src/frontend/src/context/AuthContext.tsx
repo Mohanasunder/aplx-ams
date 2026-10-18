@@ -4,12 +4,9 @@
  * Provides current signed-in user (UserMe) and a setter to the component tree.
  * Used by Login.tsx to store the authenticated user after POST /api/auth/login/.
  * Used by App.tsx to guard routes.
- *
- * Mode A stub: AuthProvider renders children unchanged; context value is the
- * no-op default. No logic implemented.
  */
 
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import type { UserMe } from '../api/auth';
 
 // ── Context value type ────────────────────────────────────────────────────────
@@ -32,15 +29,16 @@ export function useAuth(): AuthContextValue {
   return useContext(AuthContext);
 }
 
-// ── Provider stub ─────────────────────────────────────────────────────────────
+// ── Provider ──────────────────────────────────────────────────────────────────
 
 export function AuthProvider({
   children,
 }: {
   children: React.ReactNode;
 }): React.JSX.Element {
+  const [user, setUser] = useState<UserMe | null>(null);
   return (
-    <AuthContext.Provider value={{ user: null, setUser: () => undefined }}>
+    <AuthContext.Provider value={{ user, setUser }}>
       {children}
     </AuthContext.Provider>
   );
