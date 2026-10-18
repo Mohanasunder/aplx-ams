@@ -1,4 +1,4 @@
-﻿---
+---
 id: UIS-001
 title: APLX AMS: UI Specification
 phase: 4

@@ -555,3 +555,80 @@ None.
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW' — API-001: listed; in-place patches carry no version bump per DEC-060
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-7: API-001 v0.1 citation in 33 story feature plans — regenerate to v0.2
+
+<!-- scr_status: Draft -->
+<!-- scr_date: 2026-10-18 -->
+<!-- scr_approver: -->
+
+### Input References
+- SCR S-6 v0.1 (Approved 2026-10-17) — API-001 update from v0.1 to v0.2 (glossary fixes, FEAT-001)
+- API-001 v0.2 (Approved 2026-10-17) — APLX AMS API Specification, current approved version
+- FEAT-002 through FEAT-034 plan.md v0.1 (Approved 2026-10-17) — 33 story feature plans with stale citation
+
+### Purpose And Scope
+Updates the API-001 citation in all 33 story feature plan.md and tasks.md files from v0.1 to v0.2. The update is limited to the Input References and Context Pack citation strings; no acceptance criteria, file lists, task steps, or architectural decisions change. Does not cover ADR-001, BED-001, or FBD-001 stale citations (separate scope).
+
+### Changed Artifact
+- FEAT-002 through FEAT-034 plan.md — API-001 citation v0.1 → v0.2 (33 files; path pattern: `docs/05-build-plan/feature-NNN-*/plan.md`)
+- FEAT-002 through FEAT-034 tasks.md — API-001 citation v0.1 → v0.2 (33 files; path pattern: `docs/05-build-plan/feature-NNN-*/tasks.md`)
+
+### Trigger
+`context_pack.py check FEAT-002` failure discovered 2026-10-18 when preparing to start the first story feature after FEAT-035 merge. Error: `API-001 cited at v0.1; approved version is v0.2`. All 33 story feature plans have the same stale citation.
+
+### Change
+In each affected plan.md and tasks.md, replace the Input References line:
+- Before: `API-001 v0.1 — APLX AMS: API Specification (Approved 2026-10-17)`
+- After:  `API-001 v0.2 — APLX AMS: API Specification (Approved 2026-10-17)`
+
+And in Context Pack entries where applicable:
+- Before: `API-001 v0.1 § <section>`
+- After:  `API-001 v0.2 § <section>`
+
+No other text in any plan or tasks file changes.
+
+### Reason
+The 33 Phase 5 feature plans were approved on 2026-10-17. SCR S-6 (also 2026-10-17) updated API-001 from v0.1 to v0.2 to fix glossary violations found during FEAT-001. The plans were not regenerated after SCR S-6 closed. The spec_impact and context_pack scripts therefore report every story feature plan as citing a stale API spec version, blocking Phase 6 branch creation.
+
+### Decision Record
+Not applicable — no architecture or contract artifact is being changed. Only Phase 5 plan citation strings are updated to reflect the version already approved under SCR S-6.
+
+### Impact
+| Artifact | State | Action |
+|---|---|---|
+| FEAT-002 through FEAT-034 plan.md (33 files) | Approved — Not started | Update citation v0.1 → v0.2; re-approve at v0.2 (batch) |
+| FEAT-002 through FEAT-034 tasks.md (33 files) | Approved — Not started | Update citation v0.1 → v0.2; re-approve at v0.2 (batch) |
+| ADR-001, BED-001, FBD-001 | Approved | Out of scope — separate SCR if needed |
+
+### Work Stopped
+None — all 33 story features are Not started (no active branches).
+
+### Resume Criteria
+1. This SCR S-7 approved by tech lead (Mohanasunder)
+2. All 33 plan.md and tasks.md updated to v0.2 citation by build-planner
+3. Batch re-approval of all 33 plan.md and tasks.md at v0.2 by tech lead
+
+### Assumptions
+None beyond those logged in docs/logs/assumptions-log.md.
+
+### Open Questions
+None.
+
+### Traceability Links
+- Upstream: SCR S-6 (API-001 v0.1 → v0.2); API-001 v0.2; FEAT-002 through FEAT-034 plan.md v0.1
+- Downstream: Phase 6 build of all story features
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] Vague words removed (etc., as needed, appropriate)
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record — Not applicable
+- [x] Impact covers every artifact and feature that cites the changed artifact
