@@ -455,3 +455,34 @@ The fix applied `UserUpdateSerializer(data=request.data)` and gates on `is_valid
 ### Traceability Links
 - Upstream: FEAT-005 plan.md v0.2; FEAT-005-TESTS v0.3; API-001 v0.2; DEC-080; DEC-081
 - Downstream: FEAT-005 PR; `docs/logs/review-feedback-log.md` (2 new Major findings NF-1 NF-2)
+
+## AIR FEAT-005 (final check): S-20 Delivery Manager Manages User Accounts
+
+<!-- air_status: Draft -->
+<!-- air_author: ai-code-reviewer -->
+<!-- air_date: 2026-10-18 -->
+<!-- air_verdict: Pass with observations -->
+<!-- commit: ee574e1 -->
+
+### NF-1 status — Confirmed resolved
+`UserUpdateSerializer.validate()` (serializers.py lines 58–64) raises `ValidationError({"client_org_id": "..."})` → HTTP 400 when `role == "client_user"` and `client_org_id` is absent. Serializer invoked before `user.save()`. Satisfies OpenAPI spec line 1216.
+
+### NF-2 status — Confirmed resolved
+`IntegrityError` imported at views.py line 17. `try/except IntegrityError` at lines 81–84 wraps only `user.save()`, returns HTTP 400. Correct placement and exception type.
+
+### New findings (Minor — for human reviewer)
+
+| Severity | File | Line | Category | Issue |
+|---|---|---|---|---|
+| Minor | `views.py` | 84 | `info-disclosure-in-error` | `str(exc)` passes raw Django/PostgreSQL constraint name to the API consumer. Recommendation: replace with generic message `"A database conflict prevented this update."` |
+| Minor | `views.py` | 84 | `contract-mismatch` | IntegrityError 400 response body `{"detail": str(exc)}` does not conform to the spec's `ValidationError` format (field-keyed arrays). Recommendation: use `{"non_field_errors": ["A database conflict prevented this update."]}` or update spec 400 schema to accept `SimpleError`. |
+
+### Design concern — for human reviewer
+A PATCH of `{"client_org_id": null}` on an existing `client_user` passes validation (role not in payload → guard not triggered) and may nullify their org. Whether this scenario should be rejected requires looking up current DB state in `validate()`. Raised for human review; not treated as a code defect.
+
+### Verdict
+**Pass with observations.** All Major findings resolved. Two Minor observations and one design concern for human reviewer.
+
+### Traceability Links
+- Upstream: FEAT-005 plan.md v0.2; FEAT-005-TESTS v0.3; API-001 v0.2; DEC-080; DEC-081; commit `ee574e1`
+- Downstream: FEAT-005 PR human review
