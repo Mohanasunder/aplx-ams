@@ -243,3 +243,5 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-18 12:58 | FEAT-003-TESTS | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | Tests cover all 4 ACs including constraint edge cases and role-based refusal. |
 | 2026-10-18 14:21 | PRD FEAT-003 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | [review depth: Deep, tier High] [review: 20 min] All five Deep checklist items completed. Approved as-is. |
 | 2026-10-18 14:30 | SCR S-8 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | Cosmetic tracking update only; no downstream impact. |
+| 2026-10-18 16:47 | SCR S-9 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | None |
+| 2026-10-18 16:50 | FEAT-005 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass | - | None |
