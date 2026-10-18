@@ -80,8 +80,11 @@ class UserViewSet(viewsets.GenericViewSet):
                 setattr(user, field, serializer.validated_data[field])
         try:
             user.save()
-        except IntegrityError as exc:
-            return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+        except IntegrityError:
+            return Response(
+                {"non_field_errors": ["A database conflict prevented this update."]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         return Response(UserDetailSerializer(user).data)
 
     def deactivate(self, request: Request, pk: int | None = None) -> Response:
