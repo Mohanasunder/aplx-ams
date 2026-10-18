@@ -2,7 +2,10 @@
 FEAT-002: organizations models.
 
 Implements ClientOrg and SAPApplication as defined in DBD-001 v0.1.
+FEAT-003: Contract model stub (full implementation in Mode B).
 """
+
+from __future__ import annotations
 
 from typing import ClassVar
 
@@ -30,3 +33,9 @@ class SAPApplication(models.Model):
 
     class Meta:
         unique_together: ClassVar[list[tuple[str, str]]] = [("client_org", "name")]
+
+
+class Contract(models.Model):
+    """FEAT-003 stub — full implementation added in Mode B."""
+
+    pass
