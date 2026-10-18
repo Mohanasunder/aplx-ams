@@ -87,3 +87,18 @@ OQ-20261018-001: pip-audit gate should use -r requirements.txt scope
 **Impact if not resolved:** Every feature's pip-audit gate will fail on system-tool vulnerabilities unrelated to the project, requiring DEC entries each time.
 
 **Proposed resolution:** Update automated-gates.md gate command to pip-audit -r requirements.txt. Requires standards-author to draft the change and tech lead to approve.
+
+---
+
+OQ-20261018-002: FEAT-005 UserManagement.tsx uses native HTML instead of MUI — is this deviation formally approved?
+
+**Raised by:** documentation-writer (FEAT-005 PR description, 2026-10-18)
+**Status:** Open
+
+**Question:** Is the FEAT-005 `UserManagement.tsx` implementation using native HTML `<table>`, `<dialog>`, and `<select>` instead of MUI DataGrid, MuiDialog, and MuiSelect a formally approved deviation from UIS-001 v0.1 § S-20 and plan.md step 9?
+
+**Context:** FEAT-005 plan.md step 9 specifies "MUI DataGrid; DM-only create/deactivate." FEAT-003 ContractSetup.tsx uses MUI components per UIS-001 v0.1. FEAT-005 UserManagement.tsx uses native HTML elements for React 18 ARIA compliance with Vitest ARIA queries. No DEC entry was found in the decision log covering this choice.
+
+**Impact if not resolved:** If not approved, an SCR updating UIS-001 v0.1 § S-20 is required. Future features that reference the UserManagement page may implement inconsistent component styles.
+
+**Proposed resolution:** Mohanasunder (Architect / tech lead) to confirm whether this deviation is approved. If approved, log as a DEC and record whether UIS-001 needs an SCR update. If not approved, raise an SCR and the builder must revise UserManagement.tsx to use MUI components.

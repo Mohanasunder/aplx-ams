@@ -312,3 +312,110 @@ All automated scan gates passed with exit code 0. No secrets detected. No MEDIUM
 
 - Upstream: FEAT-003-TESTS v0.1; automated-gates.md; DEC-071; DEC-072; DEC-073
 - Downstream: PR FEAT-003 human review
+
+---
+
+## SSR FEAT-005: S-20 Delivery Manager Manages User Accounts — Security Scan
+
+<!-- ssr_status: Draft -->
+<!-- ssr_author: security-scanner -->
+<!-- ssr_date: 2026-10-18 -->
+<!-- ssr_verdict: Pass with observations -->
+
+### Input References
+
+- FEAT-005 plan: `docs/06-build/` (branch `feature/FEAT-005-user-accounts`, HEAD `02e32a5`)
+- FEAT-005-TESTS v0.1 (Approved)
+- `.ai/standards/automated-gates.md`
+- `.secrets.baseline` (committed)
+- `requirements.txt` (unchanged from FEAT-003 merge)
+- DEC-079 (pre-existing pip-audit environment overrides for pyjwt, python-dotenv, python-jose, urllib3)
+- DEC-065 (bare pip-audit environmental noise from Claude Code infrastructure packages)
+
+### Purpose And Scope
+
+This report covers the SAST, dependency, and secrets scans for FEAT-005 (S-20: Delivery Manager Manages User Accounts) on branch `feature/FEAT-005-user-accounts`. Files in scope:
+
+- `src/aplx_ams_django/accounts/` — all Python source files (views.py, models.py, serializers.py, services.py, dal.py, urls.py, admin.py, apps.py, migrations/0001_initial.py, tests/)
+- `src/frontend/src/pages/UserManagement.tsx`
+- `src/frontend/src/api/users.ts`
+
+Does not cover: infrastructure-as-code (Phase 8), runtime penetration testing, or artifacts outside the feature scope.
+
+### Scan Tools And Scope
+
+| Tool | Version | Command | Exit Code | Scope |
+| --- | --- | --- | --- | --- |
+| bandit | 1.9.4 | `python -m bandit -r src/aplx_ams_django/accounts/ -ll -q` | 0 | All Python source under `accounts/` (1,080 lines) |
+| pip-audit | 2.10.1 | `python -m pip_audit -r requirements.txt` | 0 | All packages in `requirements.txt` |
+| pip-audit (env) | 2.10.1 | `python -m pip_audit` | 1 | Full Python environment (Claude Code tool infrastructure — environmental noise per DEC-065) |
+| detect-secrets | 1.5.0 | `python -m detect_secrets scan --baseline .secrets.baseline` | 0 | Repository-wide, against committed baseline |
+| Manual review | — | Source inspection | — | views.py, models.py, serializers.py, services.py, dal.py, UserManagement.tsx, users.ts |
+
+Python runtime: 3.12.9
+
+### Findings
+
+#### Automated Scan Findings
+
+| Tool | Rule / Finding | Severity | File | Line | Notes |
+| --- | --- | --- | --- | --- | --- |
+| bandit (-ll) | No issues identified at or above MEDIUM threshold | — | — | — | 50 Low-severity findings exist (B101 assert_used in test files; B110 try_except_pass in conftest.py); all below configured -ll threshold |
+| pip-audit (-r requirements.txt) | No known vulnerabilities found | — | — | — | All pinned project packages clean |
+| pip-audit (env bare) | 48 findings across 12 packages | Environmental noise | Various | — | All in Claude Code infrastructure packages or pre-existing overrides (pyjwt, python-dotenv, python-jose, urllib3 per DEC-079); none in requirements.txt |
+| detect-secrets | No new secrets beyond committed baseline | — | — | — | Baseline unchanged in results section |
+
+#### Low-Severity Bandit Findings in Production Source (below -ll gate threshold — informational only)
+
+| Rule | Severity | File | Lines | Notes |
+| --- | --- | --- | --- | --- |
+| B101 assert_used | Low | `src/aplx_ams_django/accounts/views.py` | 54, 60, 71 | `assert pk is not None` in retrieve, partial_update, and deactivate actions. `pk` is typed `<int:pk>` in the URL pattern and cannot be None at runtime. Same pattern accepted in FEAT-003 M-1. Below -ll gate threshold. |
+
+#### Manual Review Findings
+
+| Finding | Severity | File | Line(s) | Detail |
+| --- | --- | --- | --- | --- |
+| M-1: `partial_update` bypasses `UserUpdateSerializer` | Minor | `src/aplx_ams_django/accounts/views.py` | 62–67 | The PATCH handler whitelists four field names and applies values from `request.data` directly via `setattr` without routing through `UserUpdateSerializer`. DB constraints backstop integrity, but API contract compliance (returning 400 for invalid input) is not enforced consistently for PATCH. No SQL injection risk; ORM is used throughout. |
+| M-2: No `password` field exposure | Info | `src/aplx_ams_django/accounts/serializers.py` | 74–84 | `UserDetailSerializer` does not include `password` or `last_login`. Confirmed safe. |
+| M-3: `services.create_user` uses `set_unusable_password()` | Info | `src/aplx_ams_django/accounts/services.py` | 40 | No plaintext password stored at account creation. Password flow deferred to FEAT-006 per plan. Confirmed safe. |
+| M-4: Frontend `temporary_password` field | Info | `src/frontend/src/pages/UserManagement.tsx` | 217–229 | Input uses `type="password"` (masked). Form state reset on dialog close. No credential leak risk. |
+| M-5: Frontend fetch uses `credentials: 'include'` | Info | `src/frontend/src/api/users.ts` | 64, 74, 87, 93 | Session cookie credentials. No hardcoded tokens or API keys. Confirmed correct. |
+| M-6: `HasRolePermission` checks `is_authenticated` first | Info | `src/aplx_ams_django/permissions.py` | 27–29 | Unauthenticated requests return False (403) before any role check. All `UserViewSet` actions invoke this via `get_permissions()` before any DB access. |
+
+#### Pre-existing Environmental pip-audit Findings (not FEAT-005 findings)
+
+| Package | IDs | Status |
+| --- | --- | --- |
+| pyjwt 2.13.0 | PYSEC-2026-4140 through PYSEC-2026-4183 (12 entries) | Pre-existing; overridden per DEC-079 |
+| python-dotenv 1.0.1 | PYSEC-2026-2270 (2 entries) | Pre-existing; overridden per DEC-079 |
+| python-jose 3.5.0 | PYSEC-2026-4298 | Pre-existing; overridden per DEC-079 |
+| urllib3 2.7.0 | PYSEC-2026-4175, PYSEC-2026-4176, PYSEC-2026-4177 | Pre-existing; overridden per DEC-079 |
+| langchain-core, langchain-openai, langgraph-sdk, ecdsa, multidict, oauthlib, pdfminer-six, pip | Multiple | Claude Code tool infrastructure; not in requirements.txt; environmental noise per DEC-065 |
+
+### Secrets Check
+
+`python -m detect_secrets scan --baseline .secrets.baseline` exited 0. No new secrets detected beyond the committed baseline. No credentials, tokens, or API keys appear in any FEAT-005 source file.
+
+### Verdict
+
+**Pass with observations**
+
+All non-overridable gate commands passed with exit code 0:
+- bandit -ll: PASS (exit 0, no MEDIUM or HIGH findings)
+- pip-audit -r requirements.txt: PASS (exit 0, no vulnerabilities in project packages)
+- detect-secrets: PASS (exit 0, no new secrets)
+
+One Minor finding (M-1) is raised as an advisory observation: the `partial_update` view handler applies PATCH field values via `setattr` without routing through `UserUpdateSerializer`, meaning application-layer validation is not enforced for that endpoint. DB constraints backstop integrity. No Blockers.
+
+### Assumptions
+
+- A-SEC-005-01: The bare `pip-audit` findings for langchain-core, ecdsa, multidict, oauthlib, pdfminer-six, and pip are Claude Code host environment packages, not APLX AMS project dependencies. Verified by cross-checking all 48 flagged packages against `requirements.txt`.
+
+### Open Questions
+
+None.
+
+### Traceability Links
+
+- Upstream: FEAT-005 plan; FEAT-005-TESTS v0.1; automated-gates.md; DEC-079; DEC-065; PRM-001 v0.1
+- Downstream: PR FEAT-005 human review

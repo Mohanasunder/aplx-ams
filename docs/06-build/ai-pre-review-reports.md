@@ -337,3 +337,72 @@ All 4 ACs covered across DB, backend, and frontend test layers.
 
 - Upstream: FEAT-003 plan.md v0.1; FEAT-003-ACC v0.1; FEAT-003-TESTS v0.1; API-001 v0.2; DBD-001 v0.1; STD-001 v0.1; PRM-001 v0.1
 - Downstream: Human PR review of `feature/FEAT-003-contract-setup`; `docs/logs/review-feedback-log.md`
+
+---
+
+## AIR FEAT-005: S-20 Delivery Manager Manages User Accounts
+
+<!-- air_status: Draft -->
+<!-- air_author: ai-code-reviewer -->
+<!-- air_date: 2026-10-18 -->
+<!-- air_verdict: Needs changes -->
+
+### Input References
+
+- FEAT-005 plan.md v0.2 (Approved 2026-10-18, Mohanasunder)
+- FEAT-005-ACC v0.1 (Approved 2026-10-17, Mohanasunder)
+- FEAT-005-TESTS v0.3 (Approved 2026-10-18, Mohanasunder)
+- API-001 v0.2 § F-6 User account management
+- DBD-001 v0.1 § accounts_user
+- PRM-001 v0.1 § F-6
+- STD-001 v0.1
+- Branch: `feature/FEAT-005-user-accounts`; HEAD `02e32a5`
+
+### Purpose And Scope
+
+Advisory pre-review of FEAT-005 (S-20: Delivery Manager Manages User Accounts). Covers plan adherence, all four acceptance criteria, API contract compliance, permission enforcement, DB constraint alignment, security, and agent charter compliance. Locked test files not flagged. Advisory only.
+
+### Acceptance Criteria Coverage
+
+| Criterion | Implementation | Tests | Gap |
+|---|---|---|---|
+| AC-1: DM creates user with 4 roles → saved | `UserCreateSerializer` validates role via ChoiceField; services.create_user saves; 201 | 4 backend tests + 1 frontend + DB tests | None for backend; frontend form field mismatch (F-3, F-5) |
+| AC-2: Client user without org → 400 | `UserCreateSerializer.validate()` line 44–47 raises ValidationError | test_create_client_user_without_client_org_returns_400 + frontend tests | None |
+| AC-3: Deactivate → is_active=False | `services.deactivate_user` sets is_active=False | test_deactivate_user_returns_200 + frontend test | DoesNotExist unhandled (F-2) |
+| AC-4: Non-DM → 403 | `get_permissions()` returns HasRolePermission(delivery_manager) for all actions | 9 backend tests + 1 frontend | None |
+
+### Findings
+
+| # | File | Line(s) | Category | Severity | Issue |
+|---|---|---|---|---|---|
+| F-1 | `src/aplx_ams_django/accounts/views.py` | 58–67 | missing-input-validation | **Major** | `partial_update` reads `request.data` directly and applies via `setattr` without calling `UserUpdateSerializer`. Any string value can be set as `role`; invalid cross-field updates (role=client_user without client_org_id) raise unhandled IntegrityError → 500 instead of 400. Fix: import `UserUpdateSerializer`, validate via `ser.is_valid(raise_exception=True)`, apply `ser.validated_data`. |
+| F-2 | `src/aplx_ams_django/accounts/views.py` | 55, 62, 72 | unhandled-exception-500 | **Major** | `retrieve`, `partial_update`, `deactivate` call DAL/service functions that raise `User.DoesNotExist` when user ID not found. DRF default exception handler does not convert DoesNotExist to HTTP 404. Result: HTTP 500. Fix: wrap each call with `try/except User.DoesNotExist: return Response(status=status.HTTP_404_NOT_FOUND)`. |
+| F-3 | `src/frontend/src/api/users.ts` | 30, 33, 43, 46, 54 | api-contract-field-mismatch | **Major** | `User` interface uses `full_name` and `organization`; backend `UserDetailSerializer` returns `name` and `client_org_id` (per DBD-001 v0.1). All user list rows render blank names at runtime. Fix: rename to match backend: `full_name` → `name`, `organization` → `client_org_id`. |
+| F-4 | `src/frontend/src/api/users.ts` | 37–40 | api-contract-field-mismatch | **Major** | `UserListResponse` typed as `{ count: number; results: User[] }`; `UserManagement.tsx` line 71 calls `setUsers(res.results)`. Backend `list` action returns flat JSON array (no DRF pagination class configured). `res.results` is always `undefined`. Fix: use flat array type, `setUsers(res as User[])`. |
+| F-5 | `src/frontend/src/api/users.ts` | 42–48 | api-contract-field-mismatch | **Major** | `CreateUserPayload` has no `username` field; `UserManagement.tsx` create form has no `username` field. Backend `UserCreateSerializer` requires `username`. Every POST returns HTTP 400; no user can be created via UI. Fix: add `username` to `CreateFormState`, dialog form, and `CreateUserPayload`. |
+| F-6 | `src/aplx_ams_django/accounts/serializers.py` | 51–62 | dead-code | Minor | `UserUpdateSerializer` defined but never imported or used; `views.py` imports only `UserCreateSerializer` and `UserDetailSerializer`. Remove once F-1 fix imports it. |
+| F-7 | `src/frontend/src/pages/UserManagement.tsx` | 34, 217–228 | scope-deviation | Minor | `CreateFormState` includes `temporary_password`; form renders a password input; payload sends it. plan.md § Out Of Scope: "Temporary password — FEAT-008." Backend silently ignores field. Remove from form and payload; reinstate in FEAT-008. |
+| F-8 | `src/frontend/src/api/users.ts` | 65, 73–75, 84–88, 92–96 | missing-error-handling | Minor | None of the four async functions check `r.ok` before calling `r.json()`. 400/403/500 responses parsed as success types → runtime errors or silent state corruption. Fix: add `if (!r.ok) throw new Error(...)` after each fetch. |
+| F-9 | `src/frontend/src/pages/UserManagement.tsx` | 16 | coupling | Minor | `UserContext` imported from `'./OrgManagement'` — a sibling page component. Move to `src/context/UserContext.ts`. |
+| F-10 | `src/aplx_ams_django/accounts/serializers.py` | 21–26 | duplication | Minor | `_VALID_ROLES` duplicates the four role strings already in `UserRole` TextChoices. Use `[r.value for r in UserRole]` instead. |
+| F-11 | `.secrets.baseline` | — | scope-deviation | Minor | `.secrets.baseline` modified on branch but not listed in plan.md Files To Create Or Modify. Verify scope gate or record DEC. |
+
+### Escalation to Human
+
+**Design question — Frontend field naming:** Major findings F-3, F-4, F-5 stem from `users.ts` field names not matching the backend serializer. Confirm: DBD-001 v0.1 specifies `name` and `client_org_id`; the backend is correct; the frontend client needs to be fixed (not the backend). Tech lead should confirm this before fixes proceed.
+
+### Verdict
+
+**Needs changes (advisory).**
+
+Five Major findings must be resolved before merge:
+- **F-1:** PATCH bypasses validation — use `UserUpdateSerializer`
+- **F-2:** DoesNotExist → 500 on retrieve/update/deactivate — add `try/except → 404`
+- **F-3:** Frontend `full_name`/`organization` → `name`/`client_org_id`
+- **F-4:** Frontend expects `{count,results}` wrapper — backend returns flat array
+- **F-5:** Frontend create payload missing required `username` field
+
+### Traceability Links
+
+- Upstream: FEAT-005 plan.md v0.2; FEAT-005-ACC v0.1; FEAT-005-TESTS v0.3; API-001 v0.2 § F-6; DBD-001 v0.1; PRM-001 v0.1; STD-001 v0.1
+- Downstream: Human PR review of `feature/FEAT-005-user-accounts`; `docs/logs/review-feedback-log.md` (5 Major findings)

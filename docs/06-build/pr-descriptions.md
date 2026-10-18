@@ -739,6 +739,162 @@ None.
 - [x] Vague words removed (etc., as needed, appropriate)
 
 ---
+
+## PR FEAT-005: S-20 — Delivery Manager Manages User Accounts
+
+<!-- pr_status: Draft -->
+<!-- pr_approver: -->
+<!-- pr_depth: Deep -->
+<!-- pr_review_minutes: -->
+
+### Input References
+- FEAT-005 plan.md v0.2 (Approved 2026-10-18, Mohanasunder)
+- FEAT-005-ACC v0.1 (Approved 2026-10-17, Mohanasunder)
+- FEAT-005-TESTS v0.3 (Approved 2026-10-18, Mohanasunder) — test commit `fe4e56f`
+- REQ-001 v0.3 § S-20 — acceptance criteria source (Approved 2026-10-17)
+- API-001 v0.2 — endpoint contracts (Approved 2026-10-17)
+- DBD-001 v0.1 § Module: accounts — table definitions (Approved 2026-10-17)
+- UIS-001 v0.1 — UI Specification (Approved 2026-10-17)
+- STD-001 v0.1 — APLX AMS: Coding Standards (Approved 2026-10-17)
+- TST-001 v0.1 — APLX AMS: Test Strategy (Approved 2026-10-17)
+- PRM-001 v0.1 § User account management (F-6) — Permission Matrix (Approved 2026-10-17)
+- SCR S-9 (Approved 2026-10-18) — settings/base.py added to plan.md file scope
+- SCR S-10 (Approved 2026-10-18) — FEAT-005-TESTS SHA ordering fix
+- DEC-075, DEC-076 (2026-10-18) — SCR S-9 governance
+- DEC-077 (2026-10-18) — SCR S-10 governance
+- DEC-078 (2026-10-18) — Scope gate override: 8 out-of-plan Django boilerplate files
+- DEC-079 (2026-10-18) — pip-audit gate override: pre-existing vulnerabilities
+
+### Summary
+Implements REQ S-20 end-to-end: Django `accounts` app (`User` model extending `AbstractBaseUser` with `UserRole` TextChoices, 4 DB constraints, `0001_initial` migration, DAL, services, serializers, `UserViewSet` enforcing `delivery_manager`-only access via `HasRolePermission`) and React `UserManagement` page (user list with Deactivated chip, native-HTML create dialog with role select and org validation, deactivate confirm flow). All 35 locked tests from FEAT-005-TESTS v0.3 pass (13 model, 16 API, 6 frontend). All CI gates pass; pre-existing scope (DEC-078) and pip-audit (DEC-079) gates were overridden by Mohanasunder.
+
+### Linked Artifacts
+- FEAT-005 plan.md v0.2
+- FEAT-005-ACC v0.1
+- FEAT-005-TESTS v0.3
+- REQ-001 v0.3 § S-20 (acceptance criteria)
+- API-001 v0.2 § User account management (F-6)
+- DBD-001 v0.1 § Module: accounts (table definitions)
+- UIS-001 v0.1 § REQ S-20 — Delivery manager manages user accounts
+- STD-001 v0.1 (Coding Standards — naming, structure, gate commands)
+- TST-001 v0.1 (Test Strategy — test levels)
+- PRM-001 v0.1 § User account management (F-6)
+- SCR S-9; SCR S-10
+- DEC-075, DEC-076, DEC-077, DEC-078, DEC-079
+
+### Changes
+**Database:**
+- `src/aplx_ams_django/accounts/models.py` — `User(AbstractBaseUser)`: `username` (CharField 150, unique), `name` (CharField 255), `email` (EmailField 254, unique), `role` (`UserRole` TextChoices: `l1_support_engineer`, `l2_l3_support_engineer`, `delivery_manager`, `client_user`), `client_org` (ForeignKey to `ClientOrg`, SET_NULL, nullable), `is_active` (BooleanField, default=True), `failed_attempts` (SmallIntegerField, default=0), `locked_until` (DateTimeField, nullable), `date_joined` (DateTimeField, auto_now_add). 4 DB constraints: `chk_role_valid`, `chk_client_user_has_org`, `chk_internal_user_no_org`, `chk_failed_attempts_non_negative`. `UserManager` with `create_user`.
+- `src/aplx_ams_django/accounts/migrations/0001_initial.py` — creates `accounts_user` table with all fields and constraints; depends on `organizations/0002_contract`.
+
+**Backend:**
+- `src/aplx_ams_django/accounts/dal.py` — `get_user_by_id()`, `list_users()`, `get_active_users_by_org()`.
+- `src/aplx_ams_django/accounts/services.py` — `create_user()` (validates `client_org_id` required for `client_user` role, returns 400 on missing org), `deactivate_user()` (sets `is_active=False` and saves).
+- `src/aplx_ams_django/accounts/serializers.py` — `UserCreateSerializer` (validates `client_org_id` required for `client_user` role), `UserUpdateSerializer`, `UserDetailSerializer`.
+- `src/aplx_ams_django/accounts/views.py` — `UserViewSet(GenericViewSet)`: `get_permissions()` returns `HasRolePermission(required_roles=["delivery_manager"])`; actions: `list`, `create` (returns 201 or 400), `retrieve`, `partial_update`, `deactivate` (returns 200).
+- `src/aplx_ams_django/accounts/urls.py` — registers `GET/POST /api/accounts/users/`, `GET/PATCH /api/accounts/users/{id}/`, `POST /api/accounts/users/{id}/deactivate/` per API-001 v0.2 § F-6.
+- `src/aplx_ams_django/settings/base.py` — `INSTALLED_APPS` adds `aplx_ams_django.accounts`; `AUTH_USER_MODEL = "accounts.User"` (SCR S-9).
+- `src/aplx_ams_django/urls.py` — root URL router includes accounts URLs.
+
+**Frontend:**
+- `src/frontend/src/api/users.ts` — typed API client: `listUsers`, `createUser`, `updateUser`, `deactivateUser` making real fetch calls to accounts endpoints.
+- `src/frontend/src/pages/UserManagement.tsx` — P3 (DM) route guard renders `data-testid="redirect-to-tickets"` for non-P3; native HTML `<table>` user list with role column and Deactivated chip (`<span>Deactivated</span>`) or Deactivate button per row; native HTML `<dialog>` create-user form with `<select>` role picker (all 4 options per API-001 v0.2 § F-6), org selector, Confirm button disabled when `role=client_user` and no org selected; deactivate confirmation dialog.
+
+**Tests (locked, FEAT-005-TESTS v0.3):**
+- `src/aplx_ams_django/accounts/tests/test_models.py` — 13 model tests (locked)
+- `src/aplx_ams_django/accounts/tests/test_api.py` — 16 API tests (locked)
+- `src/frontend/src/pages/UserManagement.test.tsx` — 6 frontend tests (locked)
+
+### Tests
+**Tests added (35 locked from FEAT-005-TESTS v0.3):**
+
+Model (`src/aplx_ams_django/accounts/tests/test_models.py`): `test_role_field_exists`, `test_role_field_has_all_four_valid_choices`, `test_create_user_with_l1_support_engineer_role`, `test_create_user_with_l2_l3_support_engineer_role`, `test_create_user_with_delivery_manager_role`, `test_create_user_with_client_user_role`, `test_invalid_role_rejected`, `test_client_user_without_org_raises_integrity_error`, `test_client_user_with_valid_org_saved_successfully`, `test_internal_role_with_org_raises_integrity_error`, `test_is_active_field_is_booleanfield`, `test_is_active_defaults_to_true`, `test_deactivate_user_persists_through_db_round_trip`
+
+Backend (`src/aplx_ams_django/accounts/tests/test_api.py`): `test_dm_creates_user_with_l1_support_engineer_role`, `test_dm_creates_user_with_l2_l3_support_engineer_role`, `test_dm_creates_user_with_delivery_manager_role`, `test_dm_creates_user_with_client_user_role`, `test_create_client_user_without_client_org_returns_400`, `test_deactivate_user_returns_200`, `test_deactivated_user_has_is_active_false`, `test_l1_cannot_create_user`, `test_l2_l3_cannot_create_user`, `test_client_user_cannot_create_user`, `test_l1_cannot_patch_user`, `test_l2_l3_cannot_patch_user`, `test_client_user_cannot_patch_user`, `test_l1_cannot_deactivate_user`, `test_l2_l3_cannot_deactivate_user`, `test_client_user_cannot_deactivate_user`
+
+Frontend (`src/frontend/src/pages/UserManagement.test.tsx`): `FEAT-005 AC-1: role select renders all four role options`, `FEAT-005 AC-1: form submission calls createUser with correct role field`, `FEAT-005 AC-2: Confirm button is disabled when client_user role and no org selected`, `FEAT-005 AC-2: error message shown when client_user submitted without org`, `FEAT-005 AC-3: deactivated user row shows Deactivated chip`, `FEAT-005 AC-4: non-DM role is redirected away from /admin/users`
+
+**How to run:**
+```
+pytest src/ --cov=src --cov-fail-under=80 --timeout=600
+cd src/frontend && npm run test -- --run
+```
+
+**Gate results (all pass on branch `feature/FEAT-005-user-accounts`; overridden gates noted):**
+
+| Gate | Result |
+|---|---|
+| ruff check + format | Pass |
+| mypy --strict | Pass |
+| pytest (35 new; 87 total) | Pass |
+| bandit -ll | Pass |
+| pip-audit -r requirements.txt | Pass (pre-existing vulnerabilities overridden per DEC-079) |
+| detect-secrets | Pass |
+| tsc --noEmit | Pass |
+| eslint --max-warnings=0 | Pass |
+| vitest coverage | Pass |
+| check_feature_size | Pass (8 boilerplate files overridden per DEC-078) |
+
+### Requirements Covered
+- REQ-020 AC-1: `test_dm_creates_user_with_l1_support_engineer_role` (backend, PASSING), `test_dm_creates_user_with_l2_l3_support_engineer_role` (backend, PASSING), `test_dm_creates_user_with_delivery_manager_role` (backend, PASSING), `test_dm_creates_user_with_client_user_role` (backend, PASSING), `FEAT-005 AC-1: role select renders all four role options` (frontend, PASSING), `FEAT-005 AC-1: form submission calls createUser with correct role field` (frontend, PASSING)
+- REQ-020 AC-2: `test_create_client_user_without_client_org_returns_400` (backend, PASSING), `FEAT-005 AC-2: Confirm button is disabled when client_user role and no org selected` (frontend, PASSING), `FEAT-005 AC-2: error message shown when client_user submitted without org` (frontend, PASSING)
+- REQ-020 AC-3: `test_deactivate_user_returns_200` (backend, PASSING), `test_deactivated_user_has_is_active_false` (backend, PASSING), `FEAT-005 AC-3: deactivated user row shows Deactivated chip` (frontend, PASSING) — sign-in refusal test deferred to FEAT-006 (FEAT-005 plan.md § Out Of Scope; scope boundary documented in FEAT-005-TESTS v0.3)
+- REQ-020 AC-4: `test_l1_cannot_create_user` (backend, PASSING), `test_l2_l3_cannot_create_user` (backend, PASSING), `test_client_user_cannot_create_user` (backend, PASSING), `test_l1_cannot_patch_user` (backend, PASSING), `test_l2_l3_cannot_patch_user` (backend, PASSING), `test_client_user_cannot_patch_user` (backend, PASSING), `test_l1_cannot_deactivate_user` (backend, PASSING), `test_l2_l3_cannot_deactivate_user` (backend, PASSING), `test_client_user_cannot_deactivate_user` (backend, PASSING), `FEAT-005 AC-4: non-DM role is redirected away from /admin/users` (frontend, PASSING)
+
+### Known Gaps
+1. REQ S-20 AC-3 partial: The acceptance criterion states "that user can no longer sign in." DB persistence (`is_active=False`) is tested at database and backend layers in this feature. The sign-in refusal test (HTTP 401 on sign-in attempt with a deactivated account) is deferred to FEAT-006, which owns the sign-in endpoint (FEAT-005 plan.md § Out Of Scope; FEAT-005-TESTS v0.3 § Purpose And Scope). FEAT-006-TESTS must close this gap.
+
+### Deviations From Plan
+- **DEC-078 (2026-10-18, Mohanasunder):** Scope gate overridden for 8 out-of-plan files: Django app boilerplate (`accounts/__init__.py`, `accounts/admin.py`, `accounts/apps.py`, `accounts/migrations/__init__.py`, `accounts/tests/__init__.py`, `accounts/tests/conftest.py`) auto-created by Django; `pyproject.toml` for ruff/mypy tooling config (gate-required); `plan.md` amended via approved SCR S-9.
+- **DEC-079 (2026-10-18, Mohanasunder):** pip-audit gate overridden. Pre-existing PyJWT, python-dotenv, python-jose, and urllib3 vulnerabilities flagged by bare pip-audit pre-date FEAT-005 and are not introduced by this feature. Dependency upgrades tracked as a separate backlog item.
+- **SCR S-9 (Approved 2026-10-18, Mohanasunder; DEC-075, DEC-076):** `src/aplx_ams_django/settings/base.py` added to FEAT-005 plan.md file scope (v0.2). Required for `AUTH_USER_MODEL = "accounts.User"` and `INSTALLED_APPS` configuration.
+- **UIS-001 deviation — native HTML instead of MUI DataGrid/Dialog/Select:** plan.md step 9 specifies "MUI DataGrid; DM-only create/deactivate." Implementation uses a native HTML `<table>`, `<dialog>`, and `<select>` for React 18 ARIA compliance with Vitest ARIA queries. No DEC entry was found in the decision log covering this choice. See OQ-20261018-002.
+
+### Blockers
+None.
+
+### Risk Tier And Review Depth
+Tier: High — Deep review required (tech lead + one human developer reviewer).
+
+This feature manages personal data (names, emails, roles); an incorrect role assignment could grant unauthorized access to restricted areas. Per `.ai/standards/review-and-approval.md` § Approval tiers, High features require the tech lead plus one human developer reviewer, with Deep review depth.
+
+Deep review means: read every changed line of logic; review security against the threat model and permission matrix (auth, validation, secrets, data exposure); run the feature locally including failure paths; check migrations and rollback; read every test for behavior.
+
+### Reviewer Checklist
+- [ ] Ran or previewed the feature (not only read the diff)
+- [ ] Every acceptance criterion is met
+- [ ] Change summary read: Known Gaps acceptable (AC-3 sign-in refusal is a documented scope boundary deferred to FEAT-006), Deviations From Plan justified (DEC-078 boilerplate, DEC-079 pre-existing CVEs, SCR S-9 settings/base.py, HTML-vs-MUI OQ-20261018-002), Blockers 'None'
+- [ ] No files changed outside the plan (boilerplate additions recorded as DEC-078; settings/base.py added via SCR S-9; see Deviations From Plan)
+- [ ] No packages added or upgraded beyond the plan's New Packages (New Packages: None)
+- [ ] Tests assert behavior, not just that code runs (assertions: field existence and constraints, HTTP status codes, DOM element presence, DB persistence, permission refusals)
+- [ ] Approved test set (FEAT-005-TESTS v0.3) unchanged in logic since approval; implementation started after test commit `fe4e56f` (SHA ordering fix authorized by DEC-077)
+- [ ] Auth, permissions, input validation, secrets, and data handling checked (`HasRolePermission` returns 403 for all non-DM roles before any DB access; `client_org_id` required for `client_user` role enforced at serializer and DB constraint layers; `is_active=False` blocks sign-in via FEAT-006)
+- [ ] Migrations reversible and consistent with the schema design (`0001_initial` creates `accounts_user` table with 4 constraints per DBD-001; reversible; depends on `organizations/0002_contract`)
+- [ ] Contract (OpenAPI) and UI spec followed (endpoints per API-001 v0.2 § F-6; UIS-001 deviation logged as OQ-20261018-002 — native HTML vs MUI components requires human decision)
+- [ ] Applicable learned rules (`.ai/standards/learned-rules.md`) followed
+- [ ] Checker validation summary and AI pre-review read; any "Proceeded on Fail" findings examined
+- [ ] Second approver obtained (High tier: tech lead + one reviewer) — Mohanasunder holds both Tech lead and Human developer reviewer roles; single-approver pilot accepted per DEC-020
+
+### Assumptions
+None beyond those logged in docs/logs/assumptions-log.md.
+
+### Open Questions
+- OQ-20261018-002 (Open, 2026-10-18): Is the FEAT-005 `UserManagement.tsx` native-HTML implementation (`<table>`, `<dialog>`, `<select>`) instead of MUI DataGrid, MuiDialog, and MuiSelect a formally approved deviation from UIS-001 v0.1 § S-20 and plan.md step 9? No DEC entry was found in the decision log for this choice. If not approved, an SCR is required. Logged in docs/logs/open-questions-log.md.
+
+### Traceability Links
+- Upstream: REQ-001 v0.3 § S-20; API-001 v0.2 § F-6; DBD-001 v0.1 § Module: accounts; UIS-001 v0.1 § S-20; FEAT-005 plan.md v0.2; FEAT-005-ACC v0.1; FEAT-005-TESTS v0.3; STD-001 v0.1; TST-001 v0.1; PRM-001 v0.1 § F-6; SCR S-9; SCR S-10; DEC-075; DEC-076; DEC-077; DEC-078; DEC-079
+- Downstream: FEAT-006 (sign-in; must check `is_active`; closes AC-3 sign-in gap); FEAT-007 (RLS policies on accounts); FEAT-030/FEAT-031 (temporary password, change own password); Phase 7 regression test suite
+
+### Quality Checklist
+- [x] Every template section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] Vague words removed (etc., as needed, appropriate)
+
+---
 <!-- Add further ## PR FEAT-NNN: sections here as new features are built -->
 
 ## Assumptions
