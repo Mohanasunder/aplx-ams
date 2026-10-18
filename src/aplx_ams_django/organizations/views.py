@@ -13,6 +13,8 @@ Permission matrix (PRM-001 v0.1):
   GET    /api/organizations/{id}/sap-applications/ — P1, P2, P3, P4
 """
 
+from typing import ClassVar
+
 from django.db.models import QuerySet
 from rest_framework import mixins, status, viewsets
 from rest_framework.request import Request
@@ -48,6 +50,7 @@ class OrgViewSet(
 
     queryset = ClientOrg.objects.all().order_by("name")
     serializer_class = ClientOrgSerializer
+    http_method_names: ClassVar[list[str]] = ["get", "post", "patch", "head", "options"]
 
     def get_permissions(self) -> list[HasRolePermission]:
         if self.action in ("create", "update", "partial_update"):
@@ -93,6 +96,8 @@ class SAPApplicationViewSet(viewsets.GenericViewSet):
 
     def create(self, request: Request, org_id: int | None = None) -> Response:
         """POST /api/organizations/{org_id}/sap-applications/ — add SAP app to org."""
-        sap_app = services.add_sap_application(org_id=org_id, data=request.data)  # type: ignore[arg-type]
-        serializer = self.get_serializer(sap_app)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        org_id = self.kwargs.get("org_id")
+        sap_app = services.add_sap_application(org_id=org_id, data=serializer.validated_data)
+        return Response(SAPApplicationSerializer(sap_app).data, status=status.HTTP_201_CREATED)
