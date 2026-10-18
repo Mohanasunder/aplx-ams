@@ -16,14 +16,9 @@ from typing import ClassVar
 
 from rest_framework import serializers
 
-from aplx_ams_django.accounts.models import User
+from aplx_ams_django.accounts.models import User, UserRole
 
-_VALID_ROLES = [
-    "l1_support_engineer",
-    "l2_l3_support_engineer",
-    "delivery_manager",
-    "client_user",
-]
+_VALID_ROLES = [r.value for r in UserRole]  # type: ignore[attr-defined]
 
 
 class UserCreateSerializer(serializers.Serializer):

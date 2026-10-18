@@ -19,7 +19,12 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from aplx_ams_django.accounts import dal, services
-from aplx_ams_django.accounts.serializers import UserCreateSerializer, UserDetailSerializer
+from aplx_ams_django.accounts.models import User
+from aplx_ams_django.accounts.serializers import (
+    UserCreateSerializer,
+    UserDetailSerializer,
+    UserUpdateSerializer,
+)
 from aplx_ams_django.permissions import HasRolePermission
 
 _DM_ONLY = ["delivery_manager"]
@@ -52,22 +57,34 @@ class UserViewSet(viewsets.GenericViewSet):
     def retrieve(self, request: Request, pk: int | None = None) -> Response:
         """GET /api/accounts/users/{pk}/ — return a single user detail."""
         assert pk is not None
-        user = dal.get_user_by_id(pk)
+        try:
+            user = dal.get_user_by_id(pk)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         return Response(UserDetailSerializer(user).data)
 
     def partial_update(self, request: Request, pk: int | None = None) -> Response:
         """PATCH /api/accounts/users/{pk}/ — partial update of updatable fields."""
         assert pk is not None
-        user = dal.get_user_by_id(pk)
+        try:
+            user = dal.get_user_by_id(pk)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = UserUpdateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         updatable = ("name", "email", "role", "client_org_id")
         for field in updatable:
-            if field in request.data:
-                setattr(user, field, request.data[field])
+            if field in serializer.validated_data:
+                setattr(user, field, serializer.validated_data[field])
         user.save()
         return Response(UserDetailSerializer(user).data)
 
     def deactivate(self, request: Request, pk: int | None = None) -> Response:
         """POST /api/accounts/users/{pk}/deactivate/ — set is_active=False (AC-3)."""
         assert pk is not None
-        user = services.deactivate_user(pk)
+        try:
+            user = services.deactivate_user(pk)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         return Response(UserDetailSerializer(user).data)
