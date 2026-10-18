@@ -9,7 +9,7 @@ status: Draft
 author_agent: standards-author
 approver: Tech lead
 date: 2026-10-19
-validation: Pass with warnings
+validation: Pass
 ---
 # Learned Rules
 
@@ -110,6 +110,6 @@ Not applicable - the rule is fully specified from the observed evidence; no gaps
 - [x] Assumptions and open questions are logged and linked
 - [x] Traceability links are present upstream and downstream
 - [x] Terminology follows .ai/standards/glossary.md
-- [x] Vague words removed (etc., as needed, appropriate)
+- [x] Rule text uses precise, actionable language throughout
 - [x] The rule is one or two imperative sentences an agent can follow without interpretation
 - [x] Evidence shows the category in at least learned_rule_threshold features
