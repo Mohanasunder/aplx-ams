@@ -139,7 +139,7 @@ None.
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Architect / tech lead |
-| Version | 0.2 |
+| Version | 0.3 |
 | Conditions | None |
-| Comments | SCR S-12: nginx/nginx.conf added to file scope per DEC-042 |
-| Timestamp | 2026-10-18 19:43 UTC |
+| Comments | SCR S-13: react-router-dom required for useNavigate in Login.tsx |
+| Timestamp | 2026-10-18 20:18 UTC |
