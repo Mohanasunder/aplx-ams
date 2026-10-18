@@ -14,6 +14,7 @@ Permission matrix (PRM-001 v0.1 § User account management F-6):
 
 from __future__ import annotations
 
+from django.db import IntegrityError
 from rest_framework import status, viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -77,7 +78,10 @@ class UserViewSet(viewsets.GenericViewSet):
         for field in updatable:
             if field in serializer.validated_data:
                 setattr(user, field, serializer.validated_data[field])
-        user.save()
+        try:
+            user.save()
+        except IntegrityError as exc:
+            return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(UserDetailSerializer(user).data)
 
     def deactivate(self, request: Request, pk: int | None = None) -> Response:

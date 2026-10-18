@@ -55,6 +55,14 @@ class UserUpdateSerializer(serializers.Serializer):
     role = serializers.ChoiceField(choices=_VALID_ROLES, required=False)
     client_org_id = serializers.IntegerField(required=False, allow_null=True)
 
+    def validate(self, attrs: dict[str, object]) -> dict[str, object]:
+        role = attrs.get("role")
+        if role == "client_user" and not attrs.get("client_org_id"):
+            raise serializers.ValidationError(
+                {"client_org_id": "client_org_id is required when role is client_user."}
+            )
+        return attrs
+
 
 class UserDetailSerializer(serializers.ModelSerializer):
     """Read-only serializer for User instances returned by the API.
