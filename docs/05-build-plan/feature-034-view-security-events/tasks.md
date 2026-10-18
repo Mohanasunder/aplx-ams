@@ -19,7 +19,7 @@ validation: Pass
 ## Input References
 - FEAT-034 plan.md â€” implementation steps and file list
 - REQ-001 v0.3 Â§ S-33 â€” acceptance criteria
-- API-001 v0.1 â€” endpoint contracts
+- API-001 v0.2 â€” endpoint contracts
 - DBD-001 v0.1 â€” table definitions
 - STD-001 v0.1 â€” coding standards
 
@@ -43,7 +43,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: FEAT-034 plan.md; REQ-001 v0.3 Â§ S-33; API-001 v0.1; DBD-001 v0.1; STD-001 v0.1
+- Upstream: FEAT-034 plan.md; REQ-001 v0.3 Â§ S-33; API-001 v0.2; DBD-001 v0.1; STD-001 v0.1
 - Downstream: Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

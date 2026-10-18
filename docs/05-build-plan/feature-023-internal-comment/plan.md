@@ -19,7 +19,7 @@ validation: Pass
 ## Input References
 - PIB-005 v0.1 — Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 - REQ-001 v0.3 — APLX AMS: User Stories (Approved 2026-10-17) § S-29
-- API-001 v0.1 — APLX AMS: API Specification (Approved 2026-10-17)
+- API-001 v0.2 — APLX AMS: API Specification (Approved 2026-10-17)
 - DBD-001 v0.1 — APLX AMS: Database Design (Approved 2026-10-17)
 - STD-001 v0.1 — APLX AMS: Coding Standards (Approved 2026-10-17)
 - BED-001 v0.1 — APLX AMS: Backend Design (Approved 2026-10-17)
@@ -40,13 +40,13 @@ Deliver all 4 acceptance criteria of REQ S-29 end-to-end: backend models, migrat
 
 ## Inputs And Contracts
 - REQ-001 v0.3 § S-29 — acceptance criteria (copied verbatim into acceptance.md)
-- API-001 v0.1 — endpoint contracts for this feature
+- API-001 v0.2 — endpoint contracts for this feature
 - DBD-001 v0.1 — table definitions and migration order
 - PRM-001 v0.1 — role-based permission matrix
 
 ## Context Pack
 - REQ-001 v0.3 § S-29
-- API-001 v0.1 § Ticket management (F-1)
+- API-001 v0.2 § Ticket management (F-1)
 - DBD-001 v0.1 § Module: tickets
 - STD-001 v0.1 § Naming And Structure
 - PRM-001 v0.1 § Ticket management (F-1)
@@ -112,7 +112,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: PIB-005 v0.1; REQ-001 v0.3 § S-29; API-001 v0.1; DBD-001 v0.1; STD-001 v0.1; BED-001 v0.1; UIS-001 v0.1
+- Upstream: PIB-005 v0.1; REQ-001 v0.3 § S-29; API-001 v0.2; DBD-001 v0.1; STD-001 v0.1; BED-001 v0.1; UIS-001 v0.1
 - Downstream: FEAT-023-TASKS; FEAT-023-ACC; FEAT-023-STATUS; Phase 6 PR
 
 ## Quality Checklist
