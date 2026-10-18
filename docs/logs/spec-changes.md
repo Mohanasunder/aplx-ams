@@ -798,3 +798,93 @@ None.
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+## SCR S-10: FEAT-005-TESTS — correct Test Commit SHA ordering so CI gate uses final commit
+
+<!-- scr_status: Draft -->
+<!-- scr_date: 2026-10-18 -->
+<!-- scr_approver: -->
+
+### Input References
+- FEAT-005-TESTS v0.2 (Approved 2026-10-18, Mohanasunder) — artifact being amended
+
+### Purpose And Scope
+Restructures the Test Commit section of FEAT-005-TESTS.md so that the final Mode A commit SHA (`fe4e56f`) appears as the first SHA in the section. The `locked_tests.py check` CI gate reads the first SHA it encounters via a regex; listing `6248aa5` (the initial database-layer commit) first causes the gate to compare current files against an intermediate commit, producing false violations for `test_api.py` and `UserManagement.test.tsx`. No test content, criterion coverage, or approval decision changes.
+
+### Changed Artifact
+FEAT-005-TESTS v0.2 → v0.3; `docs/06-build/FEAT-005-TESTS.md`
+
+### Trigger
+`python3 scripts/locked_tests.py check` exit code 1 immediately after FEAT-005-TESTS v0.2 was approved (2026-10-18). The gate reported `locked test file changed since 6248aa5` for `test_api.py` and `UserManagement.test.tsx`. Root cause: `locked_tests.py` uses `SHA.search()` on the Test Commit section, which returns the first SHA found. The section lists `6248aa5` first (the database-layer commit) while the actual final state of all three test files is `fe4e56f` (the F-001/F-003 fix commit, committed before approval).
+
+### Change
+**§ Test Commit** — add a "Final test commit" leader line before the sequential list so `fe4e56f` is the first SHA the regex finds:
+
+Before:
+```
+## Test Commit
+Four sequential commits on branch `feature/FEAT-005-user-accounts`:
+- `6248aa5` — database layer ...
+- `8a33dca` — backend layer ...
+- `0c9ce44` — frontend layer ...
+- `fe4e56f` — test_api.py fix ...
+
+The checker diffs the three test files against commit `fe4e56f` (HEAD of the test-only run)...
+```
+
+After:
+```
+## Test Commit
+Final test commit (HEAD of Mode A, all three test files at approved state): `fe4e56f`
+
+Sequential commits on branch `feature/FEAT-005-user-accounts`:
+- `6248aa5` — database layer ...
+- `8a33dca` — backend layer ...
+- `0c9ce44` — frontend layer ...
+- `fe4e56f` — test_api.py fix ...
+```
+
+No other section of FEAT-005-TESTS.md changes.
+
+### Reason
+The `locked_tests.py` script (`scripts/locked_tests.py`, line 56) uses `SHA.search(secs.get("Test Commit", ""))` which returns the leftmost SHA match. The Test Commit section was written with the first commit first (chronological order), but the script requires the final/HEAD commit to be first so the gate correctly verifies files are unchanged since the approved state. The four commits are all on the feature branch before approval; `fe4e56f` is the one that captures the final state of all three locked test files.
+
+### Decision Record
+Not applicable — FEAT-005-TESTS is a feature test set (template `feature-test-set`), not an architecture-overview, adr, api-spec, database-design, deployment-topology, or threat-model artifact.
+
+### Impact
+| Artifact / Feature | State | Action |
+|---|---|---|
+| FEAT-005-TESTS v0.2 | Approved | Revise to v0.3; no re-approval required — content (tests, coverage, red-run evidence) unchanged |
+| `scripts/locked_tests.py check` | CI gate failing | Will pass for FEAT-005 once v0.3 is in place |
+| FEAT-035 `locked_tests.py check` failure | Pre-existing | Not in scope for this SCR |
+
+### Work Stopped
+None — Mode B has not started yet. The CI gate failure is a pre-Mode-B discovery.
+
+### Resume Criteria
+1. This SCR (SCR S-10) Approved by Mohanasunder (tech lead).
+2. FEAT-005-TESTS v0.3 committed (Test Commit section restructured).
+3. `python3 scripts/locked_tests.py check` exits 0 for FEAT-005-TESTS.
+
+### Assumptions
+None.
+
+### Open Questions
+None.
+
+### Traceability Links
+- Upstream: FEAT-005-TESTS v0.2 (Approved)
+- Downstream: FEAT-005-TESTS v0.3; `locked_tests.py check` CI gate (FEAT-005)
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
