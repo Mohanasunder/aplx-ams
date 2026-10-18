@@ -3,7 +3,7 @@ import { defineConfig } from 'playwright/test';
 export default defineConfig({
   testDir: './e2e',
   use: {
-    baseURL: 'http://nginx:80',
+    baseURL: 'http://localhost',
     headless: true,
   },
   projects: [
