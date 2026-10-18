@@ -1,10 +1,10 @@
 """
 FEAT-002: organizations views.
-FEAT-003: ContractViewSet stub (full implementation in Mode B).
+FEAT-003: ContractViewSet (implemented in Mode B).
 
 OrgViewSet: CRUD for ClientOrg.
 SAPApplicationViewSet: create and list SAP applications scoped to one org.
-ContractViewSet: create and retrieve active contract for one org (stub only).
+ContractViewSet: create and retrieve active contract for one org.
 
 Permission matrix (PRM-001 v0.1):
   POST   /api/organizations/                          — P3
@@ -13,12 +13,15 @@ Permission matrix (PRM-001 v0.1):
   PATCH  /api/organizations/{id}/                     — P3
   POST   /api/organizations/{id}/sap-applications/   — P3
   GET    /api/organizations/{id}/sap-applications/   — P1, P2, P3, P4
-  POST   /api/organizations/{id}/contracts/          — P3 (FEAT-003 stub)
-  GET    /api/organizations/{id}/contracts/active/   — P3 (FEAT-003 stub)
+  POST   /api/organizations/{id}/contracts/          — P3
+  GET    /api/organizations/{id}/contracts/active/   — P3
 """
+
+from __future__ import annotations
 
 from typing import ClassVar
 
+from django.core.exceptions import ValidationError
 from django.db.models import QuerySet
 from rest_framework import mixins, status, viewsets
 from rest_framework.request import Request
@@ -109,21 +112,46 @@ class SAPApplicationViewSet(viewsets.GenericViewSet):
 
 
 class ContractViewSet(viewsets.GenericViewSet):
-    """FEAT-003 stub — ContractViewSet; full implementation added in Mode B.
+    """FEAT-003: ContractViewSet for contract creation and active contract retrieval.
 
-    POST /api/organizations/{org_id}/contracts/          — P3 (stub)
-    GET  /api/organizations/{org_id}/contracts/active/   — P3 (stub)
+    POST /api/organizations/{org_id}/contracts/          — P3 (Delivery Manager)
+    GET  /api/organizations/{org_id}/contracts/active/   — P3 (Delivery Manager)
 
-    Both actions return 501 in Mode A; permission enforcement and business
-    logic are wired in Mode B.
+    Permission enforced on every action via HasRolePermission (PRM-001 v0.1).
     """
 
     serializer_class = ContractSerializer
 
+    def get_permissions(self) -> list[HasRolePermission]:
+        return [HasRolePermission(required_roles=_DM_ONLY)]
+
     def create(self, request: Request, org_id: int | None = None) -> Response:
-        """POST /api/organizations/{org_id}/contracts/ — FEAT-003 stub."""
-        return Response({"detail": "not implemented"}, status=status.HTTP_501_NOT_IMPLEMENTED)
+        """POST /api/organizations/{org_id}/contracts/ — create a contract for the org.
+
+        Returns 201 on success, 409 when an active contract already exists.
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            contract = services.create_contract(
+                org_id=org_id, data=serializer.validated_data
+            )
+        except ValidationError:
+            return Response(
+                {"detail": "An active contract already exists for this organization."},
+                status=status.HTTP_409_CONFLICT,
+            )
+        return Response(ContractSerializer(contract).data, status=status.HTTP_201_CREATED)
 
     def get_active(self, request: Request, org_id: int | None = None) -> Response:
-        """GET /api/organizations/{org_id}/contracts/active/ — FEAT-003 stub."""
-        return Response({"detail": "not implemented"}, status=status.HTTP_501_NOT_IMPLEMENTED)
+        """GET /api/organizations/{org_id}/contracts/active/ — return the active contract.
+
+        Returns 200 with the contract body, or 404 if no active contract exists.
+        """
+        contract = services.get_active_contract(org_id=org_id)
+        if contract is None:
+            return Response(
+                {"detail": "No active contract found for this organization."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        return Response(ContractSerializer(contract).data, status=status.HTTP_200_OK)

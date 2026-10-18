@@ -1,13 +1,18 @@
 """
 FEAT-002: organizations service layer.
-FEAT-003: contract service stubs (full implementation in Mode B).
+FEAT-003: contract service (implemented in Mode B).
 
 Thin orchestration layer between views and the data access layer (DAL).
 No role-enforcement logic lives here; that is handled by HasRolePermission
 in views (PRM-001 v0.1).
 """
 
+from __future__ import annotations
+
 from typing import Any
+
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 
 from aplx_ams_django.organizations import dal
 from aplx_ams_django.organizations.models import ClientOrg, Contract, SAPApplication
@@ -34,22 +39,24 @@ def add_sap_application(org_id: int, data: dict[str, Any]) -> SAPApplication:
 
 
 # ---------------------------------------------------------------------------
-# FEAT-003 stubs — full implementation in Mode B
+# FEAT-003 — contract service
 # ---------------------------------------------------------------------------
 
 
 def create_contract(org_id: int, data: dict[str, Any]) -> Contract:
-    """FEAT-003 stub — create a contract for the given org.
+    """Create a contract for the given org and return it.
 
-    Full implementation (validation, 409 guard, DAL call) added in Mode B.
+    Raises django.core.exceptions.ValidationError when the partial unique
+    index rejects a second active contract for the same org (HTTP 409).
     """
-    raise NotImplementedError("FEAT-003: create_contract not yet implemented")
+    try:
+        return dal.create_contract_for_org(org_id=org_id, data=data)
+    except IntegrityError as exc:
+        raise ValidationError(
+            "An active contract already exists for this organization."
+        ) from exc
 
 
-def get_active_contract(org_id: int) -> Contract:
-    """FEAT-003 stub — return the active contract for the given org.
-
-    Full implementation (DAL delegation, hours_bank_balance computation)
-    added in Mode B.
-    """
-    raise NotImplementedError("FEAT-003: get_active_contract not yet implemented")
+def get_active_contract(org_id: int) -> Contract | None:
+    """Return the active contract for the given org, or None if none exists."""
+    return dal.get_active_contract_for_org(org_id=org_id)
