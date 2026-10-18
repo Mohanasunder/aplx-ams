@@ -249,3 +249,4 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-18 16:58 | SCR S-10 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | None |
 | 2026-10-18 17:46 | SCR S-11 | 0.1 | Approve | Mohanasunder | Tech lead | n/a | - | None |
 | 2026-10-18 19:08 | PRD FEAT-005 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | [review depth: Deep, tier High] [review: 20 min] |
+| 2026-10-18 19:27 | LRN L-1 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | - |

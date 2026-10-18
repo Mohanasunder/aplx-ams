@@ -16,8 +16,9 @@ validation: Pass
 <!-- Collection file. All learned rules are appended as `## LRN L-N: [title]` sections (L-1, L-2, …). Never create a separate file per rule. Sub-IDs are consecutive and never reused. Cite a specific rule as `LRN L-N`. Per-rule status stored as HTML comments within each section. Approve each section individually with `/approve docs/logs/learned-rules.md --sub-id L-N`. Run `python3 scripts/learned_rules.py build` after approval to regenerate .ai/standards/learned-rules.md. -->
 
 ## LRN L-1: missing-input-validation
+<!-- lrn_approver: Mohanasunder -->
 
-<!-- lrn_status: Draft -->
+<!-- lrn_status: Approved -->
 <!-- lrn_date: 2026-10-19 -->
 <!-- lrn_category: missing-input-validation -->
 
