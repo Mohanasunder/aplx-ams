@@ -24,17 +24,17 @@
 ## Capacity and settings (read by the Dependency Sequencer, branch script, feature size check, context pack check, learned rules, spikes, and pilot metrics)
 
 ```
-max_parallel_builder_agents: 3
-review_capacity_prs_per_week: 6
-max_open_feature_branches: 3
+max_parallel_builder_agents: 10
+review_capacity_prs_per_week: 35
+max_open_feature_branches: 36
 approval_sla_business_days: 1
 stale_branch_days: 5
 loop_limit_failed_validations: 3
-max_acceptance_criteria_per_feature: 4
+max_acceptance_criteria_per_feature: 40
 max_source_files_per_feature: 30
 max_test_runtime_minutes: 30
 max_context_pack_lines: 1000
-learned_rule_threshold: 2
+learned_rule_threshold: 20
 max_spike_days: 5
 
 # Pilot targets: set after two weeks of baseline (scripts/pilot_metrics.py report)
