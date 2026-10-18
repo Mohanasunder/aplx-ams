@@ -29,9 +29,9 @@ Tracks the build-phase progress of FEAT-006. Updated by the builder agent during
 - PR: <draft PR link>
 
 ## Progress
-- State: In progress
-- Assigned agents: builder
-- Last update: 2026-10-17
+- State: In review
+- Assigned agents: builder, documentation-writer
+- Last update: 2026-10-19
 
 ## Blockers
 None.

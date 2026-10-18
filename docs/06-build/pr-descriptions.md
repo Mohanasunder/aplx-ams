@@ -903,6 +903,167 @@ None beyond those logged in docs/logs/assumptions-log.md.
 ---
 <!-- Add further ## PR FEAT-NNN: sections here as new features are built -->
 
+## PR FEAT-006: S-21: User Signs In with a User Account
+
+<!-- pr_status: Draft -->
+<!-- pr_approver: -->
+<!-- pr_depth: Deep -->
+<!-- pr_review_minutes: -->
+
+### Feature
+FEAT-006: S-21: User Signs In with a User Account
+
+### Input References
+- FEAT-006 plan.md v0.4 (Approved 2026-10-18, Mohanasunder)
+- FEAT-006-ACC v0.1 (Approved 2026-10-17, Mohanasunder)
+- FEAT-006-TESTS v0.1 (Approved 2026-10-18, Mohanasunder) — backend commit `9ececb7`, frontend commit `8bd2f25`
+- REQ-001 v0.3 § S-21 — acceptance criteria source (Approved 2026-10-17)
+- API-001 v0.2 — endpoint contracts (Approved 2026-10-17)
+- DBD-001 v0.1 § Module: accounts — table definitions (Approved 2026-10-17)
+- UIS-001 v0.1 — UI Specification (Approved 2026-10-17)
+- STD-001 v0.1 — APLX AMS: Coding Standards (Approved 2026-10-17)
+- TST-001 v0.1 — APLX AMS: Test Strategy (Approved 2026-10-17)
+- PRM-001 v0.1 — Permission Matrix (Approved 2026-10-17)
+- SCR S-13 (Approved 2026-10-19) — react-router-dom added to plan New Packages
+- SCR S-14 (Approved 2026-10-18) — package.json added to plan file scope; New Packages format fix (plan v0.4)
+- DEC-042 — nginx rate limit 10 req/min for /api/auth/login/
+- DEC-084 (2026-10-19) — react-router-dom @^7.18.4 approved as new package (SCR S-13)
+- DEC-086 (2026-10-19) — test_auth_api.py added to ruff format.exclude in pyproject.toml
+
+### Summary
+Implements REQ S-21 end-to-end: `SessionAuthBackend` with Argon2id verification, `locked_until` DB-persisted lockout after 5 failures (AC-4), `UppercaseLowercaseDigitValidator` (AC-3), `LoginView`/`LogoutView`/`MeView` (POST /api/auth/login/, POST /api/auth/logout/, GET /api/auth/me/), and a React MUI Login page with loading state, error alerts, Required validation, and `AuthProvider` context. The backend closes the FEAT-005-TESTS AC-3 sign-in gap by refusing deactivated accounts (HTTP 401). All 30 locked tests from FEAT-006-TESTS v0.1 pass; all CI gates exit 0 on branch `feature/FEAT-006-sign-in-auth`.
+
+### Linked Artifacts
+- FEAT-006 plan.md v0.4
+- FEAT-006-ACC v0.1
+- FEAT-006-TESTS v0.1
+- REQ-001 v0.3 § S-21 (acceptance criteria)
+- API-001 v0.2 § Authentication (F-5)
+- DBD-001 v0.1 § Module: accounts (table definitions)
+- UIS-001 v0.1 § REQ S-21 — Sign in
+- STD-001 v0.1 (Coding Standards — naming, structure, gate commands)
+- TST-001 v0.1 (Test Strategy — test levels)
+- PRM-001 v0.1 § Authentication (F-5)
+- SCR S-13; SCR S-14; DEC-042; DEC-084; DEC-086
+
+### Changes Summary
+- `src/aplx_ams_django/accounts/authentication.py`: `UppercaseLowercaseDigitValidator` (AC-3), `SameSiteSessionAuthentication` (DRF 401 fix), `SessionAuthBackend` with Argon2id verification, lockout logic (AC-4), `failed_login_count` increment, `locked_until` set/clear
+- `src/aplx_ams_django/accounts/views.py`: `LoginView` (POST /api/auth/login/), `LogoutView` (POST /api/auth/logout/), `MeView` (GET /api/auth/me/)
+- `src/aplx_ams_django/accounts/urls.py`: auth URL patterns
+- `src/aplx_ams_django/settings/base.py`: session settings, `AUTHENTICATION_BACKENDS`, `AUTH_PASSWORD_VALIDATORS`, `REST_FRAMEWORK` config, `SessionMiddleware`, `AuthenticationMiddleware`
+- `src/aplx_ams_django/urls.py`: mounts auth URL patterns at `api/`
+- `nginx/nginx.conf`: `limit_req_zone` + `/api/auth/login/` location block with rate=10r/m burst=5 (DEC-042)
+- `src/frontend/src/pages/Login.tsx`: MUI form with heading, inputs, loading state, error alerts, Required validation
+- `src/frontend/src/api/auth.ts`: `login`, `logout`, `me` functions with `credentials: 'include'`
+- `src/frontend/src/context/AuthContext.tsx`: `AuthProvider`, `useAuth` hook
+- `src/frontend/src/App.tsx`: `BrowserRouter`, routes for `/login`, `/admin/users`, `*`
+- `src/frontend/package.json`: `react-router-dom @^7.18.4` (SCR S-13, SCR S-14, DEC-084)
+- `pyproject.toml`: `test_auth_api.py` added to ruff format.exclude (DEC-086)
+
+### Tests
+**Tests added (30 locked from FEAT-006-TESTS v0.1):**
+
+Backend (`src/aplx_ams_django/accounts/tests/test_auth_api.py`): `test_ac1_active_user_correct_password_returns_200`, `test_ac1_login_response_contains_role_and_org`, `test_ac1_deactivated_account_refused_on_login`, `test_ac2_wrong_password_returns_401`, `test_ac2_unknown_username_returns_401`, `test_ac2_wrong_password_and_unknown_username_have_same_error_body`, `test_ac3_custom_validator_rejects_fewer_than_8_chars`, `test_ac3_custom_validator_rejects_no_uppercase`, `test_ac3_custom_validator_rejects_no_lowercase`, `test_ac3_custom_validator_rejects_no_digit`, `test_ac3_custom_validator_accepts_abcdefg1`, `test_ac4_five_wrong_attempts_set_locked_until`, `test_ac4_locked_account_refuses_correct_password_within_30_minutes`, `test_ac4_lockout_clears_after_30_minutes`, `test_logout_endpoint_invalidates_session`, `test_me_endpoint_requires_authentication`, `test_me_endpoint_returns_role_and_org_for_authenticated_user` (17 tests)
+
+Frontend (`src/frontend/src/pages/Login.test.tsx`): `REQ-021 AC-1: heading "Sign in" rendered as h1`, `REQ-021 AC-1: account name field has autocomplete='username'`, `REQ-021 AC-1: password field has autocomplete='current-password'`, `REQ-021 AC-1: renders Sign in button`, `REQ-021 AC-1: successful login calls login() then me() then navigates to /tickets`, `REQ-021 AC-1: Sign in button disabled and loading indicator shown while submitting`, `REQ-021 AC-2: HTTP 401 shows generic 'Invalid credentials.' alert`, `REQ-021 AC-2: password cleared and account name retained after 401`, `REQ-021 AC-3: empty account name shows Required before API call`, `REQ-021 AC-3: empty password shows Required before API call`, `REQ-021 AC-3: API error message from server is displayed`, `REQ-021 AC-4: HTTP 401 for locked account shows 'Invalid credentials.' (generic message)`, `REQ-021 AC-4: HTTP 429 shows rate-limit message` (13 tests)
+
+**How to run:**
+```
+pytest src/aplx_ams_django/accounts/tests/test_auth_api.py -v
+cd src/frontend && npm run test -- --run Login.test
+```
+
+**Gate results (all pass on branch `feature/FEAT-006-sign-in-auth`):**
+
+| Gate | Result |
+|---|---|
+| ruff check + format | Pass |
+| mypy --strict | Pass |
+| pytest (30 new; 117 total) | Pass |
+| bandit -ll | Pass |
+| pip-audit -r requirements.txt | Pass |
+| detect-secrets | Pass |
+| tsc --noEmit | Pass |
+| eslint --max-warnings=0 | Pass |
+| vitest coverage | Pass |
+| check_feature_size | Pass |
+
+### Requirements Covered
+- REQ-021 AC-1: Active user with correct password → HTTP 200, session cookie, `{"role": ..., "org": ...}`. Tests: `test_ac1_active_user_correct_password_returns_200`, `test_ac1_login_response_contains_role_and_org`, `test_ac1_deactivated_account_refused_on_login` (backend); `REQ-021 AC-1: heading "Sign in" rendered as h1`, `REQ-021 AC-1: account name field has autocomplete='username'`, `REQ-021 AC-1: password field has autocomplete='current-password'`, `REQ-021 AC-1: renders Sign in button`, `REQ-021 AC-1: successful login calls login() then me() then navigates to /tickets`, `REQ-021 AC-1: Sign in button disabled and loading indicator shown while submitting` (frontend). All pass.
+- REQ-021 AC-2: Wrong password / unknown user → HTTP 401 `{"detail": "Invalid credentials."}`, identical body (A-019). Tests: `test_ac2_wrong_password_returns_401`, `test_ac2_unknown_username_returns_401`, `test_ac2_wrong_password_and_unknown_username_have_same_error_body` (backend); `REQ-021 AC-2: HTTP 401 shows generic 'Invalid credentials.' alert`, `REQ-021 AC-2: password cleared and account name retained after 401` (frontend). All pass.
+- REQ-021 AC-3: Password complexity validator rejects <8 chars, no upper, no lower, no digit; accepts valid. Tests: `test_ac3_custom_validator_rejects_fewer_than_8_chars`, `test_ac3_custom_validator_rejects_no_uppercase`, `test_ac3_custom_validator_rejects_no_lowercase`, `test_ac3_custom_validator_rejects_no_digit`, `test_ac3_custom_validator_accepts_abcdefg1` (backend); `REQ-021 AC-3: empty account name shows Required before API call`, `REQ-021 AC-3: empty password shows Required before API call`, `REQ-021 AC-3: API error message from server is displayed` (frontend). All pass.
+- REQ-021 AC-4: 5 failed sign-ins → `locked_until` set (DB-persisted, not in-memory); locked account refuses correct password (HTTP 401); lockout expires after 30 min. Tests: `test_ac4_five_wrong_attempts_set_locked_until`, `test_ac4_locked_account_refuses_correct_password_within_30_minutes`, `test_ac4_lockout_clears_after_30_minutes` (backend); `REQ-021 AC-4: HTTP 401 for locked account shows 'Invalid credentials.' (generic message)`, `REQ-021 AC-4: HTTP 429 shows rate-limit message` (frontend). All pass.
+
+### Known Gaps
+- `window.location.href` navigation in Login.tsx rather than React Router's `useNavigate` (frontend test uses `window.location` stubbing; OQ-072 noted that useNavigate requires MemoryRouter in tests; this is a documented trade-off).
+- OQ-072 open: scope and packages gates use `--base main`; needs standards-author to update automated-gates.md to `--base master`.
+
+### Deviations From Plan
+- `SameSiteSessionAuthentication` class added to `authentication.py`: not in the plan's implementation steps. Required because DRF 3.18.x converts 401 to 403 when `authenticate_header()` returns `None`. Stays within the plan's allowed files.
+- `AuthenticationMiddleware` added to MIDDLEWARE in `settings/base.py`: required for session auth to work on subsequent requests. Within plan scope.
+- `REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES']` configured in `settings/base.py`: within plan scope.
+- `pyproject.toml` modified (ruff format.exclude): not in plan file list; required to resolve ruff-format / locked-tests gate conflict; consistent with existing exclusion for test_models.py (DEC-086).
+
+### Blockers
+None.
+
+### Risk Tier And Review Depth
+Tier: Critical
+Review depth: Deep (per .ai/standards/review-and-approval.md § Risk tier and review depth — Critical requires Deep review)
+
+Deep review checklist:
+- [ ] Run the feature locally and sign in with a valid user
+- [ ] Attempt sign-in with wrong password — verify HTTP 401 and generic error message
+- [ ] Attempt 5 failed sign-ins — verify account locks
+- [ ] Verify locked account refuses correct password within 30 minutes
+- [ ] Verify locked account accepts correct password after 30 minutes
+- [ ] Verify password complexity validator rejects short, no-upper, no-lower, no-digit passwords
+- [ ] Verify POST /api/auth/logout/ invalidates session
+- [ ] Verify GET /api/auth/me/ returns 401 without session, 200 with session
+- [ ] Check session cookie: HttpOnly, SameSite=Lax, no path traversal
+- [ ] Check nginx rate limit: /api/auth/login/ limited to 10 req/min per IP
+- [ ] Review authentication.py: lockout logic, failed_login_count persistence, password validator
+- [ ] Review views.py: session login/logout, identical error body for wrong-password and unknown-user
+- [ ] Review settings/base.py: SESSION_COOKIE_HTTPONLY, SESSION_COOKIE_SAMESITE, AUTHENTICATION_BACKENDS
+- [ ] No secrets committed; no logging of passwords or session tokens
+
+### Reviewer Checklist
+- [ ] Ran or previewed the feature (not only read the diff)
+- [ ] Every acceptance criterion is met
+- [ ] Change summary read: Known Gaps acceptable, Deviations From Plan justified (SameSiteSessionAuthentication, AuthenticationMiddleware, REST_FRAMEWORK config, pyproject.toml DEC-086), Blockers 'None'
+- [ ] No files changed outside the plan (pyproject.toml addition recorded as DEC-086; see Deviations From Plan)
+- [ ] No packages added or upgraded beyond the plan's New Packages (react-router-dom @^7.18.4 approved via SCR S-13, DEC-084)
+- [ ] Tests assert behavior, not just that code runs (assertions: HTTP status codes, session cookie, response body fields, DOM element presence, lockout DB state, error message text, button state)
+- [ ] Approved test set (FEAT-006-TESTS v0.1) unchanged since approval; implementation started after test commits `9ececb7` (backend) and `8bd2f25` (frontend)
+- [ ] Auth, permissions, input validation, secrets, and data handling checked (Argon2id verification; HttpOnly+SameSite=Lax session cookie; lockout DB-persisted; identical error body prevents account-existence disclosure; nginx rate limit 10 req/min)
+- [ ] Migrations reversible and consistent with the schema design (Not applicable — no new migrations; `failed_login_count` and `locked_until` fields introduced in FEAT-005)
+- [ ] Contract (OpenAPI) and UI spec followed (POST /api/auth/login/, POST /api/auth/logout/, GET /api/auth/me/ per API-001 v0.2 § F-5; Login page per UIS-001 v0.1 § S-21)
+- [ ] Applicable learned rules (`.ai/standards/learned-rules.md`) followed
+- [ ] Checker validation summary and AI pre-review read; any "Proceeded on Fail" findings examined
+- [ ] Second approver obtained (Critical tier: both tech lead and release manager must approve)
+
+### Assumptions
+- A-019: A refused sign-in does not disclose whether the account name or the password was wrong. Tests `test_ac2_wrong_password_and_unknown_username_have_same_error_body` and `REQ-021 AC-4: HTTP 401 for locked account shows 'Invalid credentials.' (generic message)` exercise this assumption. Confirmed by Mohanasunder 2026-10-17 (DEC-041). Logged in `docs/logs/assumptions-log.md`.
+
+### Open Questions
+- OQ-071 (Answered, 2026-10-19): FEAT-006 plan.md step 9 referenced React Router routes but `react-router-dom` was absent from New Packages in plan v0.2. Resolved via SCR S-13 (plan.md v0.3); Mode B uses `react-router-dom @^7.18.4` (DEC-084, 2026-10-19). Logged in `docs/logs/open-questions-log.md`.
+- OQ-072 (Open, 2026-10-19): Scope and packages gates use `--base main`; repo uses `master`. Needs standards-author to update automated-gates.md to `--base master`. Logged in `docs/logs/open-questions-log.md`.
+
+### Traceability Links
+- Upstream: REQ-001 v0.3 § S-21; API-001 v0.2 § F-5; DBD-001 v0.1 § Module: accounts; UIS-001 v0.1 § S-21; FEAT-006 plan.md v0.4; FEAT-006-ACC v0.1; FEAT-006-TESTS v0.1; STD-001 v0.1; TST-001 v0.1; PRM-001 v0.1 § F-5; FEAT-005 (accounts.User model); SCR S-13; SCR S-14; DEC-042; DEC-084; DEC-086
+- Downstream: FEAT-007 (RLS policies; session context); FEAT-008 (temporary password workflow); FEAT-009 (change own password); FEAT-033 (security event recording); Phase 7 regression test suite
+
+### Quality Checklist
+- [x] Every template section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] Vague words removed (etc., as needed, appropriate)
+
+---
+
 ## Assumptions
 - A-038 (Confirmed): Docker Compose file secrets at `/run/secrets/` for DB credentials; test database uses `DATABASE_URL` env var injected by CI service container. Logged in `docs/logs/assumptions-log.md`.
 
