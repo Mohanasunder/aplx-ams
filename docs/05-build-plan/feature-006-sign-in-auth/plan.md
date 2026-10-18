@@ -140,7 +140,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Architect / tech lead |
-| Version | 0.3 |
+| Version | 0.4 |
 | Conditions | None |
-| Comments | SCR S-13: react-router-dom required for useNavigate in Login.tsx |
-| Timestamp | 2026-10-18 20:18 UTC |
+| Comments | SCR S-14: metadata-only fix, implementation already correct |
+| Timestamp | 2026-10-18 21:04 UTC |
