@@ -26,12 +26,12 @@ Tracks the build-phase progress of FEAT-005. Updated by the builder agent during
 - Branch: feature/FEAT-005-user-accounts
 - Base commit: cf9e2ec
 - Started: 2026-10-18
-- Last implementation commit: 02e32a5
-- PR: Draft — PR description in docs/06-build/pr-descriptions.md § PR FEAT-005
+- Last implementation commit: ee574e1
+- PR: In review — PR description in docs/06-build/pr-descriptions.md § PR FEAT-005
 
 ## Progress
-- State: Implementation complete; PR description drafted; awaiting human review
-- Assigned agents: builder (implementation), documentation-writer (PR description)
+- State: In review — all gates pass; AI review Pass with observations; awaiting human PR review
+- Assigned agents: builder (implementation), documentation-writer (PR description), ai-code-reviewer (advisory), security-scanner (advisory)
 - Last update: 2026-10-18
 
 ## Blockers
