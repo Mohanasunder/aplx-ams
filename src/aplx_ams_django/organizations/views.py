@@ -1,16 +1,20 @@
 """
 FEAT-002: organizations views.
+FEAT-003: ContractViewSet stub (full implementation in Mode B).
 
 OrgViewSet: CRUD for ClientOrg.
 SAPApplicationViewSet: create and list SAP applications scoped to one org.
+ContractViewSet: create and retrieve active contract for one org (stub only).
 
 Permission matrix (PRM-001 v0.1):
-  POST   /api/organizations/                     — P3
-  GET    /api/organizations/                     — P1, P2, P3, P4
-  GET    /api/organizations/{id}/                — P1, P2, P3
-  PATCH  /api/organizations/{id}/                — P3
-  POST   /api/organizations/{id}/sap-applications/ — P3
-  GET    /api/organizations/{id}/sap-applications/ — P1, P2, P3, P4
+  POST   /api/organizations/                          — P3
+  GET    /api/organizations/                          — P1, P2, P3, P4
+  GET    /api/organizations/{id}/                     — P1, P2, P3
+  PATCH  /api/organizations/{id}/                     — P3
+  POST   /api/organizations/{id}/sap-applications/   — P3
+  GET    /api/organizations/{id}/sap-applications/   — P1, P2, P3, P4
+  POST   /api/organizations/{id}/contracts/          — P3 (FEAT-003 stub)
+  GET    /api/organizations/{id}/contracts/active/   — P3 (FEAT-003 stub)
 """
 
 from typing import ClassVar
@@ -24,6 +28,7 @@ from aplx_ams_django.organizations import services
 from aplx_ams_django.organizations.models import ClientOrg, SAPApplication
 from aplx_ams_django.organizations.serializers import (
     ClientOrgSerializer,
+    ContractSerializer,
     SAPApplicationSerializer,
 )
 from aplx_ams_django.permissions import HasRolePermission
@@ -101,3 +106,24 @@ class SAPApplicationViewSet(viewsets.GenericViewSet):
         org_id = self.kwargs.get("org_id")
         sap_app = services.add_sap_application(org_id=org_id, data=serializer.validated_data)
         return Response(SAPApplicationSerializer(sap_app).data, status=status.HTTP_201_CREATED)
+
+
+class ContractViewSet(viewsets.GenericViewSet):
+    """FEAT-003 stub — ContractViewSet; full implementation added in Mode B.
+
+    POST /api/organizations/{org_id}/contracts/          — P3 (stub)
+    GET  /api/organizations/{org_id}/contracts/active/   — P3 (stub)
+
+    Both actions return 501 in Mode A; permission enforcement and business
+    logic are wired in Mode B.
+    """
+
+    serializer_class = ContractSerializer
+
+    def create(self, request: Request, org_id: int | None = None) -> Response:
+        """POST /api/organizations/{org_id}/contracts/ — FEAT-003 stub."""
+        return Response({"detail": "not implemented"}, status=status.HTTP_501_NOT_IMPLEMENTED)
+
+    def get_active(self, request: Request, org_id: int | None = None) -> Response:
+        """GET /api/organizations/{org_id}/contracts/active/ — FEAT-003 stub."""
+        return Response({"detail": "not implemented"}, status=status.HTTP_501_NOT_IMPLEMENTED)
