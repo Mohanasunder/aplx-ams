@@ -699,9 +699,9 @@ This SCR is approved and the two tracking fields in status.md are updated.
 
 ## SCR S-9: Add settings/base.py to FEAT-005 plan.md file scope
 
-<!-- scr_status: Draft -->
+<!-- scr_status: Approved -->
 <!-- scr_date: 2026-10-18 -->
-<!-- scr_approver: -->
+<!-- scr_approver: Mohanasunder -->
 
 ### Input References
 - FEAT-005 plan.md v0.1 (Approved 2026-10-17, Mohanasunder) — artifact being amended

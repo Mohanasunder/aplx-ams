@@ -3,7 +3,7 @@ id: FEAT-005
 id_prefix: FEAT
 title: "FEAT-005: S-20: Delivery Manager Manages User Accounts"
 phase: 5
-version: 0.1
+version: 0.2
 template: feature-plan
 template_version: 1.6
 status: Approved
@@ -61,6 +61,7 @@ Deliver all 4 acceptance criteria of REQ S-20 end-to-end: backend models, migrat
 - `src/aplx_ams_django/accounts/views.py`
 - `src/aplx_ams_django/accounts/urls.py`
 - `src/aplx_ams_django/urls.py`
+- `src/aplx_ams_django/settings/base.py`
 - `src/frontend/src/pages/UserManagement.tsx`
 - `src/frontend/src/api/users.ts`
 
@@ -97,7 +98,7 @@ See acceptance.md for the full Given/When/Then text of each criterion above.
 | Metric | Count | Limit |
 |---|---|---|
 | Acceptance criteria | 4 | 4 |
-| Source files (non-test) | 10 | 10 |
+| Source files (non-test) | 11 | 30 |
 
 Expected test runtime: 5 minutes
 Open design decisions: None
