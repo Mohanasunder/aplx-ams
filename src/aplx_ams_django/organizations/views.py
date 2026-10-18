@@ -135,6 +135,11 @@ class ContractViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
         try:
             contract = services.create_contract(org_id=org_id, data=serializer.validated_data)
+        except ClientOrg.DoesNotExist:
+            return Response(
+                {"detail": "Organization not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
         except ValidationError:
             return Response(
                 {"detail": "An active contract already exists for this organization."},

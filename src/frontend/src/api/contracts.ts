@@ -13,9 +13,12 @@ export type ContractType = 'hours_bank' | 'fixed_fee';
 
 export interface Contract {
   id: number;
-  organization: number;
   contract_type: ContractType;
   contracted_hours: number | null;
+  is_active: boolean;
+  started_at: string;
+  created_at: string;
+  hours_bank_balance: number | null;
 }
 
 export interface CreateContractPayload {

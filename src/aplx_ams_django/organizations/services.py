@@ -46,9 +46,11 @@ def add_sap_application(org_id: int, data: dict[str, Any]) -> SAPApplication:
 def create_contract(org_id: int, data: dict[str, Any]) -> Contract:
     """Create a contract for the given org and return it.
 
+    Raises ClientOrg.DoesNotExist if org_id does not exist (→ 404 in view).
     Raises django.core.exceptions.ValidationError when the partial unique
-    index rejects a second active contract for the same org (HTTP 409).
+    index rejects a second active contract for the same org (→ 409 in view).
     """
+    dal.get_org_by_id(org_id)  # raises ClientOrg.DoesNotExist if not found
     try:
         return dal.create_contract_for_org(org_id=org_id, data=data)
     except IntegrityError as exc:
