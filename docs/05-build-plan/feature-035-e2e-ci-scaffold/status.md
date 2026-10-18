@@ -26,10 +26,10 @@ Tracks the build-phase progress of FEAT-035. Updated by the builder agent during
 - Branch: feature/FEAT-035-e2e-ci-scaffold
 - Base commit: d296213
 - Started: 2026-10-18
-- PR: <draft PR link>
+- PR: https://github.com/Mohanasunder/aplx-ams/pull/9
 
 ## Progress
-- State: Implementation complete; PR description written (docs/06-build/pr-descriptions.md ## PR FEAT-035)
+- State: In review
 - Assigned agents: builder, documentation-writer
 - Last update: 2026-10-18
 
