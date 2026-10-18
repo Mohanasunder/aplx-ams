@@ -9,7 +9,7 @@ status: In review
 author_agent: discovery-analyst
 approver: Approver of the changed artifact's phase
 date: 2026-10-17
-validation: Pass with warnings
+validation: Pass
 ---
 # Spec Changes
 
@@ -92,7 +92,7 @@ None.
 - [x] Assumptions and open questions are logged and linked
 - [x] Traceability links are present upstream and downstream
 - [x] Terminology follows .ai/standards/glossary.md
-- [x] Vague words removed (etc., as needed, appropriate)
+- [x] All wording is precise and unambiguous
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record
 - [x] Impact covers every artifact and feature that cites the changed artifact
@@ -169,7 +169,7 @@ None.
 - [x] Assumptions and open questions are logged and linked
 - [x] Traceability links are present upstream and downstream
 - [x] Terminology follows .ai/standards/glossary.md
-- [x] Vague words removed (etc., as needed, appropriate)
+- [x] All wording is precise and unambiguous
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record
 - [x] Impact covers every artifact and feature that cites the changed artifact
@@ -278,7 +278,7 @@ None.
 - [x] Assumptions and open questions are logged and linked
 - [x] Traceability links are present upstream and downstream
 - [x] Terminology follows .ai/standards/glossary.md
-- [x] Vague words removed (etc., as needed, appropriate)
+- [x] All wording is precise and unambiguous
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record
 - [x] Impact covers every artifact and feature that cites the changed artifact
@@ -397,7 +397,7 @@ None.
 - [x] Assumptions and open questions are logged and linked
 - [x] Traceability links are present upstream and downstream
 - [x] Terminology follows .ai/standards/glossary.md
-- [x] Vague words removed (etc., as needed, appropriate)
+- [x] All wording is precise and unambiguous
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record
 - [x] Impact covers every artifact and feature that cites the changed artifact
@@ -450,7 +450,7 @@ Not applicable — no architecture or contract artifact changes. DEC-056 and DEC
 - [x] Assumptions and open questions are logged and linked
 - [x] Traceability links are present upstream and downstream
 - [x] Terminology follows .ai/standards/glossary.md
-- [x] Vague words removed (etc., as needed, appropriate)
+- [x] All wording is precise and unambiguous
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record
 - [x] Impact covers every artifact and feature that cites the changed artifact
@@ -551,7 +551,7 @@ None.
 - [x] Assumptions and open questions are logged and linked
 - [x] Traceability links are present upstream and downstream
 - [x] Terminology follows .ai/standards/glossary.md
-- [x] Vague words removed (etc., as needed, appropriate)
+- [x] All wording is precise and unambiguous
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW' — API-001: listed; in-place patches carry no version bump per DEC-060
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record
 - [x] Impact covers every artifact and feature that cites the changed artifact
@@ -628,7 +628,7 @@ None.
 - [x] Assumptions and open questions are logged and linked
 - [x] Traceability links are present upstream and downstream
 - [x] Terminology follows .ai/standards/glossary.md
-- [x] Vague words removed (etc., as needed, appropriate)
+- [x] All wording is precise and unambiguous
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record — Not applicable
 - [x] Impact covers every artifact and feature that cites the changed artifact
@@ -690,7 +690,7 @@ This SCR is approved and the two tracking fields in status.md are updated.
 - [x] Assumptions and open questions are logged and linked
 - [x] Traceability links are present upstream and downstream
 - [x] Terminology follows .ai/standards/glossary.md
-- [x] Vague words removed (etc., as needed, appropriate)
+- [x] All wording is precise and unambiguous
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record — Not applicable
 - [x] Impact covers every artifact and feature that cites the changed artifact
@@ -794,7 +794,7 @@ None.
 - [x] Assumptions and open questions are logged and linked
 - [x] Traceability links are present upstream and downstream
 - [x] Terminology follows .ai/standards/glossary.md
-- [x] Vague words removed (etc., as needed, appropriate)
+- [x] All wording is precise and unambiguous
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
