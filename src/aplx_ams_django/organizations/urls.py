@@ -15,7 +15,8 @@ from aplx_ams_django.organizations.views import OrgViewSet, SAPApplicationViewSe
 router = DefaultRouter()
 router.register("organizations", OrgViewSet, basename="clientorg")
 
-urlpatterns = router.urls + [
+urlpatterns = [
+    *router.urls,
     path(
         "organizations/<int:org_id>/sap-applications/",
         SAPApplicationViewSet.as_view({"get": "list", "post": "create"}),

@@ -13,6 +13,7 @@ Permission matrix (PRM-001 v0.1):
   GET    /api/organizations/{id}/sap-applications/ — P1, P2, P3, P4
 """
 
+from django.db.models import QuerySet
 from rest_framework import mixins, status, viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -80,7 +81,7 @@ class SAPApplicationViewSet(viewsets.GenericViewSet):
         # list
         return [HasRolePermission(required_roles=_ALL_ROLES)]
 
-    def get_queryset(self) -> "models.QuerySet[SAPApplication]":  # type: ignore[name-defined]
+    def get_queryset(self) -> QuerySet[SAPApplication]:
         org_id: int = self.kwargs["org_id"]
         return SAPApplication.objects.filter(client_org_id=org_id).order_by("name")
 

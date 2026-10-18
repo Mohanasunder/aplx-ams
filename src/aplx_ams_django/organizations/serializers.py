@@ -5,6 +5,10 @@ ClientOrgSerializer: id, name, created_at.
 SAPApplicationSerializer: id, client_org, name, created_at.
 """
 
+from __future__ import annotations
+
+from typing import ClassVar
+
 from rest_framework import serializers
 
 from aplx_ams_django.organizations.models import ClientOrg, SAPApplication
@@ -15,8 +19,8 @@ class ClientOrgSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ClientOrg
-        fields = ["id", "name", "created_at"]
-        read_only_fields = ["id", "created_at"]
+        fields: ClassVar[list[str]] = ["id", "name", "created_at"]
+        read_only_fields: ClassVar[list[str]] = ["id", "created_at"]
 
 
 class SAPApplicationSerializer(serializers.ModelSerializer):
@@ -28,5 +32,5 @@ class SAPApplicationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SAPApplication
-        fields = ["id", "client_org", "name", "created_at"]
-        read_only_fields = ["id", "client_org", "created_at"]
+        fields: ClassVar[list[str]] = ["id", "client_org", "name", "created_at"]
+        read_only_fields: ClassVar[list[str]] = ["id", "client_org", "created_at"]

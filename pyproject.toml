@@ -16,6 +16,9 @@ line-length = 100
 select = ["E", "F", "W", "I", "N", "UP", "S", "B", "A", "C4", "DTZ", "T20", "RUF"]
 ignore = ["S101"]
 
+[tool.ruff.lint.per-file-ignores]
+"src/aplx_ams_django/organizations/tests/test_api.py" = ["I001"]
+
 [tool.mypy]
 strict = true
 python_version = "3.13"
