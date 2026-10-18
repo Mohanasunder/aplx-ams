@@ -29,7 +29,8 @@ Tracks the build-phase progress of FEAT-035. Updated by the builder agent during
 - PR: https://github.com/Mohanasunder/aplx-ams/pull/9
 
 ## Progress
-- State: In review
+- State: Merged
+- Merge commit: 1dd66b1
 - Assigned agents: builder, documentation-writer
 - Last update: 2026-10-18
 
