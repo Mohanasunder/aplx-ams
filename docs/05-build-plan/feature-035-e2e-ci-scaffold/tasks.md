@@ -25,8 +25,8 @@ validation: Pass
 Ordered task checklist for the builder of FEAT-035. Each task names the file(s) it produces.
 
 ## Task Checklist
-- [x] T-1: Write `.github/workflows/e2e.yml` with an `e2e` job: start Docker Compose services (`docker compose up -d`), wait for Nginx health, install Playwright browsers (`npx playwright install --with-deps chromium`), run `npx playwright test` from `src/frontend/`, and exit 0.
-- [x] T-2: Write `src/frontend/playwright.config.ts` configuring `baseURL: 'http://nginx:80'`, `testDir: './e2e'`, `use: { headless: true }`, and a single Chromium project.
+- [ ] T-1: Write `.github/workflows/e2e.yml` with an `e2e` job: start Docker Compose services (`docker compose up -d`), wait for Nginx health, install Playwright browsers (`npx playwright install --with-deps chromium`), run `npx playwright test` from `src/frontend/`, and exit 0.
+- [ ] T-2: Write `src/frontend/playwright.config.ts` configuring `baseURL: 'http://nginx:80'`, `testDir: './e2e'`, `use: { headless: true }`, and a single Chromium project.
 - [ ] T-3: Verify the E2E workflow exits 0 on an empty `e2e/` directory (dry-run or local Docker Compose).
 - [ ] T-4: Verify `python3 scripts/check_feature_size.py size FEAT-035` exits 0.
 - [ ] T-5: Verify `python3 scripts/context_pack.py check FEAT-035` exits 0.
