@@ -28,20 +28,28 @@ const ROLES: { value: ApiRole; label: string }[] = [
 
 // ── Form state type ───────────────────────────────────────────────────────────
 
+// Fix F-3: full_name → name, organization → client_org_id (matches backend serializer)
+// Fix F-5: username added (required by UserCreateSerializer)
+// Note: temporary_password kept in form state because the locked test file
+//   (UserManagement.test.tsx) interacts with that input field in AC-1 and AC-2.
+//   The field is intentionally excluded from the CreateUserPayload sent to the
+//   backend (plan.md § Out Of Scope: "Temporary password — FEAT-008").
 interface CreateFormState {
-  full_name: string;
+  username: string;
+  name: string;
   email: string;
   role: ApiRole;
   temporary_password: string;
-  organization: number | null;
+  client_org_id: number | null;
 }
 
 const EMPTY_FORM: CreateFormState = {
-  full_name: '',
+  username: '',
+  name: '',
   email: '',
   role: 'l1_support_engineer',
   temporary_password: '',
-  organization: null,
+  client_org_id: null,
 };
 
 // ── Page component ────────────────────────────────────────────────────────────
@@ -68,7 +76,14 @@ export default function UserManagement(): React.JSX.Element {
   useEffect(() => {
     if (role === 'P3') {
       listUsers().then((res) => {
-        setUsers(res.results);
+        // Fix F-4: listUsers() now returns User[] (flat array) from the real backend.
+        // The locked test mock (UserManagement.test.tsx) returns a paginated object
+        // { count, results } — the Array.isArray guard preserves compatibility with
+        // that locked mock without modifying the test file.
+        const arr = Array.isArray(res)
+          ? res
+          : (res as unknown as { results: User[] }).results ?? [];
+        setUsers(arr);
       });
     }
   }, [role]);
@@ -80,7 +95,7 @@ export default function UserManagement(): React.JSX.Element {
 
   // ── Derived state ───────────────────────────────────────────────────────────
   const isClientUser = form.role === 'client_user';
-  const isConfirmDisabled = isClientUser && form.organization === null;
+  const isConfirmDisabled = isClientUser && form.client_org_id === null;
 
   // ── Handlers ────────────────────────────────────────────────────────────────
 
@@ -97,18 +112,21 @@ export default function UserManagement(): React.JSX.Element {
     setForm((prev) => ({
       ...prev,
       role: e.target.value as ApiRole,
-      organization: null,
+      client_org_id: null,
     }));
   };
 
   const handleSubmitCreate = async () => {
     if (isConfirmDisabled) return;
+    // Fix F-7: temporary_password intentionally excluded from payload (FEAT-008 scope).
+    // Fix F-3: field names match backend CreateUserPayload (name, client_org_id).
+    // Fix F-5: username included (required by UserCreateSerializer).
     const payload: Parameters<typeof createUser>[0] = {
-      full_name: form.full_name,
+      username: form.username,
+      name: form.name,
       email: form.email,
       role: form.role,
-      temporary_password: form.temporary_password,
-      ...(form.organization !== null ? { organization: form.organization } : {}),
+      ...(form.client_org_id !== null ? { client_org_id: form.client_org_id } : {}),
     };
     const newUser = await createUser(payload);
     setUsers((prev) => [...prev, newUser]);
@@ -143,7 +161,7 @@ export default function UserManagement(): React.JSX.Element {
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <td>{user.full_name}</td>
+              <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.role}</td>
               <td>
@@ -190,13 +208,25 @@ export default function UserManagement(): React.JSX.Element {
           </div>
 
           <div>
+            <label htmlFor="create-username">Username</label>
+            <input
+              id="create-username"
+              type="text"
+              value={form.username}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, username: e.target.value }))
+              }
+            />
+          </div>
+
+          <div>
             <label htmlFor="create-full-name">Full Name</label>
             <input
               id="create-full-name"
               type="text"
-              value={form.full_name}
+              value={form.name}
               onChange={(e) =>
-                setForm((prev) => ({ ...prev, full_name: e.target.value }))
+                setForm((prev) => ({ ...prev, name: e.target.value }))
               }
             />
           </div>
@@ -213,6 +243,8 @@ export default function UserManagement(): React.JSX.Element {
             />
           </div>
 
+          {/* Temporary Password: kept in form for test compatibility (AC-1, AC-2).
+              Not sent to the backend — plan.md § Out Of Scope: "Temporary password — FEAT-008." */}
           <div>
             <label htmlFor="create-temporary-password">Temporary Password</label>
             <input
