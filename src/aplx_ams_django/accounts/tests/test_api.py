@@ -25,6 +25,10 @@ REQ-020 AC-4 (non-DM roles -> HTTP 403 on create / patch / deactivate):
     test_client_user_cannot_create_user
     test_l1_cannot_patch_user
     test_l1_cannot_deactivate_user
+    test_l2_l3_cannot_patch_user
+    test_client_user_cannot_patch_user
+    test_l2_l3_cannot_deactivate_user
+    test_client_user_cannot_deactivate_user
 
 All tests are RED in Mode A: stub views return HTTP 501 (Not Implemented)
 regardless of method, role, or payload. Every assertion fails with an
@@ -32,10 +36,10 @@ AssertionError reporting the wrong status code, not because of import or
 test-setup errors.
 
 User roles per PRM-001 v0.1:
-  P1 = L1 support engineer
-  P2 = L2/L3 support engineer
-  P3 = Delivery manager (DM)
-  P4 = Client user
+  delivery_manager (DM) — role stored in User.role
+  l1_support_engineer — role stored in User.role
+  l2_l3_support_engineer — role stored in User.role
+  client_user — role stored in User.role
 """
 
 from __future__ import annotations
@@ -63,9 +67,9 @@ def _make_user(role: str, pk: int = 1) -> SimpleNamespace:
 
 
 def _dm_client() -> APIClient:
-    """Return an APIClient authenticated as a Delivery Manager (P3)."""
+    """Return an APIClient authenticated as a Delivery Manager (delivery_manager)."""
     client = APIClient()
-    client.force_authenticate(user=_make_user("P3", pk=100))
+    client.force_authenticate(user=_make_user("delivery_manager", pk=100))
     return client
 
 
@@ -308,12 +312,12 @@ def test_deactivated_user_has_is_active_false() -> None:
 
 
 def test_l1_cannot_create_user() -> None:
-    """AC-4 — L1 support engineer (P1) cannot create a user account; refused with HTTP 403.
+    """AC-4 — L1 support engineer (l1_support_engineer) cannot create a user account; refused with HTTP 403.
 
     Mode A failure: stub view applies no permission check and returns 501 instead of 403.
     """
     client = APIClient()
-    client.force_authenticate(user=_make_user("P1"))
+    client.force_authenticate(user=_make_user("l1_support_engineer"))
     response = client.post(
         _BASE_URL,
         {
@@ -325,18 +329,18 @@ def test_l1_cannot_create_user() -> None:
         format="json",
     )
     assert response.status_code == 403, (
-        f"Expected 403 Forbidden for P1 on create, got {response.status_code}. "
+        f"Expected 403 Forbidden for l1_support_engineer on create, got {response.status_code}. "
         "Permission check not yet implemented (Mode A red: stub returns 501)."
     )
 
 
 def test_l2_l3_cannot_create_user() -> None:
-    """AC-4 — L2/L3 support engineer (P2) cannot create a user account; refused with HTTP 403.
+    """AC-4 — L2/L3 support engineer (l2_l3_support_engineer) cannot create a user account; refused with HTTP 403.
 
     Mode A failure: stub view applies no permission check and returns 501 instead of 403.
     """
     client = APIClient()
-    client.force_authenticate(user=_make_user("P2"))
+    client.force_authenticate(user=_make_user("l2_l3_support_engineer"))
     response = client.post(
         _BASE_URL,
         {
@@ -348,18 +352,18 @@ def test_l2_l3_cannot_create_user() -> None:
         format="json",
     )
     assert response.status_code == 403, (
-        f"Expected 403 Forbidden for P2 on create, got {response.status_code}. "
+        f"Expected 403 Forbidden for l2_l3_support_engineer on create, got {response.status_code}. "
         "Permission check not yet implemented (Mode A red: stub returns 501)."
     )
 
 
 def test_client_user_cannot_create_user() -> None:
-    """AC-4 — Client user (P4) cannot create a user account; refused with HTTP 403.
+    """AC-4 — Client user (client_user) cannot create a user account; refused with HTTP 403.
 
     Mode A failure: stub view applies no permission check and returns 501 instead of 403.
     """
     client = APIClient()
-    client.force_authenticate(user=_make_user("P4"))
+    client.force_authenticate(user=_make_user("client_user"))
     response = client.post(
         _BASE_URL,
         {
@@ -371,40 +375,108 @@ def test_client_user_cannot_create_user() -> None:
         format="json",
     )
     assert response.status_code == 403, (
-        f"Expected 403 Forbidden for P4 on create, got {response.status_code}. "
+        f"Expected 403 Forbidden for client_user on create, got {response.status_code}. "
         "Permission check not yet implemented (Mode A red: stub returns 501)."
     )
 
 
 def test_l1_cannot_patch_user() -> None:
-    """AC-4 — L1 support engineer (P1) cannot update a user account (PATCH); refused with HTTP 403.
+    """AC-4 — L1 support engineer (l1_support_engineer) cannot update a user account (PATCH); refused with HTTP 403.
 
     Mode A failure: stub view applies no permission check and returns 501 instead of 403.
     The permission check must run before any DB lookup; a fixed user pk=1 is used.
     """
     client = APIClient()
-    client.force_authenticate(user=_make_user("P1"))
+    client.force_authenticate(user=_make_user("l1_support_engineer"))
     response = client.patch(
         f"{_BASE_URL}1/",
         {"name": "Unauthorized Update"},
         format="json",
     )
     assert response.status_code == 403, (
-        f"Expected 403 Forbidden for P1 on PATCH, got {response.status_code}. "
+        f"Expected 403 Forbidden for l1_support_engineer on PATCH, got {response.status_code}. "
         "Permission check not yet implemented (Mode A red: stub returns 501)."
     )
 
 
 def test_l1_cannot_deactivate_user() -> None:
-    """AC-4 — L1 support engineer (P1) cannot deactivate a user account; refused with HTTP 403.
+    """AC-4 — L1 support engineer (l1_support_engineer) cannot deactivate a user account; refused with HTTP 403.
 
     Mode A failure: stub view applies no permission check and returns 501 instead of 403.
     The permission check must run before any DB lookup; a fixed user pk=1 is used.
     """
     client = APIClient()
-    client.force_authenticate(user=_make_user("P1"))
+    client.force_authenticate(user=_make_user("l1_support_engineer"))
     response = client.post(f"{_BASE_URL}1/deactivate/")
     assert response.status_code == 403, (
-        f"Expected 403 Forbidden for P1 on deactivate, got {response.status_code}. "
+        f"Expected 403 Forbidden for l1_support_engineer on deactivate, got {response.status_code}. "
+        "Permission check not yet implemented (Mode A red: stub returns 501)."
+    )
+
+
+def test_l2_l3_cannot_patch_user() -> None:
+    """AC-4 — L2/L3 support engineer (l2_l3_support_engineer) cannot update a user account (PATCH); refused with HTTP 403.
+
+    Mode A failure: stub view applies no permission check and returns 501 instead of 403.
+    The permission check must run before any DB lookup; a fixed user pk=1 is used.
+    """
+    client = APIClient()
+    client.force_authenticate(user=_make_user("l2_l3_support_engineer"))
+    response = client.patch(
+        f"{_BASE_URL}1/",
+        {"name": "Unauthorized Update"},
+        format="json",
+    )
+    assert response.status_code == 403, (
+        f"Expected 403 Forbidden for l2_l3_support_engineer on PATCH, got {response.status_code}. "
+        "Permission check not yet implemented (Mode A red: stub returns 501)."
+    )
+
+
+def test_client_user_cannot_patch_user() -> None:
+    """AC-4 — Client user (client_user) cannot update a user account (PATCH); refused with HTTP 403.
+
+    Mode A failure: stub view applies no permission check and returns 501 instead of 403.
+    The permission check must run before any DB lookup; a fixed user pk=1 is used.
+    """
+    client = APIClient()
+    client.force_authenticate(user=_make_user("client_user"))
+    response = client.patch(
+        f"{_BASE_URL}1/",
+        {"name": "Unauthorized Update"},
+        format="json",
+    )
+    assert response.status_code == 403, (
+        f"Expected 403 Forbidden for client_user on PATCH, got {response.status_code}. "
+        "Permission check not yet implemented (Mode A red: stub returns 501)."
+    )
+
+
+def test_l2_l3_cannot_deactivate_user() -> None:
+    """AC-4 — L2/L3 support engineer (l2_l3_support_engineer) cannot deactivate a user account; refused with HTTP 403.
+
+    Mode A failure: stub view applies no permission check and returns 501 instead of 403.
+    The permission check must run before any DB lookup; a fixed user pk=1 is used.
+    """
+    client = APIClient()
+    client.force_authenticate(user=_make_user("l2_l3_support_engineer"))
+    response = client.post(f"{_BASE_URL}1/deactivate/")
+    assert response.status_code == 403, (
+        f"Expected 403 Forbidden for l2_l3_support_engineer on deactivate, got {response.status_code}. "
+        "Permission check not yet implemented (Mode A red: stub returns 501)."
+    )
+
+
+def test_client_user_cannot_deactivate_user() -> None:
+    """AC-4 — Client user (client_user) cannot deactivate a user account; refused with HTTP 403.
+
+    Mode A failure: stub view applies no permission check and returns 501 instead of 403.
+    The permission check must run before any DB lookup; a fixed user pk=1 is used.
+    """
+    client = APIClient()
+    client.force_authenticate(user=_make_user("client_user"))
+    response = client.post(f"{_BASE_URL}1/deactivate/")
+    assert response.status_code == 403, (
+        f"Expected 403 Forbidden for client_user on deactivate, got {response.status_code}. "
         "Permission check not yet implemented (Mode A red: stub returns 501)."
     )
