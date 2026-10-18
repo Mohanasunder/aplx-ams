@@ -26,7 +26,7 @@ Tracks the build-phase progress of FEAT-002. Updated by the builder agent during
 - Branch: feature/FEAT-002-org-sap-setup
 - Base commit: 6cd95bc
 - Started: 2026-10-18
-- PR: (to be created)
+- PR: https://github.com/Mohanasunder/aplx-ams/pull/14
 
 ## Progress
 - State: In review
