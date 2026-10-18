@@ -291,6 +291,124 @@ None.
 
 ---
 
+## PR FEAT-035: E2E CI Scaffold
+
+<!-- pr_status: Draft -->
+<!-- pr_approver: -->
+<!-- pr_depth: Deep -->
+<!-- pr_review_minutes: -->
+
+### Input References
+- FEAT-035 plan.md v0.1 (Approved 2026-10-17, Mohanasunder)
+- FEAT-035-ACC v0.1 (Approved 2026-10-17, Mohanasunder)
+- FEAT-035-TESTS v0.1 (Approved 2026-10-18, Mohanasunder) — test commit `13a976b`
+- STD-001 v0.1 — APLX AMS: Coding Standards (Approved 2026-10-17)
+- TST-001 v0.1 — APLX AMS: Test Strategy (Approved 2026-10-17)
+
+### Summary
+Delivers the Playwright E2E GitHub Actions CI workflow (`.github/workflows/e2e.yml`) and the upgraded Playwright configuration (`src/frontend/playwright.config.ts`) that wire the E2E test gate required by `.ai/standards/automated-gates.md`. The workflow triggers on every PR and push to master, starts Docker Compose services, waits up to 60 seconds for nginx to become healthy, installs Playwright Chromium, and runs `npx playwright test` from `src/frontend/`. The config is upgraded from the FEAT-001 stub to a full config: `baseURL: 'http://nginx:80'`, `testDir: './e2e'`, `use: { headless: true }`, single Chromium project — enabling all subsequent story features to add E2E test files without further CI changes.
+
+### Linked Artifacts
+- FEAT-035 plan.md v0.1
+- FEAT-035-ACC v0.1
+- FEAT-035-TESTS v0.1
+- STD-001 v0.1 (Coding Standards — Automated Gate Commands)
+- TST-001 v0.1 (Test Strategy — Test Levels)
+- FEAT-001 (installed `playwright` npm package; scaffold depends on it)
+
+### Changes
+**CI:**
+- `.github/workflows/e2e.yml` — new GitHub Actions `e2e` job: triggers on `pull_request` and `push` to `master`; steps: checkout, Node 24 setup, `npm --prefix src/frontend ci`, `npx playwright install --with-deps chromium`, `docker compose up -d`, health-check wait (curl polls `http://localhost/api/health/` for up to 60 s; logs and exits 1 on timeout), `cd src/frontend && npx playwright test`.
+
+**Frontend:**
+- `src/frontend/playwright.config.ts` — upgraded from FEAT-001 stub to full config: `baseURL: 'http://nginx:80'`, `testDir: './e2e'`, `use: { headless: true }`, single Chromium project. Import: `from 'playwright/test'`.
+
+**Tests (locked):**
+- `src/frontend/e2e/scaffold.spec.ts` — locked test asserting `config.use?.baseURL === 'http://nginx:80'` (from FEAT-035-TESTS v0.1).
+
+### Tests
+**Test added:** `src/frontend/e2e/scaffold.spec.ts` — `playwright initialises with baseURL http://nginx:80`
+
+**How to run:**
+```
+cd src/frontend && npx playwright test
+```
+
+**Gate results (locally, on branch `feature/FEAT-035-e2e-ci-scaffold`):**
+
+| Gate | Result |
+|---|---|
+| Files in scope | Pass (0 outside plan) |
+| Packages approved | Pass (0 new packages) |
+| Spec impact | Pass (0 stale citations) |
+| Locked tests | Pass (0 violations) |
+| Context pack | Pass |
+| Learned rules | Pass |
+| Agent charter | Pass |
+| Glossary | Pass |
+| SAST (bandit -ll) | Pass (22 low-severity pre-existing; no medium/high) |
+| Secrets scan | Pass |
+| Lint (ruff) | Pass |
+
+Gates requiring Docker/CI: Build, unit tests, frontend tests, E2E job — run in CI.
+
+### Requirements Covered
+- TST-001 AC-5: `n/a — CI workflow run` — `.github/workflows/e2e.yml` committed; E2E job triggers on PR/push to master; Docker Compose + Playwright Chromium configured; health-check wait step included (CI-level verification; PASSING when e2e.yml workflow runs in GitHub Actions).
+- STD-001 AC-5: `playwright initialises with baseURL http://nginx:80` — `playwright.config.ts` upgraded with `baseURL: 'http://nginx:80'`; scaffold spec asserts config value (1/1 green, exit 0; PASSING).
+
+### Known Gaps
+None.
+
+### Deviations From Plan
+- **Import path `playwright/test` vs `@playwright/test` (implementation only; no file changed outside plan):** `playwright.config.ts` imports from `'playwright/test'` (the bare `playwright` package, v1.64.1, installed by FEAT-001). The plan implementation steps do not specify the import path. The two entry points are functionally identical on playwright v1.64.1 and are consistent with the locked test file `scaffold.spec.ts` which uses the same import. No design or contract implication.
+
+### Blockers
+None.
+
+### Risk Tier And Review Depth
+Tier: Critical — Deep review required (tech lead + release manager).
+
+This feature is a CI infrastructure gate; a missing, malformed, or broken E2E workflow would silently omit the E2E gate from all subsequent story-feature PRs. Per `.ai/standards/review-and-approval.md` § Approval tiers, Critical features require both the tech lead and the release manager as approvers, with Deep review depth.
+
+Deep review means: read every changed line of logic; review security against the threat model and permission matrix (auth, validation, secrets, data exposure); run the feature locally including failure paths; check migrations and rollback; read every test for behavior.
+
+### Reviewer Checklist
+- [ ] Ran or previewed the feature (not only read the diff)
+- [ ] Every acceptance criterion is met
+- [ ] Change summary read: Known Gaps acceptable, Deviations From Plan justified (import path), Blockers 'None'
+- [ ] No files changed outside the plan (all changed files are in FEAT-035 plan.md Files To Create Or Modify or the locked test set)
+- [ ] No packages added or upgraded beyond the plan's New Packages (New Packages: None)
+- [ ] Tests assert behavior, not just that code runs (`scaffold.spec.ts` asserts `config.use?.baseURL === 'http://nginx:80'`)
+- [ ] Approved test set (FEAT-035-TESTS v0.1) unchanged since approval; implementation started after test commit `13a976b`
+- [ ] Auth, permissions, input validation, secrets, and data handling checked (Not applicable — CI workflow only; no auth, user data, or secrets introduced)
+- [ ] Migrations reversible and consistent with the schema design (Not applicable — no database changes)
+- [ ] Contract (OpenAPI) and UI spec followed (Not applicable — CI infrastructure only; no API endpoints or pages added)
+- [ ] Applicable learned rules (`.ai/standards/learned-rules.md`) followed
+- [ ] Checker validation summary and AI pre-review read; any "Proceeded on Fail" findings examined
+- [ ] Second approver obtained (Critical tier: both tech lead and release manager must approve)
+
+### Assumptions
+None beyond those logged in `docs/logs/assumptions-log.md`.
+
+### Open Questions
+None.
+
+### Traceability Links
+- Upstream: FEAT-035 plan.md v0.1; FEAT-035-ACC v0.1; FEAT-035-TESTS v0.1; STD-001 v0.1; TST-001 v0.1; FEAT-001 (playwright npm package)
+- Downstream: All subsequent story features that add `src/frontend/e2e/*.spec.ts` files; Phase 7 E2E regression suite
+
+### Quality Checklist
+- [x] Every template section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] Vague words removed (etc., as needed, appropriate)
+
+---
+<!-- Add further ## PR FEAT-NNN: sections here as new features are built -->
+
 ## Assumptions
 - A-038 (Confirmed): Docker Compose file secrets at `/run/secrets/` for DB credentials; test database uses `DATABASE_URL` env var injected by CI service container. Logged in `docs/logs/assumptions-log.md`.
 

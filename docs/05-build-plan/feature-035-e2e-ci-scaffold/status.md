@@ -29,9 +29,9 @@ Tracks the build-phase progress of FEAT-035. Updated by the builder agent during
 - PR: <draft PR link>
 
 ## Progress
-- State: In progress
-- Assigned agents: builder
-- Last update: 2026-10-17
+- State: Implementation complete; PR description written (docs/06-build/pr-descriptions.md ## PR FEAT-035)
+- Assigned agents: builder, documentation-writer
+- Last update: 2026-10-18
 
 ## Blockers
 None.
