@@ -3,7 +3,7 @@ id: FEAT-006
 id_prefix: FEAT
 title: "FEAT-006: S-21: User Signs In with a User Account"
 phase: 5
-version: 0.2
+version: 0.3
 template: feature-plan
 template_version: 1.6
 status: Approved
@@ -65,7 +65,7 @@ Deliver all 4 acceptance criteria of REQ S-21 end-to-end: backend models, migrat
 - `nginx/nginx.conf`
 
 ## New Packages
-- None
+- react-router-dom (latest stable; pinned in package.json after npm install)
 
 ## Out Of Scope
 Temporary password — FEAT-008. Change own password — FEAT-009. Security event recording of sign-in events — FEAT-033. Session timeout in middleware — already stubbed in FEAT-001 middleware.py; session settings are added to base.py in this feature.

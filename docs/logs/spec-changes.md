@@ -991,3 +991,57 @@ Not applicable — no architecture or contract artifact changes.
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-13: FEAT-006 plan.md — add react-router-dom to New Packages
+
+<!-- scr_status: Approved -->
+<!-- scr_date: 2026-10-19 -->
+<!-- scr_approver: Mohanasunder -->
+
+### Input References
+- FEAT-006 plan.md v0.2 (Approved 2026-10-19, Mohanasunder) — artifact being amended
+- UIS-001 v0.1 § REQ S-21 — routing requirement (redirect to /tickets after login)
+- OQ-071 (Answered 2026-10-19, Mohanasunder) — react-router-dom decision
+- DEC-084 (2026-10-19, Mohanasunder) — decision to add react-router-dom via SCR
+
+### Purpose And Scope
+Adds `react-router-dom` to FEAT-006 plan.md New Packages. Plan step 9 requires App.tsx routing with React Router but New Packages listed None. OQ-071 answered: add react-router-dom (DEC-084). No requirements, contracts, or architecture artifacts change.
+
+### Changed Artifact
+FEAT-006 plan.md v0.2 -> v0.3; `docs/05-build-plan/feature-006-sign-in-auth/plan.md`
+
+### Trigger
+Frontend builder Mode A (2026-10-19): react-router-dom absent from package.json and New Packages; packages gate (check_feature_size.py packages) would fail in Mode B if react-router-dom were added without a plan SCR.
+
+### Change
+New Packages: None -> react-router-dom (latest stable at time of build; pinned in package.json after npm install).
+
+### Impact
+FEAT-006 plan.md: New Packages section updated (v0.2 -> v0.3). No other artifacts, features, or contracts affected. Frontend builder installs react-router-dom in Mode B via npm install.
+
+### Assumptions
+None.
+
+### Open Questions
+OQ-071 answered by this SCR.
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes.
+
+### Traceability Links
+- Upstream: FEAT-006 plan.md v0.2; OQ-071; DEC-084; UIS-001 v0.1 § REQ S-21
+- Downstream: FEAT-006 plan.md v0.3; frontend-builder Mode B; packages gate
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
