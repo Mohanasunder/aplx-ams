@@ -102,9 +102,7 @@ Date: 2026-10-18. Branch: `feature/FEAT-003-contract-setup`.
 **Existing tests**: All FEAT-002 tests remained green across all three commits, confirming no regression.
 
 ## Test Commit
-Last builder test commit: `8b8914d` (FEAT-003: tests (backend), 2026-10-18 18:22 UTC+5:30). This is the commit on the feature branch that contains all three test files in their final form. The checker diffs test files against this SHA at PR time.
-
-Note: the Phase Input Brief cited `6824848` (the frontend test commit) as the test commit SHA. The git log confirms `8b8914d` is the later commit and contains the complete test set; `8b8914d` is the correct reference SHA.
+Last builder test commit: `b4b18a1` (FEAT-003: fix ruff formatting in test files, 2026-10-18). This commit updated `8b8914d` (the original test set commit) with a formatting-only fix: removed one extra blank line after imports in `test_contract_api.py` (ruff I001) and applied `ruff format` to `test_api.py` (pre-existing FEAT-002 issue). Authorized by Mohanasunder (DEC-073). No test logic was changed.
 
 ## Assumptions
 None beyond those logged in `docs/logs/assumptions-log.md`.
