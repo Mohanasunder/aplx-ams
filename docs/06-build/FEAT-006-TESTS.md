@@ -89,6 +89,9 @@ Phase 7 regression scope: all 30 tests remain in scope for regression.
 - `src/aplx_ams_django/accounts/authentication.py` — stub `SessionAuthBackend`; no logic; `authenticate()` returns `None` unconditionally
 - `src/aplx_ams_django/accounts/views.py` — stubs added for `LoginView`, `LogoutView`, `MeView`; each returns HTTP 501 Not Implemented
 - `src/aplx_ams_django/accounts/urls.py` — stub URL patterns registering `/api/auth/login/`, `/api/auth/logout/`, `/api/auth/me/` pointing at stub views
+- `src/aplx_ams_django/settings/base.py` — session settings, `AUTHENTICATION_BACKENDS`, and password validators added (stubs; validators listed but custom class not yet wired)
+- `src/aplx_ams_django/urls.py` — root URL conf updated to mount auth URL patterns at `api/`
+- `nginx/nginx.conf` — `limit_req_zone` and `/api/auth/login/` location block added per DEC-042 (rate limit stub; logic correct, enforced when nginx runs)
 
 **Frontend builder (commit 8bd2f25):**
 - `src/frontend/src/pages/Login.tsx` — stub component: `export default function Login() { return null; }`
@@ -112,7 +115,7 @@ Failure reason: stub `Login` component returns `null`; no DOM elements are rende
 ## Test Commit
 - Backend Mode A commit (test_auth_api.py): `9ececb7` (branch `feature/FEAT-006-sign-in-auth`, 2026-10-19)
 - Frontend Mode A commit (Login.test.tsx): `8bd2f25` (branch `feature/FEAT-006-sign-in-auth`, 2026-10-19)
-- Final test commit (HEAD of Mode A; both test files at approved state): `8bd2f25`
+- Final test commit (HEAD of Mode A; both test files at approved state): `9ececb7`
 
 ## Assumptions
 - A-019: A refused sign-in does not say whether the account name or the password was wrong. Tests `test_ac2_wrong_password_and_unknown_username_have_same_error_body` (backend) and `REQ-021 AC-4: HTTP 401 for locked account shows 'Invalid credentials.' (generic message)` (frontend) exercise this assumption. Logged in `docs/logs/assumptions-log.md`. Confirmed by Mohanasunder, 2026-10-17 (DEC-041).
@@ -128,7 +131,7 @@ Failure reason: stub `Login` component returns `null`; no DOM elements are rende
 - [x] Every template section is filled, or marked "Not applicable - <reason>"
 - [x] Inputs referenced are Approved artifacts at the stated versions
 - [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
-- [x] Every acceptance criterion maps to at least one test (AC-1: 9 tests across 2 layers; AC-2: 5 tests across 2 layers; AC-3: 9 tests across 2 layers; AC-4: 5 tests across 2 layers)
+- [x] Every acceptance criterion maps to at least one test (AC-1: 9 tests across 2 layers; AC-2: 5 tests across 2 layers; AC-3: 8 tests across 2 layers; AC-4: 5 tests across 2 layers)
 - [x] Tests assert behavior, not only that code runs (HTTP status codes, response body fields, DOM element presence, DB state, error message text, button state)
 - [x] Red run shows every new test failing for the missing behavior (16 backend + 13 frontend = 29 failures; 1 intentionally green in Mode A documented; all behavioral, not syntax or setup)
 - [x] Assumptions and open questions are logged and linked (A-019; OQ-071 answered)
