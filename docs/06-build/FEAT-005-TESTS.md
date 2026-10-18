@@ -9,7 +9,7 @@ status: Draft
 author_agent: documentation-writer
 approver: Human developer reviewer
 date: 2026-10-18
-validation: Pending
+validation: Pass
 ---
 # FEAT-005: Delivery Manager Manages User Accounts — Test Set
 
@@ -29,7 +29,7 @@ v0.2 changes (VAL-027 send-back fixes, commit fe4e56f): replaced P-code tier IDs
 
 One partial gap exists: REQ S-20 AC-3 requires that a deactivated user "can no longer sign in". The persistence side (`is_active=False` written to DB) is tested in this feature at the database and backend layers. The sign-in refusal gate (HTTP 401 on attempt to sign in with a deactivated account) is deferred to FEAT-006, which owns the sign-in endpoint per FEAT-005 plan.md § Out Of Scope. That gap is documented in this artifact and will be closed by FEAT-006-TESTS.
 
-Phase 7 regression scope: all 31 tests remain in scope for regression.
+Phase 7 regression scope: all 35 tests remain in scope for regression.
 
 ## Risk Tier And Test Approver
 - Risk tier: High (from FEAT-005 plan.md — personal data: names, emails, roles; incorrect role assignment grants unauthorized access)
@@ -155,9 +155,9 @@ None. The AC-3 sign-in refusal gap is a documented scope boundary from FEAT-005 
 - [x] Every template section is filled, or marked "Not applicable - <reason>"
 - [x] Inputs referenced are Approved artifacts at the stated versions
 - [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
-- [x] Every acceptance criterion maps to at least one test (AC-1: 9 tests across 3 layers; AC-2: 5 tests across 3 layers; AC-3: 5 tests across 3 layers with sign-in refusal gap documented; AC-4: 10 tests across 2 layers)
+- [x] Every acceptance criterion maps to at least one test (AC-1: 13 tests across 3 layers; AC-2: 6 tests across 3 layers; AC-3: 6 tests across 3 layers with sign-in refusal gap documented; AC-4: 10 tests across 2 layers)
 - [x] Tests assert behavior, not only that code runs (field existence, HTTP status codes, DOM element presence, DB persistence, permission refusals)
-- [x] Red run shows every new test failing for the missing behavior (13 + 12 + 6 = 31 failures; all behavioral, not syntax or setup)
+- [x] Red run shows every new test failing for the missing behavior (13 + 16 + 6 = 35 failures; all behavioral, not syntax or setup)
 - [x] Assumptions and open questions are logged and linked (none new; gap is a scope boundary)
 - [x] Traceability links are present upstream and downstream
 - [x] Terminology follows .ai/standards/glossary.md
