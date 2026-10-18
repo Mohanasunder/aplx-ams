@@ -1,5 +1,6 @@
 """
 FEAT-005 accounts views — Mode B implementation.
+FEAT-006 auth views (LoginView, LogoutView, MeView) — Mode A stubs.
 
 UserViewSet enforces delivery_manager role on every action via
 HasRolePermission (get_permissions checks before any DB access).
@@ -10,6 +11,11 @@ Permission matrix (PRM-001 v0.1 § User account management F-6):
   GET    /api/accounts/users/{id}/             — delivery_manager
   PATCH  /api/accounts/users/{id}/             — delivery_manager (AC-4)
   POST   /api/accounts/users/{id}/deactivate/ — delivery_manager (AC-4)
+
+Permission matrix (PRM-001 v0.1 § Authentication F-5):
+  POST /api/auth/login/  — public (no auth required)
+  POST /api/auth/logout/ — all authenticated roles, own session only
+  GET  /api/auth/me/     — all authenticated roles, own user record
 """
 
 from __future__ import annotations
@@ -18,6 +24,7 @@ from django.db import IntegrityError
 from rest_framework import status, viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from aplx_ams_django.accounts import dal, services
 from aplx_ams_django.accounts.models import User
@@ -95,3 +102,51 @@ class UserViewSet(viewsets.GenericViewSet):
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         return Response(UserDetailSerializer(user).data)
+
+
+# ---------------------------------------------------------------------------
+# FEAT-006 auth views — Mode A stubs (all return 501 Not Implemented)
+# Logic is added in Mode B.
+# ---------------------------------------------------------------------------
+
+
+class LoginView(APIView):
+    """POST /api/auth/login/ — authenticate and start a session (AC-1, AC-2, AC-4).
+
+    Public endpoint: no authentication required.
+    Mode A stub: returns 501 Not Implemented for all requests.
+    """
+
+    permission_classes: list[object] = []
+
+    def post(self, request: Request) -> Response:
+        """Stub: returns 501. Implemented in Mode B."""
+        return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
+
+
+class LogoutView(APIView):
+    """POST /api/auth/logout/ — invalidate the current session.
+
+    Requires an active authenticated session (own session only per PRM-001 v0.1).
+    Mode A stub: returns 501 Not Implemented for all requests.
+    """
+
+    permission_classes: list[object] = []
+
+    def post(self, request: Request) -> Response:
+        """Stub: returns 501. Implemented in Mode B."""
+        return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
+
+
+class MeView(APIView):
+    """GET /api/auth/me/ — return the authenticated user's role and org (AC-1).
+
+    Requires authentication; returns the authenticated user's own record.
+    Mode A stub: returns 501 Not Implemented for all requests.
+    """
+
+    permission_classes: list[object] = []
+
+    def get(self, request: Request) -> Response:
+        """Stub: returns 501. Implemented in Mode B."""
+        return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
