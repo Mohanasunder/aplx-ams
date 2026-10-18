@@ -30,6 +30,7 @@ from rest_framework.test import APIClient
 # Test helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_user(role: str, pk: int = 1) -> SimpleNamespace:
     """Return a lightweight user stub with the given role.
 
@@ -49,6 +50,7 @@ def _dm_client() -> APIClient:
 # ---------------------------------------------------------------------------
 # REQ-018 AC-1
 # ---------------------------------------------------------------------------
+
 
 def test_dm_can_create_org_and_sap_app() -> None:
     """REQ-018 AC-1 — DM creates a client org, adds a SAP app; the SAP app
@@ -78,9 +80,7 @@ def test_dm_can_create_org_and_sap_app() -> None:
         {"name": "SAP S/4HANA", "sid": "S4H"},
         format="json",
     )
-    assert sap_response.status_code == 201, (
-        f"Expected 201 Created, got {sap_response.status_code}."
-    )
+    assert sap_response.status_code == 201, f"Expected 201 Created, got {sap_response.status_code}."
     sap_app_id = sap_response.json()["id"]
 
     # Step 3: verify SAP app is visible in the org's list
@@ -97,6 +97,7 @@ def test_dm_can_create_org_and_sap_app() -> None:
 # REQ-018 AC-2
 # ---------------------------------------------------------------------------
 
+
 def test_sap_app_isolated_to_org() -> None:
     """REQ-018 AC-2 — SAP application added to org A is NOT visible in org
     B's SAP application list.
@@ -112,9 +113,7 @@ def test_sap_app_isolated_to_org() -> None:
         {"name": "Org A"},
         format="json",
     )
-    assert resp_a.status_code == 201, (
-        f"Expected 201 Created for org A, got {resp_a.status_code}."
-    )
+    assert resp_a.status_code == 201, f"Expected 201 Created for org A, got {resp_a.status_code}."
     org_a_id = resp_a.json()["id"]
 
     # Create org B (use a different DM user pk to avoid caching effects)
@@ -123,9 +122,7 @@ def test_sap_app_isolated_to_org() -> None:
         {"name": "Org B"},
         format="json",
     )
-    assert resp_b.status_code == 201, (
-        f"Expected 201 Created for org B, got {resp_b.status_code}."
-    )
+    assert resp_b.status_code == 201, f"Expected 201 Created for org B, got {resp_b.status_code}."
     org_b_id = resp_b.json()["id"]
 
     # Add SAP app to org A only
@@ -149,6 +146,7 @@ def test_sap_app_isolated_to_org() -> None:
 # ---------------------------------------------------------------------------
 # REQ-018 AC-3  — unauthorized roles cannot create orgs or add SAP apps
 # ---------------------------------------------------------------------------
+
 
 def test_p1_cannot_create_org() -> None:
     """REQ-018 AC-3 — L1 support engineer (P1) cannot create a client org;

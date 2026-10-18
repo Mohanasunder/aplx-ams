@@ -31,7 +31,6 @@ from rest_framework.test import APIClient
 
 from aplx_ams_django.organizations.models import ClientOrg
 
-
 # ---------------------------------------------------------------------------
 # Test helpers
 # ---------------------------------------------------------------------------
