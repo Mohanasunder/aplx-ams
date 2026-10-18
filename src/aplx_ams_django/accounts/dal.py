@@ -10,8 +10,13 @@ Named per STD-001 v0.1 § Naming And Structure.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 
-def get_user_by_id(user_id: int):
+if TYPE_CHECKING:
+    from aplx_ams_django.accounts.models import User
+
+
+def get_user_by_id(user_id: int) -> User:
     """Return the User with the given primary key.
 
     Args:
@@ -28,7 +33,7 @@ def get_user_by_id(user_id: int):
     return User.objects.get(pk=user_id)
 
 
-def list_users() -> list:
+def list_users() -> list[User]:
     """Return all user accounts ordered by username.
 
     Returns:
@@ -39,7 +44,7 @@ def list_users() -> list:
     return list(User.objects.order_by("username"))
 
 
-def get_active_users_by_org(org_id: int) -> list:
+def get_active_users_by_org(org_id: int) -> list[User]:
     """Return all active users belonging to the given client organization.
 
     Args:

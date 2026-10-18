@@ -13,6 +13,8 @@ Constraints:
 
 from __future__ import annotations
 
+from typing import ClassVar
+
 import django.db.models as m
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import BaseUserManager
@@ -33,7 +35,7 @@ class UserManager(BaseUserManager):
         username: str,
         password: str | None = None,
         **extra_fields: object,
-    ) -> "User":
+    ) -> User:
         user = self.model(username=username, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
@@ -59,15 +61,15 @@ class User(AbstractBaseUser):
     date_joined = m.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = "username"
-    REQUIRED_FIELDS: list[str] = []
+    REQUIRED_FIELDS: ClassVar[list[str]] = []
 
     objects = UserManager()
 
     class Meta:
         db_table = "accounts_user"
-        constraints = [
+        constraints: ClassVar[list[m.BaseConstraint]] = [
             m.CheckConstraint(
-                check=m.Q(role__in=[r.value for r in UserRole]),
+                check=m.Q(role__in=[r.value for r in UserRole]),  # type: ignore[attr-defined]
                 name="chk_role_valid",
             ),
             m.CheckConstraint(

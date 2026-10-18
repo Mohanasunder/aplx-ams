@@ -711,7 +711,7 @@ This SCR is approved and the two tracking fields in status.md are updated.
 Adds `src/aplx_ams_django/settings/base.py` to FEAT-005 plan.md § Files To Create Or Modify. Covers only the plan.md file list amendment and Size Check table update. No requirements, contracts, or architecture artifacts change.
 
 ### Changed Artifact
-FEAT-005 plan.md v0.1 → v0.2; `docs/05-build-plan/feature-005-user-accounts/plan.md`
+FEAT-005 v0.1 → v0.2 (plan.md); `docs/05-build-plan/feature-005-user-accounts/plan.md`
 
 ### Trigger
 VAL-027 F-002 (Minor) — checker subagent during Mode A validation run on 2026-10-18. `settings/base.py` was modified in commit `6248aa5` (database-builder test commit, Mode A) but was not listed in plan.md § Files To Create Or Modify. The Mode B scope gate (`check_feature_size.py scope`) would fail when `settings/base.py` is re-modified during implementation unless the plan is updated.

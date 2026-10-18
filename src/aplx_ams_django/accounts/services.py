@@ -9,10 +9,13 @@ Named per STD-001 v0.1 § Naming And Structure.
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from aplx_ams_django.accounts.models import User
 
 
-def create_user(data: dict[str, Any]):
+def create_user(data: dict[str, Any]) -> User:
     """Create and persist a new user account.
 
     Sets an unusable password (the password is managed by a separate
@@ -39,7 +42,7 @@ def create_user(data: dict[str, Any]):
     return user
 
 
-def deactivate_user(user_id: int):
+def deactivate_user(user_id: int) -> User:
     """Set is_active=False on the user identified by user_id.
 
     Args:

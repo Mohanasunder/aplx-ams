@@ -32,7 +32,7 @@ class UserViewSet(viewsets.GenericViewSet):
     so authorization is checked before any database lookup (AC-4).
     """
 
-    def get_permissions(self) -> list:
+    def get_permissions(self) -> list[HasRolePermission]:
         """Return HasRolePermission restricted to delivery_manager for all actions."""
         return [HasRolePermission(required_roles=_DM_ONLY)]
 
@@ -51,11 +51,13 @@ class UserViewSet(viewsets.GenericViewSet):
 
     def retrieve(self, request: Request, pk: int | None = None) -> Response:
         """GET /api/accounts/users/{pk}/ — return a single user detail."""
+        assert pk is not None
         user = dal.get_user_by_id(pk)
         return Response(UserDetailSerializer(user).data)
 
     def partial_update(self, request: Request, pk: int | None = None) -> Response:
         """PATCH /api/accounts/users/{pk}/ — partial update of updatable fields."""
+        assert pk is not None
         user = dal.get_user_by_id(pk)
         updatable = ("name", "email", "role", "client_org_id")
         for field in updatable:
@@ -66,5 +68,6 @@ class UserViewSet(viewsets.GenericViewSet):
 
     def deactivate(self, request: Request, pk: int | None = None) -> Response:
         """POST /api/accounts/users/{pk}/deactivate/ — set is_active=False (AC-3)."""
+        assert pk is not None
         user = services.deactivate_user(pk)
         return Response(UserDetailSerializer(user).data)

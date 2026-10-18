@@ -12,6 +12,8 @@ Named per STD-001 v0.1 § Naming And Structure.
 
 from __future__ import annotations
 
+from typing import ClassVar
+
 from rest_framework import serializers
 
 from aplx_ams_django.accounts.models import User
@@ -38,14 +40,10 @@ class UserCreateSerializer(serializers.Serializer):
     role = serializers.ChoiceField(choices=_VALID_ROLES)
     client_org_id = serializers.IntegerField(required=False, allow_null=True)
 
-    def validate(self, attrs: dict) -> dict:  # noqa: D102
+    def validate(self, attrs: dict[str, object]) -> dict[str, object]:
         if attrs.get("role") == "client_user" and not attrs.get("client_org_id"):
             raise serializers.ValidationError(
-                {
-                    "client_org_id": (
-                        "Client organization is required for client user accounts."
-                    )
-                }
+                {"client_org_id": ("Client organization is required for client user accounts.")}
             )
         return attrs
 
@@ -74,7 +72,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = [
+        fields: ClassVar[list[str]] = [
             "id",
             "username",
             "name",
