@@ -1,9 +1,10 @@
 /**
- * FEAT-003 API client stubs — contracts.ts
+ * FEAT-003 API client — contracts.ts
  *
  * Contract: API-001 v0.2
- * Endpoints stubbed (no logic — implementation added in Mode B):
- *   POST /api/organizations/{id}/contracts/  → CreateContractResponse
+ * Endpoints:
+ *   POST /api/organizations/{id}/contracts/  → Contract
+ *   GET  /api/organizations/{id}/contracts/active/ → Contract
  */
 
 // ── Types (contract fields only — API-001 v0.2) ───────────────────────────────
@@ -22,16 +23,30 @@ export interface CreateContractPayload {
   contracted_hours?: number;
 }
 
-// ── Stub function (signature only — no logic) ─────────────────────────────────
+// ── API functions ─────────────────────────────────────────────────────────────
 
 export async function createContract(
-  _orgId: number,
-  _payload: CreateContractPayload,
+  orgId: number,
+  payload: CreateContractPayload,
 ): Promise<Contract> {
-  return {
-    id: 0,
-    organization: _orgId,
-    contract_type: _payload.contract_type,
-    contracted_hours: _payload.contracted_hours ?? null,
-  };
+  const response = await fetch(`/api/organizations/${orgId}/contracts/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    throw { status: response.status };
+  }
+  return response.json() as Promise<Contract>;
+}
+
+export async function getActiveContract(orgId: number): Promise<Contract | null> {
+  const response = await fetch(`/api/organizations/${orgId}/contracts/active/`);
+  if (response.status === 404) {
+    return null;
+  }
+  if (!response.ok) {
+    throw { status: response.status };
+  }
+  return response.json() as Promise<Contract>;
 }
