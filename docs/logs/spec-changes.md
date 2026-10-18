@@ -560,9 +560,9 @@ None.
 
 ## SCR S-7: API-001 v0.1 citation in 33 story feature plans — regenerate to v0.2
 
-<!-- scr_status: Draft -->
+<!-- scr_status: Approved -->
 <!-- scr_date: 2026-10-18 -->
-<!-- scr_approver: -->
+<!-- scr_approver: Mohanasunder -->
 
 ### Input References
 - SCR S-6 v0.1 (Approved 2026-10-17) — API-001 update from v0.1 to v0.2 (glossary fixes, FEAT-001)
