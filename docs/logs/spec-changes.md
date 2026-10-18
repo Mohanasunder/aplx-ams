@@ -801,9 +801,9 @@ None.
 
 ## SCR S-10: FEAT-005-TESTS — correct Test Commit SHA ordering so CI gate uses final commit
 
-<!-- scr_status: Draft -->
+<!-- scr_status: Approved -->
 <!-- scr_date: 2026-10-18 -->
-<!-- scr_approver: -->
+<!-- scr_approver: Mohanasunder -->
 
 ### Input References
 - FEAT-005-TESTS v0.2 (Approved 2026-10-18, Mohanasunder) — artifact being amended

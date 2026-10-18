@@ -245,3 +245,5 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-18 14:30 | SCR S-8 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | Cosmetic tracking update only; no downstream impact. |
 | 2026-10-18 16:47 | SCR S-9 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | None |
 | 2026-10-18 16:50 | FEAT-005 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass | - | None |
+| 2026-10-18 16:52 | FEAT-005-TESTS | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass | - | None |
+| 2026-10-18 16:58 | SCR S-10 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | None |

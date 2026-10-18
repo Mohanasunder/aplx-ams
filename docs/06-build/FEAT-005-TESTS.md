@@ -2,12 +2,12 @@
 id: FEAT-005-TESTS
 title: "FEAT-005: Delivery Manager Manages User Accounts — Test Set"
 phase: 6
-version: 0.2
+version: 0.3
 template: feature-test-set
 template_version: 1.0
-status: Draft
+status: Approved
 author_agent: documentation-writer
-approver: Human developer reviewer
+approver: Mohanasunder
 date: 2026-10-18
 validation: Pass
 ---
@@ -133,13 +133,13 @@ Result: 6 collected, 6 FAILED
 Failure reason: stub `UserManagement` returns `null`; no DOM elements rendered; all `getBy*` queries throw `TestingLibraryElementError`. Not syntax, import, or setup errors.
 
 ## Test Commit
-Four sequential commits on branch `feature/FEAT-005-user-accounts`:
+Final test commit (HEAD of Mode A; all three test files at approved state): `fe4e56f`
+
+Sequential commits on branch `feature/FEAT-005-user-accounts`:
 - `6248aa5` — database layer: 13 model tests + stub accounts app (committed 2026-10-18)
 - `8a33dca` — backend layer: 12 API tests + stub serializers, services, dal, views, urls (committed 2026-10-18)
 - `0c9ce44` — frontend layer: 6 component tests + stub UserManagement.tsx and users.ts (committed 2026-10-18)
 - `fe4e56f` — test_api.py fix: role slugs replaced (F-001); 4 AC-4 P2/P4 tests added (F-003); total backend tests 12 → 16 (committed 2026-10-18)
-
-The checker diffs the three test files against commit `fe4e56f` (HEAD of the test-only run), which is the final state of all test files at Mode A completion.
 
 ## Assumptions
 None specific to this test set. No new assumptions are raised beyond those already in `docs/logs/assumptions-log.md`.
@@ -166,9 +166,10 @@ None. The AC-3 sign-in refusal gap is a documented scope boundary from FEAT-005 
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Architect / tech lead |
+| Version | 0.2 |
 | Conditions | None |
 | Comments | None |
-| Timestamp | Pending |
+| Timestamp | 2026-10-18 16:52 UTC |
