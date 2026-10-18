@@ -35,8 +35,8 @@ Ordered task checklist for the builder of FEAT-002. Each task names the file(s) 
 - [ ] T-6: Write `views.py` with `OrgViewSet` and `SAPApplicationViewSet` restricted by `HasRolePermission`.
 - [ ] T-7: Write `urls.py` registering organization and SAP application endpoints.
 - [ ] T-8: Register `organizations.urls` in `src/aplx_ams_django/urls.py`.
-- [ ] T-9: Write `src/frontend/src/pages/OrgManagement.tsx` with MUI DataGrid listing orgs and SAP apps; DM-only create/edit controls.
-- [ ] T-10: Write `src/frontend/src/api/organizations.ts` with typed axios/fetch calls for org and SAP endpoints.
+- [x] T-9: Write `src/frontend/src/pages/OrgManagement.tsx` with MUI DataGrid listing orgs and SAP apps; DM-only create/edit controls.
+- [x] T-10: Write `src/frontend/src/api/organizations.ts` with typed axios/fetch calls for org and SAP endpoints.
 - [ ] T-11: Run all gate commands locally (`ruff`, `mypy`, `pytest --cov`, `bandit`, `pip-audit`, `detect-secrets`); confirm each exits 0.
 - [ ] T-12: Verify `python3 scripts/check_feature_size.py size FEAT-002` exits 0.
 

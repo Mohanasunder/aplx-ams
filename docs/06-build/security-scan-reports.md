@@ -243,3 +243,29 @@ All automated scan gates passed with exit code 0. No secrets detected. No MEDIUM
 - Upstream: FEAT-035 plan; STD-001 AC-5; automated-gates.md; `.secrets.baseline` commit `4d29043`
 - Downstream: PR FEAT-035 human review
 
+
+## SSR FEAT-002: Org and SAP Setup — Security Scan
+
+<!-- ssr_status: Draft -->
+<!-- ssr_author: security-scanner -->
+<!-- ssr_date: 2026-10-18 -->
+<!-- ssr_verdict: Clean -->
+
+### Scan Results
+
+| Tool | Command | Exit Code | Findings |
+|---|---|---|---|
+| bandit | `python -m bandit -r src/aplx_ams_django/ -ll -q` | 0 | No MEDIUM/HIGH findings; 47 LOW (B101 assert_used in tests, below threshold) |
+| bandit (focused) | `python -m bandit -r src/aplx_ams_django/organizations/ -ll` | 0 | 0 MEDIUM/HIGH in new organizations app |
+| pip-audit | `pip-audit -r requirements.txt` | 0 | No known vulnerabilities in project dependencies |
+| detect-secrets | `detect-secrets scan --baseline .secrets.baseline` | 0 | No new secrets; baseline unchanged in results |
+
+### Verdict
+
+**Clean.** All four gate commands exited 0. No MEDIUM or HIGH SAST findings. No new secrets detected. No new dependency vulnerabilities. 4 pre-existing baselined secrets (CI credentials, design doc examples) unchanged from prior features.
+
+### Traceability Links
+
+- Upstream: FEAT-002-TESTS v0.1; automated-gates.md; DEC-071
+- Downstream: PR FEAT-002 human review
+

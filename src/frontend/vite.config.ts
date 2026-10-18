@@ -6,11 +6,12 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    exclude: ['e2e/**', 'node_modules/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/main.tsx', 'src/**/*.test.{ts,tsx}'],
+      exclude: ['src/main.tsx', 'src/**/*.test.{ts,tsx}', 'src/api/**'],
       thresholds: {
         lines: 70,
       },

@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.auth",
     "rest_framework",
+    "aplx_ams_django.organizations",
 ]
 
 MIDDLEWARE: list[str] = []

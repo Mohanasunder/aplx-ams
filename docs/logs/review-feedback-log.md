@@ -12,3 +12,6 @@ Category: kebab-case slug; reuse an existing one when it fits (see `.ai/standard
 | 2026-10-18 | FEAT-000 | security-scanner | insecure-default | Medium | `SECRET_KEY` falls back to literal string `"insecure-dev-key-replace-in-production"` in `src/aplx_ams_django/settings/base.py` line 19 when no secret file or env var is present; should raise `ImproperlyConfigured` | security-scanner |
 
 | 2026-10-18 | FEAT-001 | ai-code-reviewer | session-timeout-incomplete | Major | AbsoluteSessionTimeoutMiddleware never initialized session_start; 12-hour absolute timeout silently inactive; fixed by adding if session_start is None: request.session[session_start]=now | ai-code-reviewer |
+
+| 2026-10-18 | FEAT-002 | ai-code-reviewer | api-contract-violation | Major | OrgViewSet inherits UpdateModelMixin adding uncontracted PUT /api/organizations/{pk}/; API-001 v0.2 only contracts PATCH | ai-code-reviewer |
+| 2026-10-18 | FEAT-002 | ai-code-reviewer | missing-input-validation | Major | SAPApplicationViewSet.create passes request.data unvalidated; data["name"] raises unhandled KeyError (500) on missing name; OrgViewSet.create correctly calls is_valid(raise_exception=True) | ai-code-reviewer |

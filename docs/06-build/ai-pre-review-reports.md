@@ -250,3 +250,54 @@ No Blockers. No Major findings. F-1 fix applied in the same commit as this repor
 - Upstream: FEAT-035 plan.md v0.1; FEAT-035-ACC v0.1; FEAT-035-TESTS v0.1; STD-001 v0.1; TST-001 v0.1; automated-gates.md
 - Downstream: Phase 6 PR for FEAT-035
 
+
+## AIR FEAT-002: S-18 — Delivery Manager Sets Up Client Organizations and SAP Applications
+
+<!-- air_status: Draft -->
+<!-- air_author: ai-code-reviewer -->
+<!-- air_date: 2026-10-18 -->
+<!-- air_verdict: Needs changes -->
+
+### Input References
+
+- FEAT-002 plan.md v0.1 (Approved 2026-10-17)
+- FEAT-002-ACC v0.1 (Approved 2026-10-17)
+- FEAT-002-TESTS v0.1 (Approved 2026-10-18)
+- API-001 v0.2; DBD-001 v0.1; STD-001 v0.1; PRM-001 v0.1; UIS-001 v0.1
+- `.ai/standards/agent-charter.md` (generated 2026-10-18)
+- DEC-070, DEC-071; A-046, A-047
+
+### Purpose And Scope
+
+Advisory pre-review of FEAT-002 on branch `feature/FEAT-002-org-sap-setup`. Covers plan adherence, AC coverage, code quality, security, and charter compliance. Locked test files not flagged. Advisory only.
+
+### Findings
+
+| # | File | Line | Category | Severity | Issue |
+|---|---|---|---|---|---|
+| 1 | `src/aplx_ams_django/organizations/views.py` | 35-36 | `api-contract-violation` | **Major** | `OrgViewSet` inherits `mixins.UpdateModelMixin` adding PUT /api/organizations/{pk}/ — not in API-001 v0.2 contract (only PATCH). Remove `UpdateModelMixin` or restrict HTTP methods to exclude PUT. |
+| 2 | `src/aplx_ams_django/organizations/views.py` / `services.py` | 89 / 29 | `missing-input-validation` | **Major** | `SAPApplicationViewSet.create` passes `request.data` unvalidated to service; `data["name"]` raises unhandled KeyError (500) when name is missing. Add `SAPApplicationSerializer(data=request.data).is_valid(raise_exception=True)` before delegating. |
+| 3 | `src/aplx_ams_django/settings/base.py` | 29 | `scope-deviation` | Minor | settings/base.py not in plan.md Files list; assumption A-046 logs it. Verify CI scope gate or record a DEC. |
+| 4 | `pyproject.toml` | 33-40 | `type-check-suppression-broad` | Minor | Module-wide `disable_error_code = ["misc", "no-any-return"]` masks future issues; prefer targeted `# type: ignore[no-any-return]`. |
+| 5 | `src/frontend/src/api/organizations.ts` | 31, 40 | `api-contract-field-mismatch` | Minor | `SapApp.organization` vs serializer field `client_org` — verify against API-001 v0.2 openapi.yaml. |
+| 6 | `src/aplx_ams_django/organizations/views.py` | 82, 87, 89 | `type-ignore-unnarrowed` | Minor | `org_id: int | None = None` narrowed with `# type: ignore[arg-type]`; add `assert org_id is not None` to narrow cleanly. |
+| 7 | `pyproject.toml` | 19-20 | `ruff-ignore-locked-file` | Info | I001 suppressed for locked test_api.py — correct workaround. |
+| 8 | `src/frontend/tsconfig.json` | 19 | `tsc-excludes-tests` | Info | Test files excluded from tsc to avoid locked-test issue. Acceptable for this feature. |
+
+### Security Observations
+
+1. HasRolePermission returns 403 (not 401) for unauthenticated — functionally safe; auth middleware added in later feature.
+2. `getattr(user, "role", None)` safely handles missing role attribute.
+3. Major finding 2: unhandled KeyError degrades availability (not a data-exposure risk).
+4. Major finding 1: uncontracted PUT can blank fields — not a data-exposure risk but bypasses contract intent.
+5. No secrets committed. No raw SQL. No production config touched.
+
+### Verdict
+
+**Needs changes (advisory).** Two Major findings must be resolved before merge; four Minor findings do not block.
+
+### Traceability Links
+
+- Upstream: FEAT-002 plan.md v0.1; API-001 v0.2; DBD-001 v0.1; STD-001 v0.1
+- Downstream: Human PR review; docs/logs/review-feedback-log.md
+

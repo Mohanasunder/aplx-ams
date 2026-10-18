@@ -23,15 +23,15 @@ validation: Pass
 Tracks the build-phase progress of FEAT-002. Updated by the builder agent during Phase 6.
 
 ## Branch And PR
-- Branch: <set by scripts/create-feature-branch.sh>
-- Base commit: <set by script>
-- Started: <set by script>
-- PR: <draft PR link>
+- Branch: feature/FEAT-002-org-sap-setup
+- Base commit: 6cd95bc
+- Started: 2026-10-18
+- PR: https://github.com/Mohanasunder/aplx-ams/pull/14
 
 ## Progress
-- State: Not started
-- Assigned agents: builder
-- Last update: 2026-10-17
+- State: In review
+- Assigned agents: database-builder, backend-builder, frontend-builder, documentation-writer, ai-code-reviewer, security-scanner
+- Last update: 2026-10-18
 
 ## Blockers
 None.
