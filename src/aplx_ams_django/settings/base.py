@@ -27,7 +27,10 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "rest_framework",
     "aplx_ams_django.organizations",
+    "aplx_ams_django.accounts",
 ]
+
+AUTH_USER_MODEL = "accounts.User"
 
 MIDDLEWARE: list[str] = []
 
