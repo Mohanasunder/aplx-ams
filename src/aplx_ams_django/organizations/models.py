@@ -1,18 +1,29 @@
 """
-organizations/models.py — stub only (Mode A: tests first).
+FEAT-002 stub: organizations models.
 
-Fields and constraints are added in Mode B after the test set is approved.
+The database-builder adds fields to these models in a concurrent session.
+The full field list (name, is_active for ClientOrg; name, sid, org FK for
+SAPApplication) is defined in DBD-001 v0.1 § Module: organizations.
 """
+
 from django.db import models
 
 
 class ClientOrg(models.Model):
-    """Stub for ClientOrg — no fields yet; implementation is Mode B."""
+    """Represents a client organization whose SAP applications AMS supports.
 
-    pass
+    Fields are added by the database-builder in Mode B (FEAT-002).
+    """
+
+    class Meta:
+        db_table = "organizations_clientorg"
 
 
 class SAPApplication(models.Model):
-    """Stub for SAPApplication — no fields yet; implementation is Mode B."""
+    """Represents an SAP application belonging to one client organization.
 
-    pass
+    Fields are added by the database-builder in Mode B (FEAT-002).
+    """
+
+    class Meta:
+        db_table = "organizations_sapapplication"
