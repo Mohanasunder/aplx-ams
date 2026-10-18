@@ -192,3 +192,61 @@ Finding 2 is escalated to the human reviewer as a design question. No new open q
 - Upstream: FEAT-001 plan.md v0.2; FEAT-001-TESTS v0.1; STD-001 v0.1; TST-001 v0.1
 - Downstream: Phase 6 PR for FEAT-001; docs/logs/review-feedback-log.md
 
+## AIR FEAT-035: E2E CI Scaffold
+
+<!-- air_status: Draft -->
+<!-- air_author: ai-code-reviewer -->
+<!-- air_date: 2026-10-18 -->
+<!-- air_verdict: Ready for human review -->
+
+### Input References
+
+- FEAT-035 plan.md v0.1 (Approved 2026-10-17, Mohanasunder)
+- FEAT-035-ACC v0.1 (Approved 2026-10-17, Mohanasunder)
+- FEAT-035-TESTS v0.1 (Approved 2026-10-18, Mohanasunder, Tech lead)
+- STD-001 v0.1 — APLX AMS: Coding Standards (Approved 2026-10-17) § Automated Gate Commands
+- TST-001 v0.1 — APLX AMS: Test Strategy (Approved 2026-10-17) § Test Levels
+- `.ai/standards/automated-gates.md` — E2E tests gate row
+- `.ai/standards/agent-charter.md` (no learned rules at time of review)
+
+### Purpose And Scope
+
+Advisory pre-review of FEAT-035 (E2E CI Scaffold) on branch `feature/FEAT-035-e2e-ci-scaffold`. Covers plan adherence, acceptance criteria coverage, CI workflow security, and agent charter compliance. The locked test file `src/frontend/e2e/scaffold.spec.ts` is not flagged per review instructions. This review is advisory only.
+
+### Plan Adherence
+
+| File | Present | Notes |
+|---|---|---|
+| `.github/workflows/e2e.yml` | Yes | New; all required steps present in correct order |
+| `src/frontend/playwright.config.ts` | Yes | Upgraded from FEAT-001 stub to full config |
+| `src/frontend/e2e/scaffold.spec.ts` | Yes | Locked test from approved FEAT-035-TESTS v0.1; not a scope violation |
+
+New Packages: None added. Declared deviation: import path `playwright/test` instead of `@playwright/test` — functionally identical on playwright v1.64.1; consistent with `scaffold.spec.ts`. Correctly declared in PR description. Plan adherence: **Pass**.
+
+### Acceptance Criteria Coverage
+
+**TST-001 AC-5** — `.github/workflows/e2e.yml` triggers on `pull_request` and `push` to `master`; steps in correct order: checkout → node setup → npm ci → playwright install → docker compose up → health-check wait (60s, robust) → `npx playwright test`. All steps present and correctly sequenced. **Covered.**
+
+**STD-001 AC-5** — `playwright.config.ts`: `testDir: './e2e'`, `use: { baseURL: 'http://nginx:80', headless: true }`, single Chromium project. All required values present. Covered by `scaffold.spec.ts` asserting `config.use?.baseURL === 'http://nginx:80'` (approved, 1/1 green). **Covered.**
+
+### Findings
+
+| # | File | Line | Category | Severity | Issue |
+|---|---|---|---|---|---|
+| F-1 | `.github/workflows/e2e.yml` | 24 (job: e2e) | `ci-workflow-robustness` | Minor | No `timeout-minutes` on the `e2e` job. GitHub Actions default is 6 hours; plan states expected runtime 2 minutes. A hung step would block a runner for up to 6 hours. **Applied fix:** added `timeout-minutes: 15`. |
+| F-2 | `.github/workflows/e2e.yml` | 29, 32 | `ci-action-pinning` | Info | `actions/checkout@v4` and `actions/setup-node@v4` use mutable major-version tags. Pre-existing project-wide pattern (established in `ci.yml`); consistent with it. No change required. |
+
+No Blockers. No Major findings. F-1 fix applied in the same commit as this report.
+
+### Escalation to Human Reviewer
+
+**Design concern — `baseURL: 'http://nginx:80'` DNS resolution.** The hostname `nginx` resolves only inside the Docker Compose network, not from the GitHub Actions runner. The scaffold test passes because it inspects the config object statically. Future navigation-based E2E tests using `page.goto('/')` will receive DNS errors. The e2e.yml comment documents this gap; however, no ADR or DEC has been recorded to govern how story-feature builders should handle it. A tech lead decision (DEC or ADR) is needed before the first story feature that adds navigation-based E2E tests.
+
+### Verdict
+
+**Ready for human review (advisory).** No Blockers. No Major findings. F-1 Minor fix applied (`timeout-minutes: 15`). F-2 Info noted. Both acceptance criteria correctly implemented.
+
+### Traceability Links
+- Upstream: FEAT-035 plan.md v0.1; FEAT-035-ACC v0.1; FEAT-035-TESTS v0.1; STD-001 v0.1; TST-001 v0.1; automated-gates.md
+- Downstream: Phase 6 PR for FEAT-035
+

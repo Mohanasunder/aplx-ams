@@ -6,6 +6,9 @@ on:
     branches:
       - master
 
+permissions:
+  contents: read
+
 # ---------------------------------------------------------------------------
 # All jobs use ubuntu-latest runners, actions/checkout@v4, and
 # actions/setup-python@v5 with Python 3.13 unless noted.

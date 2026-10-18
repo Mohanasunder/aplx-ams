@@ -90,7 +90,7 @@ Approved 2026-10-17 by Mohanasunder (Architect / tech lead).
 | --- | --- | --- | --- |
 | FEAT-000 | Walking Skeleton — Backend Scaffold and CI Pipeline | none (foundation) | FEAT-000-ACC, FEAT-000-TASKS, FEAT-000-STATUS Approved v0.1 (2026-10-18); FEAT-000-TESTS Approved v0.1 (2026-10-18, Mohanasunder, Tech lead); PR #4 Approved 2026-10-18 by Mohanasunder (Tech lead, Release manager); not yet merged |
 | FEAT-001 | Frontend Scaffold — React + Vite + Tailwind | FEAT-000 | FEAT-001-ACC, FEAT-001-TASKS, FEAT-001-STATUS Approved v0.1 (2026-10-18); FEAT-001-TESTS Approved v0.1 (2026-10-18, Mohanasunder, Tech lead); PRD FEAT-001 Approved 2026-10-18 by Mohanasunder (Architect / tech lead) and Mohanasunder (Release manager / DevOps); PR #5 https://github.com/Mohanasunder/aplx-ams/pull/5; all automated gates passed; merged 2026-10-18 (PR #5) |
-| FEAT-035 | E2E CI Scaffold | FEAT-000, FEAT-001 | FEAT-035-ACC, FEAT-035-TASKS, FEAT-035-STATUS Approved v0.1 (2026-10-18) |
+| FEAT-035 | E2E CI Scaffold | FEAT-000, FEAT-001 | FEAT-035-ACC, FEAT-035-TASKS, FEAT-035-STATUS Approved v0.1 (2026-10-18); FEAT-035-TESTS Approved v0.1 (2026-10-18, Mohanasunder, Tech lead); PRD FEAT-035 Approved 2026-10-18 by Mohanasunder (Tech lead) and Mohanasunder (Release manager); PR #9 https://github.com/Mohanasunder/aplx-ams/pull/9; all automated gates passed |
 
 These three features carry no REQ story (they are enabling features). They are linked to all Phase 4 design artifacts via STD-001 and TST-001.
 
@@ -143,6 +143,20 @@ Traceability chain: STD-001, TST-001 → FEAT-001-ACC → FEAT-001-TESTS
 | PRD FEAT-001 → GitHub PR #5 | https://github.com/Mohanasunder/aplx-ams/pull/5; approved 2026-10-18 by Mohanasunder (Architect / tech lead) and Mohanasunder (Release manager / DevOps); all automated gates passed; coverage: TST-001 AC-1 (Vitest `App.test.tsx`), STD-001 AC-1, STD-001 AC-2, TST-001 AC-2 (CI `frontend` job gates); merged 2026-10-18 (PR #5) |
 
 Build status: Merged (PR #5, https://github.com/Mohanasunder/aplx-ams/pull/5; approved 2026-10-18 by Mohanasunder (Architect / tech lead) and Mohanasunder (Release manager / DevOps); all automated gates passed; merged 2026-10-18 (PR #5)).
+
+### FEAT-035 Test Set (Approved 2026-10-18)
+
+Traceability chain: STD-001, TST-001 → FEAT-035-ACC → FEAT-035-TESTS
+
+| Link | Detail |
+|---|---|
+| STD-001 v0.1 → FEAT-035-TESTS | STD-001 AC-5 (playwright.config.ts baseURL) maps to `playwright initialises with baseURL http://nginx:80` in `src/frontend/e2e/scaffold.spec.ts` |
+| TST-001 v0.1 → FEAT-035-TESTS | TST-001 AC-5 (e2e.yml CI job) is a CI-level criterion; red state = `.github/workflows/e2e.yml` absent; green state = all Playwright steps exit 0 in GitHub Actions |
+| FEAT-035-ACC v0.1 → FEAT-035-TESTS | Both acceptance criteria (TST-001 AC-5, STD-001 AC-5) covered by FEAT-035-TESTS; STD-001 AC-5 by Playwright test in scaffold.spec.ts; TST-001 AC-5 by CI gate |
+| FEAT-035-TESTS v0.1 (Approved) | Approver: Mohanasunder (Tech lead), 2026-10-18; branch: feature/FEAT-035-e2e-ci-scaffold; test commit: 13a976b |
+| PRD FEAT-035 → GitHub PR #9 | https://github.com/Mohanasunder/aplx-ams/pull/9; approved 2026-10-18 by Mohanasunder (Tech lead) and Mohanasunder (Release manager); HEAD commit: 5485683; all automated gates passed |
+
+Build status: PR Approved (PR #9, https://github.com/Mohanasunder/aplx-ams/pull/9; approved 2026-10-18 by Mohanasunder (Tech lead) and Mohanasunder (Release manager); HEAD commit: 5485683; all automated gates passed).
 
 ### Contract Update: SCR S-6 / ADR A-18 / API-001 v0.2 (Approved 2026-10-18)
 

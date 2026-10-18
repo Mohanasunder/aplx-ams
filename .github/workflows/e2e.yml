@@ -1,0 +1,64 @@
+name: E2E
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+
+  # --------------------------------------------------------------------------
+  # E2E — Playwright (Chromium) against the full Docker Compose stack.
+  #
+  # Network note: playwright.config.ts sets baseURL: 'http://nginx:80'.
+  # The Docker Compose network resolves 'nginx' from within the Docker network.
+  # The CI runner is outside that network; future navigation-based E2E tests
+  # must either run inside a Docker service container or use localhost:80
+  # (which Docker Compose maps from nginx port 80).  The scaffold test
+  # (scaffold.spec.ts) only inspects the config object statically — it does
+  # not navigate to a URL — so it passes regardless of nginx reachability.
+  # The health-check wait step is included here so the scaffold is correct
+  # for future tests that do navigate.
+  # --------------------------------------------------------------------------
+  e2e:
+    name: E2E (Playwright / Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install npm dependencies
+        run: npm --prefix src/frontend ci
+
+      - name: Install Playwright Chromium browsers
+        run: npx --prefix src/frontend playwright install --with-deps chromium
+
+      - name: Start Docker Compose services
+        run: docker compose up -d
+
+      - name: Wait for nginx health (max 60 s)
+        # Docker Compose maps nginx:80 to localhost:80.
+        # Poll until /api/health/ responds with HTTP 200 or 60 s elapses.
+        run: |
+          deadline=$((SECONDS + 60))
+          until curl -sf http://localhost/api/health/ > /dev/null 2>&1; do
+            if [ $SECONDS -ge $deadline ]; then
+              echo "ERROR: nginx did not become healthy within 60 seconds"
+              docker compose logs
+              exit 1
+            fi
+            sleep 2
+          done
+          echo "nginx is healthy"
+
+      - name: Run Playwright E2E tests
+        run: cd src/frontend && npx playwright test

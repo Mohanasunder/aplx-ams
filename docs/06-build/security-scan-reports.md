@@ -167,3 +167,79 @@ No plaintext secrets; Docker file secrets used. secrets/*.txt gitignored. Verifi
 - Upstream: FEAT-001 plan.md v0.2; STD-001 v0.1; automated-gates.md; DEC-065; DEC-066
 - Downstream: PR FEAT-001 human review
 
+## SSR FEAT-035: E2E CI Scaffold — Security Scan
+
+<!-- ssr_status: Draft -->
+<!-- ssr_author: security-scanner -->
+<!-- ssr_date: 2026-10-18 -->
+<!-- ssr_verdict: Clean -->
+
+### Input References
+
+- FEAT-035 plan: `docs/06-build/` (feature branch `feature/FEAT-035-e2e-ci-scaffold`, HEAD `fde38e1`)
+- `.ai/standards/automated-gates.md`
+- `.secrets.baseline` (committed at `4d29043`, `generated_at: 2026-10-17T21:50:38Z`)
+- `requirements.txt` (unchanged from FEAT-001 merge)
+
+### Purpose And Scope
+
+Covers the SAST, dependency, secrets, and CI workflow security scans for FEAT-035 (E2E CI Scaffold). Files in scope:
+- `.github/workflows/e2e.yml` — new GitHub Actions E2E workflow
+- `src/frontend/playwright.config.ts` — upgraded from stub
+- `src/frontend/e2e/scaffold.spec.ts` — new locked Playwright test file
+
+Does not cover: infrastructure-as-code (Phase 8), runtime penetration testing, or artifacts outside the feature scope.
+
+### Scan Tools And Scope
+
+| Tool | Version | Command | Exit Code | Scope |
+| --- | --- | --- | --- | --- |
+| bandit | 1.9.4 | `python -m bandit -r src/ -ll` | 0 | All Python source under `src/` (12 files, 380 lines) |
+| pip-audit | (installed) | `python -m pip_audit -r requirements.txt` | 0 | All packages in `requirements.txt` |
+| detect-secrets | 1.5.0 | `python -m detect_secrets scan --baseline .secrets.baseline` | 0 | Repository-wide, against committed baseline |
+| Manual review | — | Inspection of `.github/workflows/e2e.yml` | — | Script injection, permissions, credential exposure |
+
+### Findings
+
+#### Automated Scan Findings
+
+| Tool | Rule / Finding | Severity | File | Line | Notes |
+| --- | --- | --- | --- | --- | --- |
+| bandit | No issues at or above MEDIUM (`-ll` threshold) | — | — | — | 22 LOW B101 (assert_used) in test files; pre-existing, unchanged; none in changed files (TypeScript / YAML not scanned by bandit) |
+| pip-audit | No known vulnerabilities found | — | — | — | All pinned packages clean |
+| detect-secrets | No new secrets beyond committed baseline | — | — | — | Baseline diff limited to `generated_at` timestamp update; results section unchanged |
+
+#### CI Workflow Manual Review — `.github/workflows/e2e.yml`
+
+| Finding | Severity | File | Line | Detail |
+| --- | --- | --- | --- | --- |
+| No explicit `permissions:` block | Low | `.github/workflows/e2e.yml` | (global) | **Resolved.** `permissions: contents: read` added at workflow level (commit after AIR/SSR). `ci.yml` retains the same omission (on master; out of FEAT-035 scope; tracked via OQ-070). |
+| `docker compose logs` on failure may expose container stdout | Informational | `.github/workflows/e2e.yml` | 53 | On health-check timeout the step runs `docker compose logs` and prints to the CI log. Docker file secrets are used rather than environment-variable credentials, so actual secret values are not expected in container stdout. Advisory only. |
+
+No script-injection risk: the workflow contains no `${{ github.event.* }}` or other user-controlled context interpolated into `run:` steps.
+
+No action-SHA pinning: `actions/checkout@v4` and `actions/setup-node@v4` are referenced by major-version tag (consistent with `ci.yml`; informational, not blocking under current project gates).
+
+### Secrets Check
+
+`detect-secrets scan --baseline .secrets.baseline` exited 0. No new secrets detected. The committed baseline contains four acknowledged findings across three pre-existing files (`ci.yml`, `backend-design.md`, `security-scan-reports.md`) — all assessed in prior scan reports (SSR FEAT-000, SSR FEAT-001). None of the three FEAT-035 files appear in baseline results.
+
+### Verdict
+
+**Clean**
+
+All automated scan gates passed with exit code 0. No secrets detected. No MEDIUM or HIGH SAST findings. No script-injection vectors in the new CI workflow. One Low-severity advisory (missing `permissions:` block, pre-existing pattern). No Blockers.
+
+### Assumptions
+
+- A-SEC-035-01: The `generated_at` timestamp difference in `.secrets.baseline` (local scan ran 2026-10-18 vs committed 2026-10-17) is expected behavior of detect-secrets; the `results` object is unchanged.
+
+### Open Questions
+
+- OQ-070: Should all GitHub Actions workflows add `permissions: contents: read` to enforce least-privilege GITHUB_TOKEN access? Applies to both `ci.yml` and `e2e.yml`. Assigned to Mohanasunder (tech lead).
+
+### Traceability Links
+
+- Upstream: FEAT-035 plan; STD-001 AC-5; automated-gates.md; `.secrets.baseline` commit `4d29043`
+- Downstream: PR FEAT-035 human review
+
