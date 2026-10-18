@@ -241,3 +241,4 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-18 10:06 | FEAT-035 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass | - | Unlock approved per DEC-068: baseURL corrected to http://localhost (runner host cannot resolve nginx Docker service name) |
 | 2026-10-18 10:40 | FEAT-002 | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | Tests express all 3 acceptance criteria across database, backend, and frontend layers |
 | 2026-10-18 12:58 | FEAT-003-TESTS | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | Tests cover all 4 ACs including constraint edge cases and role-based refusal. |
+| 2026-10-18 14:21 | PRD FEAT-003 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | [review depth: Deep, tier High] [review: 20 min] All five Deep checklist items completed. Approved as-is. |
