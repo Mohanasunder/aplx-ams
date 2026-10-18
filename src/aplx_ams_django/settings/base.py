@@ -62,9 +62,7 @@ AUTH_PASSWORD_VALIDATORS = [
         "OPTIONS": {"min_length": 8},
     },
     {
-        "NAME": (
-            "aplx_ams_django.accounts.authentication.UppercaseLowercaseDigitValidator"
-        ),
+        "NAME": ("aplx_ams_django.accounts.authentication.UppercaseLowercaseDigitValidator"),
     },
 ]
 

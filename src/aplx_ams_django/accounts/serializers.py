@@ -60,8 +60,10 @@ class UserUpdateSerializer(serializers.Serializer):
         # Effective role: use the incoming value if being changed, else the current DB value.
         effective_role = attrs["role"] if "role" in attrs else (instance.role if instance else None)
         # Effective org: use the incoming value (even if null) if being set, else current DB value.
-        effective_org = attrs["client_org_id"] if "client_org_id" in attrs else (
-            instance.client_org_id if instance else None
+        effective_org = (
+            attrs["client_org_id"]
+            if "client_org_id" in attrs
+            else (instance.client_org_id if instance else None)
         )
         if effective_role == "client_user" and not effective_org:
             raise serializers.ValidationError(

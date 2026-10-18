@@ -1,6 +1,6 @@
 """
 FEAT-005 accounts views — Mode B implementation.
-FEAT-006 auth views (LoginView, LogoutView, MeView) — Mode A stubs.
+FEAT-006 auth views (LoginView, LogoutView, MeView) — Mode B implementation.
 
 UserViewSet enforces delivery_manager role on every action via
 HasRolePermission (get_permissions checks before any DB access).
@@ -19,6 +19,8 @@ Permission matrix (PRM-001 v0.1 § Authentication F-5):
 """
 
 from __future__ import annotations
+
+from typing import ClassVar
 
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -120,7 +122,7 @@ class LoginView(APIView):
     Permission matrix: AllowAny (PRM-001 v0.1 § Authentication F-5).
     """
 
-    permission_classes = [AllowAny]
+    permission_classes: ClassVar[list] = [AllowAny]
 
     def post(self, request: Request) -> Response:
         """Authenticate with username + password; start a session on success."""
@@ -142,7 +144,7 @@ class LogoutView(APIView):
     Requires an active authenticated session (own session only per PRM-001 v0.1).
     """
 
-    permission_classes = [IsAuthenticated]
+    permission_classes: ClassVar[list] = [IsAuthenticated]
 
     def post(self, request: Request) -> Response:
         """Invalidate the session and return HTTP 200."""
@@ -156,7 +158,7 @@ class MeView(APIView):
     Requires authentication; returns the authenticated user's own record.
     """
 
-    permission_classes = [IsAuthenticated]
+    permission_classes: ClassVar[list] = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
         """Return role and org for the authenticated user."""

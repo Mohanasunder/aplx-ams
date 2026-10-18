@@ -42,10 +42,10 @@ class SameSiteSessionAuthentication(SessionAuthentication):
       returns HTTP 401 (not 403) for unauthenticated requests.
     """
 
-    def enforce_csrf(self, request: Any) -> None:  # noqa: ARG002
+    def enforce_csrf(self, request: Any) -> None:
         """Skip CSRF check; SameSite=Lax cookie provides equivalent protection."""
 
-    def authenticate_header(self, request: Any) -> str:  # noqa: ARG002
+    def authenticate_header(self, request: Any) -> str:
         """Return a non-empty header value so DRF sends HTTP 401 (not 403)."""
         return "Session"
 
@@ -62,21 +62,13 @@ class UppercaseLowercaseDigitValidator:
         """Raise ValidationError if the password does not meet the policy."""
         errors: list[str] = []
         if len(password) < 8:
-            errors.append(
-                "This password must be at least 8 characters long."
-            )
+            errors.append("This password must be at least 8 characters long.")
         if not any(c.isupper() for c in password):
-            errors.append(
-                "This password must contain at least one uppercase letter."
-            )
+            errors.append("This password must contain at least one uppercase letter.")
         if not any(c.islower() for c in password):
-            errors.append(
-                "This password must contain at least one lowercase letter."
-            )
+            errors.append("This password must contain at least one lowercase letter.")
         if not any(c.isdigit() for c in password):
-            errors.append(
-                "This password must contain at least one digit."
-            )
+            errors.append("This password must contain at least one digit.")
         if errors:
             raise ValidationError(errors)
 
@@ -108,7 +100,7 @@ class SessionAuthBackend:
         password: str = "",
     ) -> Any:
         """Authenticate by username and password; enforce lockout (AC-4)."""
-        from aplx_ams_django.accounts.models import User  # noqa: PLC0415 (avoid circular import)
+        from aplx_ams_django.accounts.models import User
 
         try:
             user = User.objects.get(username=username)
@@ -138,7 +130,7 @@ class SessionAuthBackend:
 
     def get_user(self, user_id: int) -> Any:
         """Fetch a user by primary key; return None if not found."""
-        from aplx_ams_django.accounts.models import User  # noqa: PLC0415
+        from aplx_ams_django.accounts.models import User
 
         try:
             return User.objects.get(pk=user_id)

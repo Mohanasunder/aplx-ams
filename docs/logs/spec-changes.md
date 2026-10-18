@@ -1047,12 +1047,14 @@ Not applicable — no architecture or contract artifact changes.
 - [x] Impact covers every artifact and feature that cites the changed artifact
 
 ## SCR S-14: FEAT-006 plan.md — add package.json to file scope and fix New Packages machine-readable format (OQ-072/DEC-085)
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
 
 ### Summary
 FEAT-006 plan.md v0.3 lists `react-router-dom` in New Packages as prose: `react-router-dom (latest stable; pinned in package.json after npm install)`. The `check_feature_size.py packages` gate requires the machine-readable format `npm: <name> @<version>`. Additionally, `src/frontend/package.json` is not listed in Files To Create Or Modify, causing the scope gate to flag it as out-of-scope when react-router-dom is installed. Plan v0.4 fixes both issues. OQ-072 documents the broader gate infrastructure questions (--base master, ALWAYS_IN_SCOPE, package-lock.json).
 
-### Changed Artifacts
-- FEAT-006 plan.md v0.3 → v0.4
+### Changed Artifact
+- FEAT-006 v0.3 → v0.4
 
 ### Reason
 Gate failure discovered during Phase 6 Step 6 (automated gates). The `packages` gate uses `PKG_LINE = re.compile(r"^\s*-\s*(npm|pypi):\s*(@?[\w.\-/]+)\s+([^\s|]+)")` which requires the `npm:` prefix and explicit version. The `scope` gate flags `src/frontend/package.json` because it is not in plan.md § Files To Create Or Modify. Both are plan format gaps, not design changes. DEC-085; OQ-072 logged.
