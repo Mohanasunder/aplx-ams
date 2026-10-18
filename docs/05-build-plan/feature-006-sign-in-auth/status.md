@@ -26,7 +26,7 @@ Tracks the build-phase progress of FEAT-006. Updated by the builder agent during
 - Branch: feature/FEAT-006-sign-in-auth
 - Base commit: 065a921
 - Started: 2026-10-18
-- PR: <draft PR link>
+- PR: https://github.com/Mohanasunder/aplx-ams/pull/17
 
 ## Progress
 - State: In review
