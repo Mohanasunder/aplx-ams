@@ -30,9 +30,9 @@ Tracks the build-phase progress of FEAT-005. Updated by the builder agent during
 - PR: In review — PR description in docs/06-build/pr-descriptions.md § PR FEAT-005
 
 ## Progress
-- State: In review — all gates pass; AI review Pass with observations; awaiting human PR review
+- State: Approved — awaiting merge
 - Assigned agents: builder (implementation), documentation-writer (PR description), ai-code-reviewer (advisory), security-scanner (advisory)
-- Last update: 2026-10-18
+- Last update: 2026-10-19
 
 ## Blockers
 None.

@@ -742,10 +742,10 @@ None.
 
 ## PR FEAT-005: S-20 — Delivery Manager Manages User Accounts
 
-<!-- pr_status: Draft -->
-<!-- pr_approver: -->
+<!-- pr_status: Approved -->
+<!-- pr_approver: Mohanasunder -->
 <!-- pr_depth: Deep -->
-<!-- pr_review_minutes: -->
+<!-- pr_review_minutes: 20 -->
 
 ### Input References
 - FEAT-005 plan.md v0.2 (Approved 2026-10-18, Mohanasunder)
