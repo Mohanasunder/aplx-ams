@@ -142,7 +142,7 @@ None. The AC-3 sign-in refusal gap is a documented scope boundary from FEAT-005 
 
 ## Traceability Links
 - Upstream: FEAT-005 plan.md v0.1; FEAT-005-ACC v0.1; REQ-001 v0.3 § S-20; API-001 v0.2; DBD-001 v0.1; UIS-001 v0.1; PRM-001 v0.1
-- Downstream: FEAT-005 Phase 6 implementation (Mode B); Phase 6 PR for FEAT-005; FEAT-006-TESTS (will cover AC-3 sign-in refusal gap)
+- Downstream: FEAT-005 Phase 6 implementation (Mode B); Phase 6 PR for FEAT-005; FEAT-006 test set (will cover AC-3 sign-in refusal gap — sign-in endpoint is in FEAT-006 scope)
 
 ## Quality Checklist
 - [x] Every template section is filled, or marked "Not applicable - <reason>"
