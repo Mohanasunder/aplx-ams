@@ -24,6 +24,7 @@ Tracks the build-phase progress of FEAT-006. Updated by the builder agent during
 
 ## Branch And PR
 - Branch: feature/FEAT-006-sign-in-auth
+<<<<<<< HEAD
 - Base commit: 065a921
 - Started: 2026-10-18
 - PR: https://github.com/Mohanasunder/aplx-ams/pull/17
@@ -32,6 +33,16 @@ Tracks the build-phase progress of FEAT-006. Updated by the builder agent during
 - State: In review
 - Assigned agents: builder, documentation-writer
 - Last update: 2026-10-19
+=======
+- Base commit: d296213
+- Started: 2026-10-18
+- PR: <draft PR link>
+
+## Progress
+- State: In progress
+- Assigned agents: builder
+- Last update: 2026-10-17
+>>>>>>> 065a921 (chore: fix create-feature-branch.sh to branch from master not main)
 
 ## Blockers
 None.
