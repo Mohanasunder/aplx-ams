@@ -213,7 +213,7 @@ Does not cover: infrastructure-as-code (Phase 8), runtime penetration testing, o
 
 | Finding | Severity | File | Line | Detail |
 | --- | --- | --- | --- | --- |
-| No explicit `permissions:` block | Low | `.github/workflows/e2e.yml` | (global) | Without an explicit `permissions:` block the GITHUB_TOKEN inherits default repository permissions. The workflow only runs tests and requires no write permissions. Recommended: add `permissions: contents: read`. Pre-existing pattern — `ci.yml` has the same omission. Not introduced by FEAT-035 alone. Tracked as OQ-070. |
+| No explicit `permissions:` block | Low | `.github/workflows/e2e.yml` | (global) | **Resolved.** `permissions: contents: read` added at workflow level (commit after AIR/SSR). `ci.yml` retains the same omission (on master; out of FEAT-035 scope; tracked via OQ-070). |
 | `docker compose logs` on failure may expose container stdout | Informational | `.github/workflows/e2e.yml` | 53 | On health-check timeout the step runs `docker compose logs` and prints to the CI log. Docker file secrets are used rather than environment-variable credentials, so actual secret values are not expected in container stdout. Advisory only. |
 
 No script-injection risk: the workflow contains no `${{ github.event.* }}` or other user-controlled context interpolated into `run:` steps.
