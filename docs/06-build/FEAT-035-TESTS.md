@@ -2,7 +2,7 @@
 id: FEAT-035
 title: FEAT-035: E2E CI Scaffold — Test Set
 phase: 6
-version: 0.1
+version: 0.2
 template: feature-test-set
 template_version: 1.0
 status: Approved
@@ -21,7 +21,7 @@ validation: Pass
 - .ai/standards/automated-gates.md — E2E tests gate row
 
 ## Purpose And Scope
-Covers the 2 acceptance criteria for FEAT-035 (Enabling — E2E CI Scaffold). Tests are written before implementation. Only the frontend layer is covered here. TST-001 AC-5 is a CI-level criterion (the GitHub Actions e2e.yml workflow run); it cannot be exercised by a local unit test — its red state is the absence of the workflow file. STD-001 AC-5 is covered by `src/frontend/e2e/scaffold.spec.ts`, which imports the Playwright config and asserts `use.baseURL` equals `'http://nginx:80'`. Phase 7 regression testing covers the full E2E job.
+Covers the 2 acceptance criteria for FEAT-035 (Enabling — E2E CI Scaffold). Tests are written before implementation. Only the frontend layer is covered here. TST-001 AC-5 is a CI-level criterion (the GitHub Actions e2e.yml workflow run); it cannot be exercised by a local unit test — its red state is the absence of the workflow file. STD-001 AC-5 is covered by `src/frontend/e2e/scaffold.spec.ts`, which imports the Playwright config and asserts `use.baseURL` equals `'http://localhost'` (updated from `'http://nginx:80'` per DEC-068: the runner host cannot resolve the Docker service name; port 80:80 is already exposed). Phase 7 regression testing covers the full E2E job.
 
 ## Risk Tier And Test Approver
 Tier: **Critical**. Approver required: **Tech lead** (Mohanasunder), per `.ai/standards/review-and-approval.md` Critical tier test approval rule.
@@ -31,7 +31,7 @@ Tier: **Critical**. Approver required: **Tech lead** (Mohanasunder), per `.ai/st
 | Criterion | Test file | Test name | Layer | What it asserts |
 |---|---|---|---|---|
 | TST-001 AC-5 | CI-level only (no unit test possible) | n/a — CI workflow run | CI | Red state = `.github/workflows/e2e.yml` does not exist; workflow cannot run until Mode B creates it. Green state = e2e.yml committed and every Playwright step exits 0 in GitHub Actions. |
-| STD-001 AC-5 | `src/frontend/e2e/scaffold.spec.ts` | `playwright initialises with baseURL http://nginx:80` | Frontend | Imports `playwright.config.ts` default export and asserts `config.use?.baseURL === 'http://nginx:80'`. Fails with `Expected: "http://nginx:80", Received: undefined` until Mode B upgrades the config. |
+| STD-001 AC-5 | `src/frontend/e2e/scaffold.spec.ts` | `playwright initialises with baseURL http://localhost` | Frontend | Imports `playwright.config.ts` default export and asserts `config.use?.baseURL === 'http://localhost'` (DEC-068: runner host resolves localhost via exposed port 80:80, not Docker service name). |
 
 ## Test Files
 - `src/frontend/e2e/scaffold.spec.ts` — locked once this artifact is Approved
@@ -71,7 +71,8 @@ Failure is `Expected: "http://nginx:80", Received: undefined` — the behavior i
 TST-001 AC-5 red state: `.github/workflows/e2e.yml` does not exist on the branch as of test commit `13a976b`; the CI E2E job cannot run.
 
 ## Test Commit
-`13a976b` — `FEAT-035: tests (frontend)` — branch `feature/FEAT-035-e2e-ci-scaffold` — 2026-10-18
+v0.1: `13a976b` — `FEAT-035: tests (frontend)` — branch `feature/FEAT-035-e2e-ci-scaffold` — 2026-10-18
+v0.2: see fix/FEAT-035-baseurl-localhost branch (DEC-068: baseURL corrected to http://localhost)
 
 ## Assumptions
 None beyond those logged in docs/logs/assumptions-log.md.
@@ -105,3 +106,5 @@ None.
 | Conditions | None |
 | Comments | None |
 | Timestamp | 2026-10-18 08:38 UTC |
+
+**v0.2 update (DEC-068):** Test name and assertion updated from `http://nginx:80` to `http://localhost`. Authorized by Mohanasunder (Tech lead) via DEC-068. Locked test file `scaffold.spec.ts` updated accordingly on branch fix/FEAT-035-baseurl-localhost.
