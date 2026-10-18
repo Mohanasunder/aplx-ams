@@ -2,14 +2,14 @@
 id: FEAT-005-TESTS
 title: "FEAT-005: Delivery Manager Manages User Accounts — Test Set"
 phase: 6
-version: 0.1
+version: 0.2
 template: feature-test-set
 template_version: 1.0
 status: Draft
 author_agent: documentation-writer
 approver: Human developer reviewer
 date: 2026-10-18
-validation: Fail
+validation: Pending
 ---
 # FEAT-005: Delivery Manager Manages User Accounts — Test Set
 
@@ -23,7 +23,9 @@ validation: Fail
 - PRM-001 v0.1 — APLX AMS: Permission Matrix (Approved 2026-10-17)
 
 ## Purpose And Scope
-Defines the tests that determine done for FEAT-005 (Delivery Manager Manages User Accounts), written before implementation (Mode A). Covers 3 layers: database (model behavior), backend (DRF API), and frontend (React component). 31 tests total across 3 test files. All 4 acceptance criteria (REQ S-20 AC-1 to AC-4) have at least one test at one layer.
+Defines the tests that determine done for FEAT-005 (Delivery Manager Manages User Accounts), written before implementation (Mode A). Covers 3 layers: database (model behavior), backend (DRF API), and frontend (React component). 35 tests total across 3 test files. All 4 acceptance criteria (REQ S-20 AC-1 to AC-4) have at least one test at one layer.
+
+v0.2 changes (VAL-027 send-back fixes, commit fe4e56f): replaced P-code tier IDs with role slugs throughout test_api.py (F-001); added 4 AC-4 backend tests covering P2 and P4 on PATCH and deactivate (F-003). Test count increased from 31 to 35.
 
 One partial gap exists: REQ S-20 AC-3 requires that a deactivated user "can no longer sign in". The persistence side (`is_active=False` written to DB) is tested in this feature at the database and backend layers. The sign-in refusal gate (HTTP 401 on attempt to sign in with a deactivated account) is deferred to FEAT-006, which owns the sign-in endpoint per FEAT-005 plan.md § Out Of Scope. That gap is documented in this artifact and will be closed by FEAT-006-TESTS.
 
@@ -66,11 +68,15 @@ Phase 7 regression scope: all 31 tests remain in scope for regression.
 | REQ S-20 AC-2 | `test_create_client_user_without_client_org_returns_400` | Backend | POST by DM (P3) with `role=client_user`, no `client_org_id` → HTTP 400 | Red — stub view returns HTTP 501 |
 | REQ S-20 AC-3 | `test_deactivate_user_returns_200` | Backend | POST `/deactivate/` → HTTP 200 | Red — stub view returns HTTP 501 |
 | REQ S-20 AC-3 | `test_deactivated_user_has_is_active_false` | Backend | After deactivation call, `is_active == False` in DB (sign-in refusal is in FEAT-006) | Red — stub view returns HTTP 501; no DB write |
-| REQ S-20 AC-4 | `test_l1_cannot_create_user` | Backend | POST by P1 (L1 support engineer) → HTTP 403 | Red — stub view returns HTTP 501 |
-| REQ S-20 AC-4 | `test_l2_l3_cannot_create_user` | Backend | POST by P2 (L2/L3 support engineer) → HTTP 403 | Red — stub view returns HTTP 501 |
-| REQ S-20 AC-4 | `test_client_user_cannot_create_user` | Backend | POST by P4 (client user) → HTTP 403 | Red — stub view returns HTTP 501 |
-| REQ S-20 AC-4 | `test_l1_cannot_patch_user` | Backend | PATCH by P1 → HTTP 403 | Red — stub view returns HTTP 501 |
-| REQ S-20 AC-4 | `test_l1_cannot_deactivate_user` | Backend | POST `/deactivate/` by P1 → HTTP 403 | Red — stub view returns HTTP 501 |
+| REQ S-20 AC-4 | `test_l1_cannot_create_user` | Backend | POST by l1_support_engineer → HTTP 403 | Red — stub view returns HTTP 501 |
+| REQ S-20 AC-4 | `test_l2_l3_cannot_create_user` | Backend | POST by l2_l3_support_engineer → HTTP 403 | Red — stub view returns HTTP 501 |
+| REQ S-20 AC-4 | `test_client_user_cannot_create_user` | Backend | POST by client_user → HTTP 403 | Red — stub view returns HTTP 501 |
+| REQ S-20 AC-4 | `test_l1_cannot_patch_user` | Backend | PATCH by l1_support_engineer → HTTP 403 | Red — stub view returns HTTP 501 |
+| REQ S-20 AC-4 | `test_l2_l3_cannot_patch_user` | Backend | PATCH by l2_l3_support_engineer → HTTP 403 | Red — stub view returns HTTP 501 |
+| REQ S-20 AC-4 | `test_client_user_cannot_patch_user` | Backend | PATCH by client_user → HTTP 403 | Red — stub view returns HTTP 501 |
+| REQ S-20 AC-4 | `test_l1_cannot_deactivate_user` | Backend | POST `/deactivate/` by l1_support_engineer → HTTP 403 | Red — stub view returns HTTP 501 |
+| REQ S-20 AC-4 | `test_l2_l3_cannot_deactivate_user` | Backend | POST `/deactivate/` by l2_l3_support_engineer → HTTP 403 | Red — stub view returns HTTP 501 |
+| REQ S-20 AC-4 | `test_client_user_cannot_deactivate_user` | Backend | POST `/deactivate/` by client_user → HTTP 403 | Red — stub view returns HTTP 501 |
 
 ### Frontend layer — `src/frontend/src/pages/UserManagement.test.tsx`
 
@@ -85,7 +91,7 @@ Phase 7 regression scope: all 31 tests remain in scope for regression.
 
 ## Test Files
 - `src/aplx_ams_django/accounts/tests/test_models.py` (locked once this artifact is Approved; 13 tests — database layer)
-- `src/aplx_ams_django/accounts/tests/test_api.py` (locked once this artifact is Approved; 12 tests — backend layer)
+- `src/aplx_ams_django/accounts/tests/test_api.py` (locked once this artifact is Approved; 16 tests — backend layer)
 - `src/frontend/src/pages/UserManagement.test.tsx` (locked once this artifact is Approved; 6 tests — frontend layer)
 
 ## Stubs Created
@@ -117,7 +123,7 @@ Failure reason: stub `User` model has no `role` field, no `client_org` FK, and n
 **Backend layer**
 Command: `python -m pytest src/aplx_ams_django/accounts/tests/test_api.py -v`
 Date: 2026-10-18
-Result: 12 collected, 12 FAILED
+Result: 16 collected, 16 FAILED (v0.2: 4 new AC-4 P2/P4 tests added; role slug fix applied)
 Failure reason: stub `UserViewSet` returns HTTP 501 for all actions; tests assert HTTP 201, 200, or 403. Not syntax, import, or setup errors.
 
 **Frontend layer**
@@ -127,12 +133,13 @@ Result: 6 collected, 6 FAILED
 Failure reason: stub `UserManagement` returns `null`; no DOM elements rendered; all `getBy*` queries throw `TestingLibraryElementError`. Not syntax, import, or setup errors.
 
 ## Test Commit
-Three sequential commits on branch `feature/FEAT-005-user-accounts`:
+Four sequential commits on branch `feature/FEAT-005-user-accounts`:
 - `6248aa5` — database layer: 13 model tests + stub accounts app (committed 2026-10-18)
 - `8a33dca` — backend layer: 12 API tests + stub serializers, services, dal, views, urls (committed 2026-10-18)
 - `0c9ce44` — frontend layer: 6 component tests + stub UserManagement.tsx and users.ts (committed 2026-10-18)
+- `fe4e56f` — test_api.py fix: role slugs replaced (F-001); 4 AC-4 P2/P4 tests added (F-003); total backend tests 12 → 16 (committed 2026-10-18)
 
-The checker diffs the three test files against commit `0c9ce44` (HEAD of the test-only run), which is the final state of all test files at Mode A completion.
+The checker diffs the three test files against commit `fe4e56f` (HEAD of the test-only run), which is the final state of all test files at Mode A completion.
 
 ## Assumptions
 None specific to this test set. No new assumptions are raised beyond those already in `docs/logs/assumptions-log.md`.
@@ -148,7 +155,7 @@ None. The AC-3 sign-in refusal gap is a documented scope boundary from FEAT-005 
 - [x] Every template section is filled, or marked "Not applicable - <reason>"
 - [x] Inputs referenced are Approved artifacts at the stated versions
 - [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
-- [x] Every acceptance criterion maps to at least one test (AC-1: 9 tests across 3 layers; AC-2: 5 tests across 3 layers; AC-3: 5 tests across 3 layers with sign-in refusal gap documented; AC-4: 6 tests across 2 layers)
+- [x] Every acceptance criterion maps to at least one test (AC-1: 9 tests across 3 layers; AC-2: 5 tests across 3 layers; AC-3: 5 tests across 3 layers with sign-in refusal gap documented; AC-4: 10 tests across 2 layers)
 - [x] Tests assert behavior, not only that code runs (field existence, HTTP status codes, DOM element presence, DB persistence, permission refusals)
 - [x] Red run shows every new test failing for the missing behavior (13 + 12 + 6 = 31 failures; all behavioral, not syntax or setup)
 - [x] Assumptions and open questions are logged and linked (none new; gap is a scope boundary)
