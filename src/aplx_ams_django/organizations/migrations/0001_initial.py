@@ -4,6 +4,10 @@ FEAT-002 initial migration: create ClientOrg and SAPApplication tables.
 Matches DBD-001 v0.1 schema. Reversible (no RunSQL; all fields via ORM).
 """
 
+from __future__ import annotations
+
+from typing import ClassVar
+
 import django.db.models.deletion
 from django.db import migrations, models
 
@@ -11,9 +15,9 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     initial = True
 
-    dependencies: list[tuple[str, str]] = []
+    dependencies: ClassVar[list[tuple[str, str]]] = []
 
-    operations = [
+    operations: ClassVar[list[migrations.CreateModel]] = [
         migrations.CreateModel(
             name="ClientOrg",
             fields=[

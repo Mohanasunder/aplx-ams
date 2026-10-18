@@ -11,7 +11,7 @@ This file is NOT part of the locked test set (only test_models.py is locked).
 
 from __future__ import annotations
 
-from typing import Generator
+from collections.abc import Generator
 
 import pytest
 
@@ -47,7 +47,7 @@ def django_db_setup(  # type: ignore[override]
     # Step 3: discard any PostgreSQL connection object already constructed.
     try:
         del connections["default"]
-    except Exception:  # noqa: BLE001
+    except Exception:  # noqa: S110
         pass
 
     # Step 4: create the SQLite test database and yield.
