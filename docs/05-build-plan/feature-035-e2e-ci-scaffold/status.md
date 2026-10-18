@@ -29,8 +29,9 @@ Tracks the build-phase progress of FEAT-035. Updated by the builder agent during
 - PR: https://github.com/Mohanasunder/aplx-ams/pull/9
 
 ## Progress
-- State: In review
-- Assigned agents: builder, documentation-writer
+- State: Merged
+- Merged: 2026-10-18 (PR #9, https://github.com/Mohanasunder/aplx-ams/pull/9, into master, merge commit 1dd66b1)
+- Assigned agents: builder, documentation-writer, ai-code-reviewer, security-scanner
 - Last update: 2026-10-18
 
 ## Blockers
@@ -43,8 +44,8 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: FEAT-035 plan.md; FEAT-035-ACC
-- Downstream: Phase 6 PR for FEAT-035
+- Upstream: FEAT-035 plan.md v0.1; FEAT-035-ACC v0.1; FEAT-035-TESTS v0.1
+- Downstream: All subsequent story features that add src/frontend/e2e/*.spec.ts; Phase 7 E2E regression suite
 
 ## Quality Checklist
 - [x] Every template section is filled, or marked "Not applicable - <reason>"
