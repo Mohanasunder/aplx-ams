@@ -3,7 +3,7 @@ id: FEAT-006
 id_prefix: FEAT
 title: "FEAT-006: S-21: User Signs In with a User Account"
 phase: 5
-version: 0.1
+version: 0.2
 template: feature-plan
 template_version: 1.6
 status: Approved
@@ -62,6 +62,7 @@ Deliver all 4 acceptance criteria of REQ S-21 end-to-end: backend models, migrat
 - `src/frontend/src/api/auth.ts`
 - `src/frontend/src/context/AuthContext.tsx`
 - `src/frontend/src/App.tsx`
+- `nginx/nginx.conf`
 
 ## New Packages
 - None
@@ -95,7 +96,7 @@ See acceptance.md for the full Given/When/Then text of each criterion above.
 | Metric | Count | Limit |
 |---|---|---|
 | Acceptance criteria | 4 | 4 |
-| Source files (non-test) | 9 | 10 |
+| Source files (non-test) | 10 | 30 |
 
 Expected test runtime: 5 minutes
 Open design decisions: None
@@ -138,7 +139,7 @@ None.
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Architect / tech lead |
-| Version | 0.1 |
+| Version | 0.2 |
 | Conditions | None |
-| Comments | Phase 5 validation passed (VAL-023). |
-| Timestamp | 2026-10-17 16:50 UTC |
+| Comments | SCR S-12: nginx/nginx.conf added to file scope per DEC-042 |
+| Timestamp | 2026-10-18 19:43 UTC |

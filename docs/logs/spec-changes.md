@@ -938,3 +938,56 @@ Not applicable — no architecture or contract artifact changes.
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-12: FEAT-006 plan.md — add nginx/nginx.conf to file scope (DEC-042)
+
+<!-- scr_status: Approved -->
+<!-- scr_date: 2026-10-19 -->
+<!-- scr_approver: Mohanasunder -->
+
+### Input References
+- FEAT-006 plan.md v0.1 (Approved 2026-10-17, Mohanasunder) — artifact being amended
+- DEC-042 (2026-10-17) — rate limit 10 req/min per IP at Nginx for /api/auth/login/
+- DEC-083 (2026-10-19, Mohanasunder) — decision to update plan rather than defer
+
+### Purpose And Scope
+Adds `nginx/nginx.conf` to FEAT-006 plan.md Files To Create Or Modify and updates the Size Check table. DEC-042 requires limit_req rate limiting on /api/auth/login/ but the nginx config file was omitted from the plan file list. No requirements, contracts, or architecture artifacts change.
+
+### Changed Artifact
+FEAT-006 plan.md v0.1 -> v0.2; `docs/05-build-plan/feature-006-sign-in-auth/plan.md`
+
+### Trigger
+Phase 6 entry check (2026-10-19): DEC-042 instructs the builder to add rate_limit to nginx.conf, but nginx/nginx.conf was not listed in plan.md Files To Create Or Modify. The scope gate (check_feature_size.py scope) would fail at automated gates if the builder modifies an unlisted file.
+
+### Change
+Files To Create Or Modify: add nginx/nginx.conf (9 files -> 10 files). Size Check source file count: 9 -> 10 (limit 30; no violation).
+
+### Impact
+FEAT-006 plan.md: file list and size check table updated (v0.1 -> v0.2). No other artifacts, features, or contracts affected.
+
+### Assumptions
+None.
+
+### Open Questions
+None.
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes.
+
+### Traceability Links
+- Upstream: FEAT-006 plan.md v0.1; DEC-042; DEC-083
+- Downstream: FEAT-006 plan.md v0.2; scope gate (check_feature_size.py scope)
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
