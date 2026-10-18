@@ -90,7 +90,7 @@ OQ-20261018-001: pip-audit gate should use -r requirements.txt scope
 
 ---
 
-OQ-20261018-002: FEAT-005 UserManagement.tsx uses native HTML instead of MUI — is this deviation formally approved?
+OQ-20261018-002 [RESOLVED: DEC-080 — native HTML approved by Mohanasunder 2026-10-18]: FEAT-005 UserManagement.tsx uses native HTML instead of MUI — is this deviation formally approved?
 
 **Raised by:** documentation-writer (FEAT-005 PR description, 2026-10-18)
 **Status:** Open
