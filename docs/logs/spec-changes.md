@@ -632,3 +632,67 @@ None.
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record — Not applicable
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-8: FEAT-003-STATUS stale tracking fields after PR approval
+<!-- scr_approver: Mohanasunder -->
+
+<!-- scr_status: Approved -->
+<!-- scr_author: orchestrator -->
+<!-- scr_date: 2026-10-18 -->
+
+### Changed Artifact
+
+| Artifact | Old Version | New Version |
+| --- | --- | --- |
+| FEAT-003-STATUS (docs/05-build-plan/feature-003-contract-setup/status.md) | v0.1 | v0.1 (patch) |
+
+### Trigger
+
+Post-approval governance audit (2026-10-18) found two stale fields in the Approved FEAT-003-STATUS artifact:
+1. `PR:` field still shows `(Draft)` — PR #15 was approved for merge.
+2. `State:` field still shows `pending human review` — the PR description was approved by Mohanasunder on 2026-10-18.
+
+### Change
+
+Update two cosmetic tracking fields only. No acceptance criteria, plan files, or downstream artifacts are affected:
+- `PR: <draft PR link>` → `PR: https://github.com/Mohanasunder/aplx-ams/pull/15 (Approved)`
+- `State: In review` → `State: PR approved; pending merge`
+
+No logic, scope, or contract content changes.
+
+### Reason
+
+Tracking fields were not updated at approval time. The approval-log is authoritative; this SCR brings the artifact's tracking fields into alignment with the recorded approval decision.
+
+### Decision Record
+
+No ADR required — not an architecture or contract artifact. Human decision: Mohanasunder (Architect / tech lead) authorized opening this SCR on 2026-10-18 by invoking `open an scr`.
+
+### Impact
+
+`python3 scripts/spec_impact.py impact FEAT-003-STATUS` output: No artifact cites it. Zero downstream artifacts affected. No features blocked.
+
+### Work Stopped
+
+None — FEAT-003 PR is already approved and pending merge. No in-progress work depends on FEAT-003-STATUS.
+
+### Resume Criteria
+
+This SCR is approved and the two tracking fields in status.md are updated.
+
+### Quality Checklist
+
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] Vague words removed (etc., as needed, appropriate)
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record — Not applicable
+- [x] Impact covers every artifact and feature that cites the changed artifact
+
+<!-- Add further ## SCR S-N: sections here -->

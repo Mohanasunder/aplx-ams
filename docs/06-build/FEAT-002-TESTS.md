@@ -100,8 +100,8 @@ All failures are for missing behavior, not syntax or import errors.
 ```
 
 ## Test Commit
-`0f15688` — `FEAT-002: tests (backend)` — branch `feature/FEAT-002-org-sap-setup` — 2026-10-18
-(Contains all three test layers: database commit `e9695a9`, frontend commit `1bda5af`, backend commit `0f15688`)
+`b4b18a1` — `FEAT-003: fix ruff formatting in test files` — branch `feature/FEAT-003-contract-setup` — 2026-10-18
+(Original test set: database `e9695a9`, frontend `1bda5af`, backend `0f15688`. SHA updated in FEAT-003 to reflect formatting-only fix to `test_api.py` — ruff format (blank lines). Authorized by Mohanasunder, DEC-073.)
 
 ## Assumptions
 - A-046 (plan gap): `src/aplx_ams_django/settings/base.py` is not listed in FEAT-002 plan.md Files To Create Or Modify, but adding `"aplx_ams_django.organizations"` to `INSTALLED_APPS` is required. Mode B must add this entry; treated as an implied step for any new Django app. Logged in `docs/logs/assumptions-log.md`.

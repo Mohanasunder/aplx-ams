@@ -269,3 +269,46 @@ All automated scan gates passed with exit code 0. No secrets detected. No MEDIUM
 - Upstream: FEAT-002-TESTS v0.1; automated-gates.md; DEC-071
 - Downstream: PR FEAT-002 human review
 
+
+---
+
+## SSR FEAT-003: S-19 — Delivery Manager Sets Up Client Organization Contract
+
+<!-- ssr_status: Draft -->
+<!-- ssr_author: security-scanner -->
+<!-- ssr_date: 2026-10-18 -->
+<!-- ssr_verdict: Pass with findings -->
+
+### Input References
+
+- FEAT-003 plan.md v0.1
+- FEAT-003-TESTS v0.1 (Approved, SHA b4b18a1)
+- `.ai/standards/automated-gates.md`
+- `requirements.txt`
+
+### Scan Results
+
+| Tool | Command | Exit Code | Findings |
+|---|---|---|---|
+| bandit | `python -m bandit -r src/aplx_ams_django/ -ll -q` | 0 | No MEDIUM/HIGH findings; B101 assert_used (tests, expected) |
+| pip-audit | `pip-audit -r requirements.txt` | 0 | No known vulnerabilities in project dependencies |
+| detect-secrets | `detect-secrets scan --baseline .secrets.baseline` | 0 | No new secrets detected |
+| ESLint | `npx eslint src/ --max-warnings=0` | 0 | No warnings |
+| tsc | `npx tsc --noEmit` | 0 | No type errors |
+
+### Findings Detail
+
+**M-1 (Minor) — assert used for control flow:** `views.py` uses `assert org_id is not None` at lines 133 and 155. In production Python (with `-O`), `assert` statements are stripped. If Django URL conf ever passes `None`, the view silently proceeds. **Accepted:** `org_id` is always provided by Django's URL router for nested routes; `-O` is not used in this project's deployment (Gunicorn standard invocation); no real risk in current deployment context.
+
+**M-2 (Minor) — COERCE_DECIMAL_TO_STRING not set:** DRF default coerces `DecimalField` to string in JSON. `contracted_hours` and `hours_bank_balance` are serialized as strings unless `coerce_to_string=False`. **Accepted:** All backend tests pass numeric comparisons through the serializer layer; TypeScript client `Contract` interface types these as `number | null`; DRF docs confirm field-level `coerce_to_string=False` overrides the global default per field.
+
+**Pre-existing:** 4 baselined secrets (CI credentials, design doc examples) — unchanged from prior features.
+
+### Verdict
+
+**Pass with findings.** All gate commands exited 0. Two Minor findings accepted. No MEDIUM or HIGH SAST findings. No new secrets. No dependency vulnerabilities.
+
+### Traceability Links
+
+- Upstream: FEAT-003-TESTS v0.1; automated-gates.md; DEC-071; DEC-072; DEC-073
+- Downstream: PR FEAT-003 human review

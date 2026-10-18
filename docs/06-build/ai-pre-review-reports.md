@@ -301,3 +301,39 @@ Advisory pre-review of FEAT-002 on branch `feature/FEAT-002-org-sap-setup`. Cove
 - Upstream: FEAT-002 plan.md v0.1; API-001 v0.2; DBD-001 v0.1; STD-001 v0.1
 - Downstream: Human PR review; docs/logs/review-feedback-log.md
 
+
+---
+
+## AIR FEAT-003: S-19 — Delivery Manager Sets Up Client Organization Contract
+
+<!-- air_status: Draft -->
+<!-- air_author: ai-code-reviewer -->
+<!-- air_date: 2026-10-18 -->
+<!-- air_verdict: Needs changes (advisory) -->
+
+### Verdict
+
+**Needs changes (advisory).**
+
+Two Major findings were raised; both were fixed before human review:
+- **F-1 (integrity-error-too-broad):** `services.py:52-55` — broad `IntegrityError` catch returned misleading 409 for non-existent org. **Fixed:** org existence checked via `dal.get_org_by_id()` before DAL create; `ClientOrg.DoesNotExist` caught in view → 404.
+- **F-2 (incomplete-frontend-api):** `contracts.ts` — stub returned mock data, no HTTP call. **Fixed:** real `fetch` call implemented to `POST /api/organizations/{orgId}/contracts/`.
+
+Four Minor findings:
+- **F-3 (out-of-scope-model-fields):** `monthly_close_at` and `ended_at` — VOID; both fields are defined in approved DBD-001 and backend-design.md.
+- **F-4 (api-contract-field-mismatch):** TypeScript `Contract` interface mismatched serializer. **Fixed:** aligned to match `ContractSerializer` fields.
+- **F-5 (hardcoded-org-id):** `ContractSetup.tsx:31` — `org_id=1` hardcoded. **Documented as Known Gap** pending FEAT-006 (routing/navigation).
+- **F-6 (decimal-coercion-risk):** `COERCE_DECIMAL_TO_STRING` not set explicitly. **Accepted:** all 48 backend tests pass with numeric comparisons; field-level `coerce_to_string=False` overrides global setting per DRF docs.
+
+### Plan Adherence
+
+All 9 plan files present. No out-of-scope files. One-active-contract constraint enforced at both DB (partial unique index) and service level.
+
+### Acceptance Criteria Coverage
+
+All 4 ACs covered across DB, backend, and frontend test layers.
+
+### Traceability Links
+
+- Upstream: FEAT-003 plan.md v0.1; FEAT-003-ACC v0.1; FEAT-003-TESTS v0.1; API-001 v0.2; DBD-001 v0.1; STD-001 v0.1; PRM-001 v0.1
+- Downstream: Human PR review of `feature/FEAT-003-contract-setup`; `docs/logs/review-feedback-log.md`
