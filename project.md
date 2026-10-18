@@ -26,7 +26,7 @@
 ```
 max_parallel_builder_agents: 3
 review_capacity_prs_per_week: 6
-max_open_feature_branches: 3
+max_open_feature_branches: 10
 approval_sla_business_days: 1
 stale_branch_days: 5
 loop_limit_failed_validations: 3
