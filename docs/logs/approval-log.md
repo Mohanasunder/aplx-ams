@@ -281,3 +281,5 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-21 16:43 | WAV-001 | 0.3 | Approve | Mohanasunder | Architect / tech lead | Pass | - | WAV-001 v0.3 approved: Wave 30 added for FEAT-037 (Edit User Account). |
 | 2026-10-21 16:52 | PRD FEAT-036 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | [review depth: Deep, tier High] [review: 15 min] |
 | 2026-10-21 17:21 | SCR S-21 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | - |
+| 2026-10-21 17:33 | SCR S-22 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | - |
+| 2026-10-21 17:34 | FEAT-010 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass | - | SCR S-22 applied: added Django boilerplate files and test file entries; corrected Size Check count to 14 and limit to 30. |

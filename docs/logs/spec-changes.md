@@ -1400,3 +1400,51 @@ Not applicable — no architecture or contract artifact changes.
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-22: FEAT-010 plan.md — add missing Django app boilerplate files and test file
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
+
+### Summary
+FEAT-010 creates a new Django `sla` application. The approved plan.md v0.1 lists only the primary business-logic files but omits the Python package markers, the AppConfig, and the test file that the scope gate requires. Without `settings/base.py` the Django `sla` app is never registered in INSTALLED_APPS and migrations fail. Without the `tests/` files in the plan the scope gate (`check_feature_size.py scope`) rejects them when the builder creates them in Mode A. Additionally the Size Check table's Limit column incorrectly records 10 (a copy of the count) rather than the project limit of 30.
+
+### Changed Artifact
+- FEAT-010 (docs/05-build-plan/feature-010-holiday-list/plan.md) v0.1 → v0.2
+
+Changes:
+1. **Files To Create Or Modify** — add a `**Django app boilerplate (create)**` sub-list and a `**Tests**` sub-list:
+   - `src/aplx_ams_django/sla/__init__.py` (new — Python package marker)
+   - `src/aplx_ams_django/sla/apps.py` (new — AppConfig, Django convention)
+   - `src/aplx_ams_django/sla/migrations/__init__.py` (new — Python package marker for migrations)
+   - `src/aplx_ams_django/settings/base.py` (modify — add `'aplx_ams_django.sla'` to INSTALLED_APPS)
+   - `src/aplx_ams_django/sla/tests/__init__.py` (new — Python package marker for tests)
+   - `src/aplx_ams_django/sla/tests/test_holiday_list.py` (new — pytest tests for AC-1 through AC-4)
+
+2. **Size Check table** — correct Limit column from 10 to 30; update source file count from 10 to 14; add test file count row (2).
+
+### Reason
+Phase 6 entry checks require all files the builder will touch to be listed in the plan. The scope gate rejects any file not in the plan or ALWAYS_IN_SCOPE. The decision-log check and migration CI gate both require the sla app to be registered in INSTALLED_APPS via settings/base.py.
+
+### Impact
+No acceptance criteria, business logic, or API contract changes. Purely a plan completeness correction. FEAT-010-ACC v0.1 is unchanged.
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes.
+
+### Traceability Links
+- Upstream: FEAT-010 plan.md v0.1; BED-001 v0.1 § Django app conventions; STD-001 v0.1 § Naming And Structure
+- Downstream: FEAT-010 plan.md v0.2; Phase 6 scope gate
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
