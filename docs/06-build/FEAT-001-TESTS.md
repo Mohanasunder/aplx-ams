@@ -5,7 +5,7 @@ phase: 6
 version: 0.2
 template: feature-test-set
 template_version: 1.0
-status: Draft
+status: Approved
 author_agent: frontend-builder
 approver: Mohanasunder
 date: 2026-10-21
@@ -77,10 +77,10 @@ None.
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approver | |
+| Decision | Approve |
+| Approver | Mohanasunder |
 | Role | Tech lead |
 | Version | 0.2 |
-| Conditions | |
-| Comments | v0.2 created by FEAT-036 Mode A per SCR S-17 to update TST-001 AC-1 (App.test.tsx) for FEAT-036 AppShell changes. |
-| Timestamp | |
+| Conditions | None |
+| Comments | TST-001 AC-1 correctly updated to test Login-renders-for-unauthenticated-users. me() mock included for FEAT-036 AuthProvider compatibility. |
+| Timestamp | 2026-10-21 13:26 UTC |
