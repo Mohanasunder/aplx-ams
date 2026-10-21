@@ -1448,3 +1448,42 @@ Not applicable — no architecture or contract artifact changes.
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-23: FEAT-010 plan.md — add conftest.py to Tests file list
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
+
+### Summary
+The database builder (Mode A) created `src/aplx_ams_django/sla/tests/conftest.py` for test infrastructure (SQLite switch + Django app registry injection for the sla app). The file is not in plan.md's Files To Create Or Modify list and the scope gate rejects unlisted files. Addition is purely infrastructure; no acceptance criteria or business logic change.
+
+### Changed Artifact
+- FEAT-010 (docs/05-build-plan/feature-010-holiday-list/plan.md) v0.2 → v0.3
+
+Change: add `src/aplx_ams_django/sla/tests/conftest.py` to the Tests sub-section of Files To Create Or Modify. Source file count unchanged (conftest.py is test infrastructure, not a source file).
+
+### Reason
+Pytest requires a conftest.py to configure the Django test settings and inject the sla app into Django's app registry before test collection. Without it, `pytest --ds=aplx_ams_django.settings.base` fails to discover the sla models. The file cannot be avoided without modifying settings/base.py inside the database-builder scope (which is the backend-builder's task per the plan).
+
+### Impact
+No acceptance criteria, API contract, or implementation logic changes. Scope gate passes after this amendment.
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes.
+
+### Traceability Links
+- Upstream: FEAT-010 plan.md v0.2; SCR S-22; database-builder Mode A commit fa86dbe
+- Downstream: FEAT-010 plan.md v0.3; Phase 6 scope gate
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
