@@ -10,17 +10,15 @@ Named per STD-001 v0.1 § Naming And Structure.
 from __future__ import annotations
 
 from datetime import date, datetime
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from aplx_ams_django.sla.models import HolidayEntry
+from aplx_ams_django.sla.models import HolidayEntry
 
 
 def get_holidays_in_range(
     start: date,
     end: date,
     as_of: datetime | None = None,
-) -> list["HolidayEntry"]:
+) -> list[HolidayEntry]:
     """Return active HolidayEntry rows whose holiday_date falls in [start, end].
 
     An entry is "active" when:
@@ -31,14 +29,19 @@ def get_holidays_in_range(
         start: First date of the inclusive range.
         end: Last date of the inclusive range.
         as_of: Point-in-time filter (datetime, timezone-aware). When None,
-               the current timestamp is used. Supports AC-4 (holiday added
-               mid-day only counts from the moment of addition onward).
+               the as_of filter is not applied (all entries added at any time
+               are considered visible). Supports AC-4 (holiday added mid-day
+               only counts from the moment of addition onward).
 
     Returns:
         List of HolidayEntry instances whose holiday_date is in [start, end]
         and that are active at the given as_of time.
-
-    Raises:
-        NotImplementedError: until Mode B implementation is complete.
     """
-    raise NotImplementedError
+    qs = HolidayEntry.objects.filter(
+        holiday_date__gte=start,
+        holiday_date__lte=end,
+        removed_at__isnull=True,  # AC-2: exclude removed entries
+    )
+    if as_of is not None:
+        qs = qs.filter(added_at__lte=as_of)  # AC-4: only visible if added at or before as_of
+    return list(qs)

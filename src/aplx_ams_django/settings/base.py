@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "aplx_ams_django.organizations",
     "aplx_ams_django.accounts",
+    "aplx_ams_django.sla",  # FEAT-010: company holiday list
 ]
 
 AUTH_USER_MODEL = "accounts.User"
