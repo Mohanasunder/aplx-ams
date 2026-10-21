@@ -690,3 +690,147 @@ Not applicable -- no new open questions raised; design concern escalated to huma
 - [x] Learned rules checked (LRN L-1 not applicable -- frontend-only feature)
 - [x] Plan adherence assessed explicitly
 - [x] Verdict stated as advisory
+
+---
+
+## AIR FEAT-010: S-24: Delivery Manager Maintains the Company Holiday List
+
+<!-- air_status: Draft -->
+<!-- air_author: ai-code-reviewer -->
+<!-- air_date: 2026-10-22 -->
+<!-- air_verdict: Needs changes — 4 Major findings make the feature non-functional via the UI at runtime -->
+
+### Input References
+
+| Artifact | Version | Status | Path |
+|---|---|---|---|
+| FEAT-010 plan.md | v0.5 | Approved (Mohanasunder, 2026-10-21) | docs/05-build-plan/feature-010-holiday-list/plan.md |
+| FEAT-010-ACC | v0.1 | Approved (Mohanasunder, 2026-10-17) | docs/05-build-plan/feature-010-holiday-list/acceptance.md |
+| FEAT-010-TESTS | v0.2 | Approved (Mohanasunder, 2026-10-21) | docs/06-build/FEAT-010-TESTS.md |
+| REQ-001 | v0.4 § S-24 | Approved | docs/02-requirements/ |
+| API-001 | v0.3 § Company holiday list | Approved | docs/04-design/openapi.yaml |
+| DBD-001 | v0.1 § Module: sla | Approved | docs/04-design/ |
+| PRM-001 | v0.1 § Company holiday list | Approved | docs/04-design/ |
+| UIS-001 | v0.1 § REQ S-24 | Approved | docs/04-design/ |
+| .ai/standards/learned-rules.md | LRN L-1 | Generated | .ai/standards/learned-rules.md |
+| .ai/standards/agent-charter.md | Generated | — | .ai/standards/agent-charter.md |
+| DEC-090 | 2026-10-21 | Approved | docs/logs/decision-log.md |
+
+### Purpose And Scope
+
+Advisory pre-review of FEAT-010 (S-24: Delivery Manager Maintains the Company Holiday List) on branch `feature/FEAT-010-holiday-list`. Reviews all source files listed in plan.md v0.5 Files To Create Or Modify plus out-of-plan files found in the diff. Covers plan adherence, all four acceptance criteria, API contract, DB schema, permission matrix, soft-delete, AC-4 time-based semantics, security, LRN L-1, and agent charter compliance. Locked test files are not flagged as defects. This review is advisory only; the human developer reviewer decides.
+
+### Plan Adherence
+
+**Files from plan.md v0.5 "Files To Create Or Modify" — all present:**
+
+| File | Present | Notes |
+|---|---|---|
+| `src/aplx_ams_django/sla/__init__.py` | Yes | Empty package marker |
+| `src/aplx_ams_django/sla/apps.py` | Yes | SlaConfig stub present |
+| `src/aplx_ams_django/sla/migrations/__init__.py` | Yes | Empty package marker |
+| `src/aplx_ams_django/settings/base.py` | Yes | `'aplx_ams_django.sla'` added to INSTALLED_APPS (line 32) |
+| `src/aplx_ams_django/sla/models.py` | Yes | Full HolidayEntry per DBD-001 |
+| `src/aplx_ams_django/sla/migrations/0001_initial.py` | Yes | Creates table + CheckConstraint |
+| `src/aplx_ams_django/sla/serializers.py` | Yes | HolidayEntrySerializer implemented |
+| `src/aplx_ams_django/sla/services.py` | Yes | add_holiday, remove_holiday, is_holiday implemented |
+| `src/aplx_ams_django/sla/dal.py` | Yes | get_holidays_in_range implemented with as_of |
+| `src/aplx_ams_django/sla/views.py` | Yes | HolidayEntryViewSet implemented |
+| `src/aplx_ams_django/sla/urls.py` | Yes | Router registered |
+| `src/aplx_ams_django/urls.py` | Yes | sla.urls included at `api/holidays/` |
+| `src/frontend/src/pages/HolidayList.tsx` | Yes | Implemented; see Major finding F-3 |
+| `src/frontend/src/api/holidays.ts` | Yes | Implemented; see Major findings F-1, F-2 |
+| `src/frontend/src/App.tsx` | Yes | Route added; see Major finding F-3 |
+| `src/aplx_ams_django/sla/tests/__init__.py` | Yes | Locked |
+| `src/aplx_ams_django/sla/tests/conftest.py` | Yes | Locked |
+| `src/aplx_ams_django/sla/tests/test_holiday_list.py` | Yes | Locked |
+| `src/aplx_ams_django/sla/tests/test_holiday_api.py` | Yes | Locked |
+| `src/frontend/src/pages/HolidayList.test.tsx` | Yes | Locked |
+
+**Files changed outside plan.md v0.5 scope:**
+
+| File | Notes |
+|---|---|
+| `pyproject.toml` | Modified (ruff excludes + per-file-ignores for new sla test files); not listed in plan.md. No DEC recorded. See Minor finding F-5. |
+| `.secrets.baseline` | Modified (commit 027f2f8); not listed in plan.md. No DEC recorded. See Minor finding F-6. |
+| `.ai/standards/automated-gates.md` | Modified; DEC-090 covers this. See Advisory F-10. |
+| `.ai/standards/agent-charter.md` | Rebuilt after automated-gates.md changed; DEC-090 covers it. See Advisory F-10. |
+
+New Packages: None added. Plan states "None." Compliant.
+
+**Plan adherence: Conditional Pass.** All 20 plan files present. Two out-of-plan files (pyproject.toml, .secrets.baseline) lack a recorded DEC; these are Minor scope deviations (F-5, F-6). Automated-gates.md / agent-charter.md changes are covered by DEC-090.
+
+### Acceptance Criteria Coverage
+
+| Criterion | Backend impl | Backend test | Frontend impl | Frontend test | Gap |
+|---|---|---|---|---|---|
+| AC-1: DM adds 2027-01-26; contributes 0 business hours | `views.create()` → `add_holiday()` creates entry | `test_ac1_dm_can_add_holiday` → HTTP 201; `test_ac1_active_holiday_appears_in_range` → DAL returns active entry | `handleAdd()` calls `addHoliday({ date, description })` — wrong field name; POST will 400 from UI (F-1, F-2) | DM sees Add Holiday button test (locked) | Major: UI POST fails at runtime (F-1, F-2). Backend correct. |
+| AC-2: DM removes 2027-03-15; counts as business day | `views.destroy()` → `remove_holiday()` sets removed_at | `test_ac2_dm_can_remove_holiday` → 204 + soft-remove; `test_ac2_removed_holiday_excluded_from_range` → DAL excludes | `handleRemove(id)` → DELETE correct. List renders `h.date` (undefined — F-1) | DM sees Remove button test (locked) | Minor: holiday dates render undefined in table (F-1). Backend and DELETE correct. |
+| AC-3: Non-DM (L1, L2/L3, client) refused | `get_permissions()` returns `HasRolePermission(["delivery_manager"])` for create/destroy; `IsAuthenticated()` for list | 9 backend tests covering 403 for all non-DM roles + 401 for unauthenticated | Route guard renders redirect sentinel. BUT: missing UserContext.Provider in App.tsx means DM also always sees sentinel (F-3) | P1/P2/P4 redirect sentinel tests (locked) | Major: frontend route guard cannot function at runtime — DM can never access the page (F-3). Backend permissions correct. |
+| AC-4: 3 hours stay counted; no business time after 12:00 mid-day addition | `get_holidays_in_range(start, end, as_of=T)` filters `added_at__lte=as_of`; backend-only concern | `test_ac4_holiday_not_visible_before_addition_time` and `test_ac4_holiday_visible_after_addition_time` in test_holiday_list.py | No UI control required (plan.md Out Of Scope, FEAT-010-TESTS coverage gap noted and accepted) | None (accepted in FEAT-010-TESTS) | Covered. DAL implementation is correct. |
+
+### Findings
+
+| # | File | Line | Category | Severity | Issue |
+|---|---|---|---|---|---|
+| F-1 | `src/frontend/src/api/holidays.ts` | 15–27 | `api-contract-field-mismatch` | **Major** | TypeScript `HolidayEntry.date` does not match backend serializer field `holiday_date`. `HolidayList.tsx:94` renders `h.date` which is always `undefined` at runtime. `addHoliday()` sends `{ date, description }` but backend serializer expects `{ holiday_date }` — POST from UI always returns HTTP 400. Fix: rename `HolidayEntry.date` → `holiday_date`, rename `CreateHolidayPayload.date` → `holiday_date`, update HolidayList.tsx render and handleAdd accordingly. |
+| F-2 | `src/frontend/src/api/holidays.ts` | 19, 26 | `invented-field` | **Major** | `description` field in `HolidayEntry` interface (line 19) and `CreateHolidayPayload` (line 26) has no backing in DBD-001 v0.1 (sla_holidayentry table has no description column), the backend model, or serializer. `HolidayList.tsx:95` renders `h.description` (always `undefined`). Fix: remove `description` from both TypeScript types and from HolidayList.tsx form and render. |
+| F-3 | `src/frontend/src/App.tsx` | 43 | `missing-context-provider` | **Major** | The `/admin/holidays` route has no `UserContext.Provider` wrapper. `HolidayList.tsx:32` calls `useContext(UserContext)` — without a provider, `ctx` is `null`/`undefined`, `role` is `undefined`, and `role !== 'P3'` is always `true`. The redirect sentinel is always rendered; P3 (delivery manager) can never access the holiday list. Frontend tests are insulated because they wrap the component in `<UserContext.Provider value={{ role }}>` directly. Fix: add a `UserContext.Provider` wrapper in App.tsx for this route (analogous to the `/admin/users` route). |
+| F-4 | `src/aplx_ams_django/sla/views.py` | 64–67, 85 | `missing-input-validation` | **Major (LRN L-1)** | `views.create()` (lines 64–67) catches only `ValueError` from `add_holiday()`; `views.destroy()` (line 85) wraps no exception around `remove_holiday()`. Both service functions call `model.save()` on a `HolidayEntry` instance subject to `chk_removed_consistent`. Per LRN L-1: wrap every model.save() call in try/except django.db.IntegrityError and return HTTP 400. Fix: add `except IntegrityError` to the service calls in `views.create()` and `views.destroy()`. |
+| F-5 | `pyproject.toml` | 17–18, 29–30 | `scope-deviation` | Minor | `pyproject.toml` modified (adds ruff excludes and per-file-ignores for sla test files) but not listed in plan.md v0.5 Files To Create Or Modify. No DEC recorded. Human reviewer to inspect the diff and record a DEC if accepted. |
+| F-6 | `.secrets.baseline` | — | `scope-deviation` | Minor | `.secrets.baseline` modified (commit 027f2f8) but not in plan.md v0.5 Files. No DEC recorded. Pattern: FEAT-005 F-11, FEAT-036 F-2. Human reviewer to inspect diff and record a DEC if accepted. |
+| F-7 | `src/frontend/src/pages/HolidayList.tsx` | 19 | `coupling` | Minor | Imports `UserContext` from `'./OrgManagement'` — a sibling page component. Correct location per project structure is `src/context/UserContext.ts`. This coupling contributes to Major finding F-3. |
+| F-8 | `src/frontend/src/pages/HolidayList.tsx` | 59–71 | `missing-error-handling` | Minor | `handleAdd()` and `handleRemove()` call async API functions with `await` but no `try/catch`; network errors produce unhandled promise rejections with no UI feedback. |
+| F-9 | `src/aplx_ams_django/sla/serializers.py` | 22–36 | `api-contract-response-fields` | Advisory | `HolidayEntrySerializer` includes `added_at`, `added_by_id` in GET response for all authenticated roles. Verify these are specified in openapi.yaml `/api/holidays/` 200 schema; if not, trim list response to `["id", "holiday_date"]`. |
+| F-10 | `.ai/standards/automated-gates.md`, `.ai/standards/agent-charter.md` | — | `scope-deviation` | Advisory (resolved) | Both modified on feature branch; DEC-090 (Mohanasunder, 2026-10-21) records the human decision. Charter rebuilt via `scripts/build_charter.py build` per documented workflow. Compliant. |
+
+### Security Observations
+
+1. No hardcoded secrets. No production configuration paths touched. Compliant.
+2. Permission enforcement: `get_permissions()` returns `HasRolePermission(["delivery_manager"])` for write and `IsAuthenticated()` for read. All three required checks are present and tested. Compliant.
+3. Soft-delete: `destroy()` delegates to `remove_holiday()` which sets `removed_at`/`removed_by` and calls `save()`. ADR A-10 / NFR N-4 compliant.
+4. Duplicate holiday guard: `add_holiday()` checks for existing active entry before creating. No DB-level unique constraint on `holiday_date`, but service-layer guard is functionally adequate.
+5. No raw SQL; all DB access via Django ORM.
+6. `request.user` is stored as `added_by`/`removed_by` FK without exposing it to user input. Compliant.
+7. `holidays.ts` uses `credentials: 'include'` for session cookie auth — correct for session-auth. Compliant.
+
+### Learned Rules Check
+
+**LRN L-1 (missing-input-validation):** "Wrap every model.save() call in a try/except django.db.IntegrityError block and return HTTP 400 with a structured error."
+
+- `views.create()` (views.py:64–67): Only `ValueError` caught. No `IntegrityError` guard. **LRN L-1 violation. Major — F-4.**
+- `views.destroy()` (views.py:85): No exception handler of any kind. **LRN L-1 violation. Major — F-4.**
+- `HolidayEntrySerializer`: No `validate()` method; all removal fields are read-only so no cross-field user input can violate `chk_removed_consistent` via the serializer. Technically non-compliant but carries no practical risk.
+
+### Assumptions
+
+Not applicable — no new assumptions raised by this review beyond those in `docs/logs/assumptions-log.md`.
+
+### Open Questions
+
+Not applicable — all defects are code-level findings, not open questions.
+
+### Traceability Links
+
+- Upstream: FEAT-010 plan.md v0.5; FEAT-010-ACC v0.1; FEAT-010-TESTS v0.2; REQ-001 v0.4 § S-24; API-001 v0.3 § Company holiday list; DBD-001 v0.1 § Module: sla; PRM-001 v0.1 § Company holiday list; UIS-001 v0.1 § REQ S-24; .ai/standards/learned-rules.md (LRN L-1); DEC-090; docs/logs/review-feedback-log.md
+- Downstream: Human PR review of `feature/FEAT-010-holiday-list`; docs/logs/review-feedback-log.md (4 Major findings appended)
+
+### Quality Checklist
+
+- [x] Every finding cites file and line and has a category
+- [x] Learned rules checked (LRN L-1: violation at views.py:64-67 and 85 — Major F-4)
+- [x] Plan adherence assessed explicitly
+- [x] Verdict stated as advisory
+- [x] Every AC assessed individually
+- [x] Security observations documented
+- [x] No secrets read or printed
+- [x] No project files created or modified by this reviewer
+
+### Verdict
+
+**Needs changes (advisory).** Four Major findings must be resolved before merge:
+
+- **F-1 (api-contract-field-mismatch):** Frontend sends `{ date }` instead of `{ holiday_date }`; every add from the UI returns HTTP 400; GET list renders undefined dates.
+- **F-2 (invented-field):** `description` field in TypeScript types has no backing in DBD-001 or backend. Remove from types, payload, and UI.
+- **F-3 (missing-context-provider):** `/admin/holidays` route in App.tsx has no `UserContext.Provider`; DM can never access the holiday list in the running application.
+- **F-4 (missing-input-validation, LRN L-1):** No `try/except IntegrityError` around service calls in `views.create()` and `views.destroy()`.
