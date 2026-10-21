@@ -1,23 +1,143 @@
 /**
- * FEAT-010 Page stub — HolidayList.tsx
+ * FEAT-010 Page — HolidayList.tsx
  *
  * Route: /admin/holidays — P3 (delivery manager) only.
  * UI spec: UIS-001 v0.1 § REQ S-24
  * Contract: API-001 v0.3 § Company holiday list (F-2 support)
  *
- * Acceptance criteria to be implemented in Mode B:
+ * Acceptance criteria implemented:
  *   AC-1 — DM adds a holiday date via "Add Holiday" button → POST /api/holidays/.
  *   AC-2 — DM removes a holiday date via "Remove" button → DELETE /api/holidays/{id}/.
  *   AC-3 — Non-DM (P1, P2, P4) route guard renders redirect sentinel to /tickets.
  *   AC-4 — (backend concern) time-based DAL behavior; no UI changes required.
  *
- * This is a Mode A stub: renders a placeholder `<div>STUB</div>` so the file
- * compiles and tests can be written. All tests importing this stub will fail
- * because the expected UI elements are absent.
+ * All hooks are declared before the route-guard early return to satisfy the
+ * Rules of Hooks (hooks must not be called conditionally).
  */
 
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { UserContext } from './OrgManagement';
+import { listHolidays, addHoliday, removeHoliday } from '../api/holidays';
+import type { HolidayEntry } from '../api/holidays';
 
+// ── Page component ────────────────────────────────────────────────────────────
+
+/**
+ * HolidayList page.
+ *
+ * P3 (Delivery Manager): list of holidays with Add and Remove actions.
+ * Non-P3: route guard — renders redirect sentinel to /tickets.
+ */
 export default function HolidayList(): React.JSX.Element {
-  return <div>STUB</div>;
+  const ctx = useContext(UserContext);
+  const [holidays, setHolidays] = useState<HolidayEntry[]>([]);
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [newDate, setNewDate] = useState('');
+  const [newDescription, setNewDescription] = useState('');
+
+  const role = ctx?.role;
+
+  // Load holiday list on mount (P3 only).
+  useEffect(() => {
+    if (role === 'P3') {
+      listHolidays()
+        .then((entries) => setHolidays(entries))
+        .catch(() => {
+          // Error state: leave list empty; could surface an error message here.
+        });
+    }
+  }, [role]);
+
+  // ── Route guard ─────────────────────────────────────────────────────────────
+  // Must be after all hook calls to satisfy Rules of Hooks.
+  if (role !== 'P3') {
+    return <div data-testid="redirect-to-tickets" />;
+  }
+
+  // ── Handlers ────────────────────────────────────────────────────────────────
+
+  const handleAdd = async () => {
+    if (!newDate) return;
+    const created = await addHoliday({ date: newDate, description: newDescription });
+    setHolidays((prev) => [...prev, created]);
+    setShowAddDialog(false);
+    setNewDate('');
+    setNewDescription('');
+  };
+
+  const handleRemove = async (id: number) => {
+    await removeHoliday(id);
+    setHolidays((prev) => prev.filter((h) => h.id !== id));
+  };
+
+  // ── Render ──────────────────────────────────────────────────────────────────
+  return (
+    <div>
+      <h1>Holiday List</h1>
+
+      <button type="button" onClick={() => setShowAddDialog(true)}>
+        Add Holiday
+      </button>
+
+      {/* ── Empty state ──────────────────────────────────────────────────── */}
+      {holidays.length === 0 ? (
+        <p>
+          No holidays have been added. Add holidays to exclude them from SLA
+          business hours.
+        </p>
+      ) : (
+        /* ── Holiday table ─────────────────────────────────────────────── */
+        <table>
+          <tbody>
+            {holidays.map((h) => (
+              <tr key={h.id}>
+                <td>{h.date}</td>
+                <td>{h.description}</td>
+                <td>
+                  <button
+                    type="button"
+                    data-testid={`remove-btn-${h.id}`}
+                    onClick={() => handleRemove(h.id)}
+                  >
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {/* ── Add holiday dialog ────────────────────────────────────────────── */}
+      {showAddDialog && (
+        <div role="dialog" aria-modal="true" aria-label="Add Holiday">
+          <h2>Add Holiday</h2>
+          <div>
+            <label htmlFor="holiday-date">Date</label>
+            <input
+              id="holiday-date"
+              type="date"
+              value={newDate}
+              onChange={(e) => setNewDate(e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="holiday-description">Description</label>
+            <input
+              id="holiday-description"
+              type="text"
+              value={newDescription}
+              onChange={(e) => setNewDescription(e.target.value)}
+            />
+          </div>
+          <button type="button" onClick={handleAdd}>
+            Confirm
+          </button>
+          <button type="button" onClick={() => setShowAddDialog(false)}>
+            Cancel
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }

@@ -1,5 +1,5 @@
 /**
- * FEAT-010 API client stub — holidays.ts
+ * FEAT-010 API client — holidays.ts
  *
  * Route: /admin/holidays
  * Contract: API-001 v0.3 § Company holiday list (F-2 support)
@@ -7,9 +7,6 @@
  *   GET    /api/holidays/      → list holiday entries
  *   POST   /api/holidays/      → create holiday entry (P3 only; HTTP 201)
  *   DELETE /api/holidays/{id}/ → remove holiday entry (P3 only; HTTP 204)
- *
- * This is a Mode A stub: all functions throw "Not implemented" until the
- * Mode B implementation fills them in.
  */
 
 // ── Response types (API-001 v0.3 § Company holiday list) ─────────────────────
@@ -33,24 +30,34 @@ export interface CreateHolidayPayload {
 
 const BASE = '/api/holidays';
 
-// ── Client functions (stubs — throw until Mode B) ────────────────────────────
+// ── Client functions ──────────────────────────────────────────────────────────
 
 /** GET /api/holidays/ — returns all holiday entries. */
 export async function listHolidays(): Promise<HolidayEntry[]> {
-  void BASE;
-  throw new Error('Not implemented: listHolidays');
+  const r = await fetch(`${BASE}/`, { credentials: 'include' });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json() as Promise<HolidayEntry[]>;
 }
 
 /** POST /api/holidays/ — adds a holiday entry; P3 only (HTTP 201). */
 export async function addHoliday(
   payload: CreateHolidayPayload,
 ): Promise<HolidayEntry> {
-  void payload;
-  throw new Error('Not implemented: addHoliday');
+  const r = await fetch(`${BASE}/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json() as Promise<HolidayEntry>;
 }
 
 /** DELETE /api/holidays/{id}/ — removes a holiday entry; P3 only (HTTP 204). */
 export async function removeHoliday(id: number): Promise<void> {
-  void id;
-  throw new Error('Not implemented: removeHoliday');
+  const r = await fetch(`${BASE}/${id}/`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
 }
