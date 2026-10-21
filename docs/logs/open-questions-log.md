@@ -104,3 +104,33 @@ OQ-20261018-002 [RESOLVED: DEC-080 — native HTML approved by Mohanasunder 2026
 **Impact if not resolved:** If not approved, an SCR updating UIS-001 v0.1 § S-20 is required. Future features that reference the UserManagement page may implement inconsistent component styles.
 
 **Proposed resolution:** Mohanasunder (Architect / tech lead) to confirm whether this deviation is approved. If approved, log as a DEC and record whether UIS-001 needs an SCR update. If not approved, raise an SCR and the builder must revise UserManagement.tsx to use MUI components.
+
+---
+
+OQ-073 [RESOLVED: Mohanasunder approved creating FEAT-036 (2026-10-21)]: The AppShell (global navigation, sign-out button, role-based nav drawer) is specified in UIS-001 v0.1 § AppShell and referenced by API-001 v0.2 § F-5 but was not assigned to any REQ story. Which feature builds it?
+
+**Raised by:** orchestrator (Phase 6 build planning review, 2026-10-19)
+**Status:** Answered — create FEAT-036 (Mohanasunder approved 2026-10-21)
+
+**Question:** UIS-001 v0.1 § AppShell defines the MuiAppBar, MuiDrawer, role chip, and "Sign out" button. These components wrap every authenticated page, but no story in REQ-001 covers them. Should a new feature be created to build the AppShell before story features that render inside it?
+
+**Context:** FEAT-006 builds Login.tsx and AuthContext.tsx. Authenticated story pages (FEAT-008, FEAT-009, FEAT-013, etc.) assume a shell exists. Without an AppShell feature, builders would either skip the shell or add it as out-of-scope scope creep.
+
+**Impact if not resolved:** Authenticated pages either have no navigation shell or it gets built ad-hoc in a later feature with no acceptance criteria, no tests, and no traceability to UIS-001.
+
+**Proposed resolution:** Create FEAT-036 (Type: Enabling) sourced from UIS-001 v0.1 § AppShell and API-001 v0.2 § F-5 as Wave 8. DEC-088 records the UIS-001 sourcing and Enabling classification decision.
+
+---
+
+OQ-074 [RESOLVED: DEC-088 (2026-10-21, Mohanasunder)]: FEAT-036 AppShell has no backing REQ story — can it use UIS-001 v0.1 § AppShell as its acceptance criteria source, and should it be Type: Feature or Type: Enabling?
+
+**Raised by:** orchestrator (FEAT-036 plan validation failure, 2026-10-21)
+**Status:** Answered — DEC-088 (2026-10-21, Mohanasunder): UIS-001 v0.1 § AppShell sourcing accepted; plan.md reclassified to Type: Enabling
+
+**Question:** check_feature_size.py size requires `REQ-NNN AC-n:` prefix for Type: Feature criteria. FEAT-036 criteria use `UIS-001 v0.1 § AppShell AC-n:` format. Should the type be changed to Enabling (which expects NFR-/TST-/STD- prefix but the size check is not gate-critical for infrastructure components)?
+
+**Context:** OQ-073 established that the AppShell has no REQ story. Type: Enabling is the correct classification for UI infrastructure components that enable story features but are not themselves user stories.
+
+**Impact if not resolved:** FEAT-036 cannot pass the size gate in its current form; a retroactive REQ SCR would require Phase 2 rework.
+
+**Proposed resolution:** DEC-088 (2026-10-21) accepts UIS-001 v0.1 § AppShell sourcing and reclassifies FEAT-036 as Type: Enabling. The size gate failure on Enabling type is accepted as an exception per DEC-088; DoD note added to plan.md.

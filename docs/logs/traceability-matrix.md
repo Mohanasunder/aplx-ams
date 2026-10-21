@@ -30,7 +30,7 @@ API-001 contract update (Phase 6, 2026-10-18): API-001 v0.2 Approved 2026-10-18 
 | REQ S-18 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-002 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-19 | EPC E-4; BRF-001 G-3 | API-001 v0.2, DBD-001 v0.1, BED-001, UIS-001, PRM-001, TST-001 | FEAT-003 | #15 (https://github.com/Mohanasunder/aplx-ams/pull/15) | test_contract_models.py (11), test_contract_api.py (7), ContractSetup.test.tsx (4) | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18); TESTS Approved v0.1 (2026-10-18, Mohanasunder, Architect / tech lead); PRD FEAT-003 Approved 2026-10-18 by Mohanasunder (Architect / tech lead); PR #15 approved for merge |
 | REQ S-20 | EPC E-5; BRF-001 G-4 | API-001 v0.2, DBD-001 v0.1, UIS-001 v0.1, PRM-001 v0.1, BED-001, TST-001 | FEAT-005 | #16 (https://github.com/Mohanasunder/aplx-ams/pull/16); commit 1684e9f; approved 2026-10-19 | test_models.py (13), test_api.py (16), UserManagement.test.tsx (6) | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17, v0.2 per SCR S-9 2026-10-18); ACC/TASKS/STATUS Approved v0.1 (2026-10-18); TESTS Approved v0.3 (SCR S-10, 2026-10-18, Mohanasunder, Tech lead); Gates overridden 2026-10-18: scope DEC-078 (8 out-of-plan Django boilerplate + tooling files); pip-audit DEC-079 (pre-existing vulnerabilities); DEC-080 (native HTML UIS deviation); DEC-081 (locked-test partial-application deviations); DEC-082 (App.tsx review wire); PRD FEAT-005 Approved 2026-10-18 by Mohanasunder (Architect / tech lead, Deep review); PR Approved 2026-10-19 by Mohanasunder (Architect / tech lead, Deep review); awaiting merge |
-| REQ S-21 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-006 | - | test_auth_api.py (17), Login.test.tsx (13) | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18); TESTS Approved v0.1 (2026-10-19, Mohanasunder, Architect / tech lead); Mode A complete (backend commit: 9ececb7, frontend commit: 8bd2f25); Mode B in progress |
+| REQ S-21 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-006 | #17 (https://github.com/Mohanasunder/aplx-ams/pull/17) | test_auth_api.py (17), Login.test.tsx (13) | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18); TESTS Approved v0.1 (2026-10-19, Mohanasunder, Architect / tech lead); PRD FEAT-006 Approved 2026-10-21 by Mohanasunder (Tech lead, Release manager, Deep, 30 min); Merged (PR #17, 2026-10-21) |
 | REQ S-22 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-007 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-23 | EPC E-5; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-032 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-24 | EPC E-2; BRF-001 G-1 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-010 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
@@ -91,12 +91,13 @@ Approved 2026-10-17 by Mohanasunder (Architect / tech lead).
 | FEAT-000 | Walking Skeleton — Backend Scaffold and CI Pipeline | none (foundation) | FEAT-000-ACC, FEAT-000-TASKS, FEAT-000-STATUS Approved v0.1 (2026-10-18); FEAT-000-TESTS Approved v0.1 (2026-10-18, Mohanasunder, Tech lead); PR #4 Approved 2026-10-18 by Mohanasunder (Tech lead, Release manager); not yet merged |
 | FEAT-001 | Frontend Scaffold — React + Vite + Tailwind | FEAT-000 | FEAT-001-ACC, FEAT-001-TASKS, FEAT-001-STATUS Approved v0.1 (2026-10-18); FEAT-001-TESTS Approved v0.1 (2026-10-18, Mohanasunder, Tech lead); PRD FEAT-001 Approved 2026-10-18 by Mohanasunder (Architect / tech lead) and Mohanasunder (Release manager / DevOps); PR #5 https://github.com/Mohanasunder/aplx-ams/pull/5; all automated gates passed; merged 2026-10-18 (PR #5) |
 | FEAT-035 | E2E CI Scaffold | FEAT-000, FEAT-001 | FEAT-035-ACC, FEAT-035-TASKS, FEAT-035-STATUS Approved v0.1 (2026-10-18); FEAT-035-TESTS Approved v0.2 (SCR S-11, 2026-10-18, Mohanasunder, Tech lead); PRD FEAT-035 Approved 2026-10-18 by Mohanasunder (Tech lead) and Mohanasunder (Release manager); PR #9 https://github.com/Mohanasunder/aplx-ams/pull/9; all automated gates passed |
+| FEAT-036 | AppShell — Global Navigation Shell and Sign Out | FEAT-006 | FEAT-036-ACC, FEAT-036-TASKS, FEAT-036-STATUS Approved v0.1 (2026-10-21, Mohanasunder, Tech lead); Wave 8; WAV-001 v0.2 (SCR S-15, Approved 2026-10-21); DEC-088 (UIS-001 v0.1 § AppShell sourcing; Type: Enabling classification) |
 
-These three features carry no REQ story (they are enabling features). They are linked to all Phase 4 design artifacts via STD-001 and TST-001.
+These four features carry no REQ story (they are enabling features). They are linked to all Phase 4 design artifacts via STD-001, TST-001, UIS-001 (FEAT-036), and API-001 (FEAT-036).
 
 ### Phase 5 Supplementary Artifact Approvals (all features, 2026-10-18)
 
-108 supplementary files approved 2026-10-18 by Mohanasunder at v0.1 (36 ACC + 36 TASKS + 36 STATUS, covering FEAT-000 through FEAT-035). Each set is upstream from its parent `FEAT-NNN` plan.md (Approved) and downstream to the Phase 6 feature branch for the same FEAT-NNN.
+111 supplementary files approved by Mohanasunder at v0.1 (37 ACC + 37 TASKS + 37 STATUS, covering FEAT-000 through FEAT-036). FEAT-000–FEAT-035 approved 2026-10-18; FEAT-036 approved 2026-10-21. Each set is upstream from its parent `FEAT-NNN` plan.md (Approved) and downstream to the Phase 6 feature branch for the same FEAT-NNN.
 
 | Artifact set | Scope | Upstream | Downstream |
 | --- | --- | --- | --- |
@@ -111,7 +112,7 @@ These three features carry no REQ story (they are enabling features). They are l
 | --- | --- | --- |
 | FBD-001 v0.1 (feature-breakdown.md) | REQ-001 v0.3, API-001 v0.1, DBD-001 v0.1, BED-001 v0.1, UIS-001 v0.1, PRM-001 v0.1, STD-001 v0.1, TST-001 v0.1 | FEAT-000 through FEAT-035 |
 | DOD-001 v0.1 (definition-of-done.md) | STD-001 v0.1, TST-001 v0.1 | FEAT-000 through FEAT-035 |
-| WAV-001 v0.1 (wave-plan.md) | FBD-001 v0.1 | FEAT-000 through FEAT-035 (ordered by wave) |
+| WAV-001 v0.2 (wave-plan.md) | FBD-001 v0.1; SCR S-15 | FEAT-000 through FEAT-036 (37 features, 29 waves, ordered by wave; SCR S-15 inserted FEAT-036 as Wave 8, Approved 2026-10-21) |
 | ENV-001 v0.1 (environment-plan.md) | STD-001 v0.1, BED-001 v0.1, DBD-001 v0.1 | FEAT-000 through FEAT-035 |
 
 ## Phase 6 Cross-Artifact Traceability Links
@@ -285,10 +286,10 @@ None. All 33 in-scope stories (REQ S-1 to S-33, Priority: Must / Should / Could)
 | REQ S-20 AC-2 | FEAT-005 | Approved — awaiting merge | yes | none | - | - |
 | REQ S-20 AC-3 | FEAT-005 | Approved — awaiting merge | yes | none | - | - |
 | REQ S-20 AC-4 | FEAT-005 | Approved — awaiting merge | yes | none | - | - |
-| REQ S-21 AC-1 | FEAT-006 | In progress | yes | none | - | - |
-| REQ S-21 AC-2 | FEAT-006 | In progress | yes | none | - | - |
-| REQ S-21 AC-3 | FEAT-006 | In progress | yes | none | - | - |
-| REQ S-21 AC-4 | FEAT-006 | In progress | yes | none | - | - |
+| REQ S-21 AC-1 | FEAT-006 | Merged (PR #17, 2026-10-21) | yes | none | test_auth_api.py | - |
+| REQ S-21 AC-2 | FEAT-006 | Merged (PR #17, 2026-10-21) | yes | none | test_auth_api.py | - |
+| REQ S-21 AC-3 | FEAT-006 | Merged (PR #17, 2026-10-21) | yes | none | Login.test.tsx | - |
+| REQ S-21 AC-4 | FEAT-006 | Merged (PR #17, 2026-10-21) | yes | none | Login.test.tsx | - |
 | REQ S-22 AC-1 | FEAT-007 | Not started | no | none | - | - |
 | REQ S-22 AC-2 | FEAT-007 | Not started | no | none | - | - |
 | REQ S-22 AC-3 | FEAT-007 | Not started | no | none | - | - |
@@ -367,7 +368,7 @@ None. All 33 in-scope stories (REQ S-1 to S-33, Priority: Must / Should / Could)
 | REQ S-9 AC-4 | FEAT-019 | Not started | no | none | - | - |
 ```
 
-Note: FEAT-005 (REQ S-20) shows "Approved — awaiting merge" with test set present. FEAT-006 (REQ S-21) now shows "In progress | yes" — FEAT-006-TESTS v0.1 Approved 2026-10-19 by Mohanasunder; Mode A complete; Mode B in progress. All other stories unchanged from 2026-10-19 run. Total: 131 criteria across 33 stories.
+Note: FEAT-005 (REQ S-20) shows "Approved — awaiting merge" with test set present. FEAT-006 (REQ S-21) now shows "Merged (PR #17, 2026-10-21)" — FEAT-006-TESTS v0.1 Approved 2026-10-19; PR #17 approved 2026-10-21 by Mohanasunder (Tech lead, Release manager, Deep, 30 min each) and merged 2026-10-21. FEAT-036 (AppShell, Enabling) plan.md and acceptance.md Approved 2026-10-21 (DEC-088, SCR S-15). All other stories unchanged from 2026-10-19 run. Total: 131 criteria across 33 stories; 37 features (including FEAT-036).
 
 ## `scripts/traceability.py check --phase 5` Output (re-run 2026-10-19, via `py -3`)
 

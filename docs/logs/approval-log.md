@@ -256,3 +256,9 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-18 20:25 | FEAT-006-TESTS | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | Tests cover all 4 AC including edge cases (lockout, error body consistency, rate-limit message) |
 | 2026-10-18 21:03 | SCR S-14 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | Format fixes only — no design change |
 | 2026-10-18 21:04 | FEAT-006 | 0.4 | Approve | Mohanasunder | Architect / tech lead | Pass | - | SCR S-14: metadata-only fix, implementation already correct |
+| 2026-10-21 11:52 | FEAT-036 | 0.1 | Approve | Mohanasunder | Tech lead | Pass | - | DEC-088: Type: Enabling accepted; UIS-001 v0.1 § AppShell sourcing accepted; size-gate exception noted in DoD section |
+| 2026-10-21 11:52 | FEAT-036-ACC | 0.1 | Approve | Mohanasunder | Tech lead | Pass | - | All 4 AC spec-derived from UIS-001 v0.1 § AppShell and API-001 v0.2 § F-5 |
+| 2026-10-21 12:00 | SCR S-15 | 0.1 | Approve | Mohanasunder | Tech lead | n/a | - | Insert FEAT-036 as Wave 8; renumber Waves 8–28 to 9–29 |
+| 2026-10-21 12:02 | WAV-001 | 0.2 | Approve | Mohanasunder | Tech lead | Pass | - | 29-wave plan, 37 features; FEAT-036 Wave 8 singleton; review load within capacity |
+| 2026-10-21 12:08 | PRD FEAT-006 | 0.1 | Approve | Mohanasunder | Tech lead | n/a | - | [review depth: Deep, tier Critical] [review: 30 min] |
+| 2026-10-21 12:08 | PRD FEAT-006 | 0.1 | Approve | Mohanasunder | Release manager | n/a | - | [review depth: Deep, tier Critical] [review: 30 min] |
