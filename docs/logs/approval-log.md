@@ -265,3 +265,7 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-21 12:38 | FEAT-036-TASKS | 0.1 | Approve | Mohanasunder | Tech lead | Pass | - | Approved with plan.md at Phase 5 gate — build-planner task list for FEAT-036 AppShell |
 | 2026-10-21 12:38 | FEAT-036-STATUS | 0.1 | Approve | Mohanasunder | Tech lead | Pass | - | Approved with plan.md at Phase 5 gate — status tracker for FEAT-036 AppShell |
 | 2026-10-21 12:56 | FEAT-001-TESTS | 0.1 | Reject | Mohanasunder | Tech lead | Pass | - | TST-001 AC-1 (App.test.tsx) must be updated: FEAT-036 removes the nav element that satisfied this test and replaces it with AppShell. The FEAT-036 frontend-builder will update App.test.tsx in Mode A to assert AppShell renders 'APLX AMS' for authenticated users. FEAT-001-TESTS.md v0.2 will be created and approved before Mode B implementation. |
+| 2026-10-21 13:04 | SCR S-16 | 0.1 | Approve | Mohanasunder | Tech lead | n/a | - | - |
+| 2026-10-21 13:05 | SCR S-17 | 0.1 | Approve | Mohanasunder | Tech lead | n/a | - | - |
+| 2026-10-21 13:05 | FEAT-036 | 0.3 | Approve | Mohanasunder | Tech lead | Pass | - | SCR S-16 + SCR S-17 applied; plan v0.3 approved for Mode A |
+| 2026-10-21 13:05 | FEAT-036-ACC | 0.2 | Approve | Mohanasunder | Tech lead | Pass | - | SCR S-17 role name correction applied |

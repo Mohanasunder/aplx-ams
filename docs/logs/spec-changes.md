@@ -1126,8 +1126,8 @@ Not applicable — no architecture or contract artifact changes; DEC-088 records
 - [x] Impact covers every artifact and feature that cites the changed artifact
 
 ## SCR S-16: FEAT-036 plan.md — remove AppShell.tsx from Context Pack (file is created by this feature, not an existing file)
-<!-- scr_status: Pending approval -->
-<!-- scr_approver: -->
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
 
 ### Summary
 FEAT-036 plan.md v0.1 lists `src/frontend/src/components/AppShell.tsx` in the Context Pack section. The Context Pack provides EXISTING files for the builder to read; AppShell.tsx is a NEW file to be created by this feature. Including it causes `context_pack.py check` to fail with "file not found" and `context_pack.py render` to emit UNRESOLVED. Removing it from the Context Pack fixes the check without affecting builder context (the builder creates this file from scratch using the UIS-001 spec already in the pack).
@@ -1164,8 +1164,8 @@ Not applicable — no architecture or contract artifact changes.
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 
 ## SCR S-17: FEAT-036 plan.md and acceptance.md — correct role name l2_l3_support_engineer → l2l3_support
-<!-- scr_status: Pending approval -->
-<!-- scr_approver: -->
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
 
 ### Summary
 FEAT-036 plan.md v0.2 (Implementation Steps T-2, T-4) and acceptance.md v0.1 (AC-4, Test Scenarios) use the incorrect role label `l2_l3_support_engineer`. The canonical role enum value in API-001 v0.2 § F-5 and `src/frontend/src/api/auth.ts` is `l2l3_support`. This discrepancy was identified during Phase 6 entry phase-intake as Gap 1 (Blocker). Mohanasunder approved the correction via the phase-intake gap resolution (2026-10-21).

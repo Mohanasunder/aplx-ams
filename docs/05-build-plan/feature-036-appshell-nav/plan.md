@@ -131,15 +131,7 @@ Open design decisions: None
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Tech lead |
-| Version | 0.1 |
-| Conditions | None |
-| Comments | None |
-| Timestamp | 2026-10-21 11:52 UTC |
-
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
 | Version | 0.3 |
 | Conditions | None |
-| Comments | SCR S-16 (v0.2): remove AppShell.tsx from Context Pack. SCR S-17 (v0.3): correct l2_l3_support_engineer → l2l3_support in Implementation Steps T-2, T-4, and Test Plan AC-4. |
-| Timestamp | Pending |
+| Comments | SCR S-16 + SCR S-17 applied; plan v0.3 approved for Mode A |
+| Timestamp | 2026-10-21 13:05 UTC |

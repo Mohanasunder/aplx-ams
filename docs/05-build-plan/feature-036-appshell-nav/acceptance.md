@@ -59,15 +59,7 @@ UIS-001 v0.1 § AppShell AC-4: For each role (delivery_manager, l2l3_support, cl
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Tech lead |
-| Version | 0.1 |
-| Conditions | None |
-| Comments | None |
-| Timestamp | 2026-10-21 11:52 UTC |
-
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
 | Version | 0.2 |
 | Conditions | None |
-| Comments | SCR S-17: correct l2_l3_support_engineer → l2l3_support in AC-4 and Test Scenarios |
-| Timestamp | Pending |
+| Comments | SCR S-17 role name correction applied |
+| Timestamp | 2026-10-21 13:05 UTC |
