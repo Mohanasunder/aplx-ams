@@ -2,7 +2,7 @@
 id: FEAT-010-TESTS
 title: FEAT-010 Test Set
 phase: 6
-version: 0.1
+version: 0.2
 template: feature-test-set
 template_version: 1.0
 status: Approved
@@ -16,7 +16,7 @@ validation: Pass
 # FEAT-010 Test Set
 
 ## Input References
-- FEAT-010 plan.md v0.4 (Approved 2026-10-21, Mohanasunder) — includes SCR S-22, S-23, S-24
+- FEAT-010 plan.md v0.5 (Approved 2026-10-22, Mohanasunder) — includes SCR S-22, S-23, S-24, S-25
 - FEAT-010-ACC v0.1 (Approved 2026-10-17, Mohanasunder) — 4 acceptance criteria for REQ S-24
 - REQ-001 v0.4 § S-24 — Delivery Manager Maintains the Company Holiday List (acceptance criteria source)
 - API-001 v0.3 § Company holiday list — endpoint contracts (POST /api/holidays/, DELETE /api/holidays/{id}/, GET /api/holidays/)
@@ -63,11 +63,11 @@ Tier: **Standard**. Approver required: **Tech lead** (Mohanasunder), per `.ai/st
 - client_user cannot DELETE (AC-3): Resolved by commit `2659028` — `test_ac3_client_user_cannot_remove_holiday` added to `test_holiday_api.py`.
 
 ## Test Files
-- `src/aplx_ams_django/sla/tests/test_holiday_list.py` — database DAL tests (AC-1, AC-2, AC-4, schema constraint); commit `fa86dbe`; locked once this artifact is Approved
-- `src/aplx_ams_django/sla/tests/conftest.py` — pytest fixtures: SQLite test-DB switch + sla app registry injection; commit `fa86dbe`; locked once this artifact is Approved
-- `src/aplx_ams_django/sla/tests/__init__.py` — Python package marker; commit `fa86dbe`; locked once this artifact is Approved
-- `src/aplx_ams_django/sla/tests/test_holiday_api.py` — backend API tests (AC-1, AC-2, AC-3); commit `2659028`; locked once this artifact is Approved
-- `src/frontend/src/pages/HolidayList.test.tsx` — frontend component tests (AC-1, AC-2, AC-3, empty state); commit `6020049`; locked once this artifact is Approved
+- `src/aplx_ams_django/sla/tests/test_holiday_list.py` — database DAL tests (AC-1, AC-2, AC-4, schema constraint); commit fa86dbe; locked
+- `src/aplx_ams_django/sla/tests/conftest.py` — pytest fixtures: SQLite test-DB switch + sla app registry injection; commit fa86dbe; locked
+- `src/aplx_ams_django/sla/tests/__init__.py` — Python package marker; commit fa86dbe; locked
+- `src/aplx_ams_django/sla/tests/test_holiday_api.py` — backend API tests (AC-1, AC-2, AC-3); commit 2659028; locked
+- `src/frontend/src/pages/HolidayList.test.tsx` — frontend component tests (AC-1, AC-2, AC-3, empty state); commit 6020049; locked
 
 ## Stubs Created
 
@@ -126,9 +126,9 @@ FAILED FEAT-010 empty state: shows empty state message when no holidays — Unab
 ```
 
 ## Test Commit
-- Database tests: `fa86dbe` — `FEAT-010: tests (database)` — branch `feature/FEAT-010-holiday-list` — 2026-10-21
-- Backend API tests: `2659028` — `FEAT-010: tests (backend) — add client_user DELETE test for AC-3` — branch `feature/FEAT-010-holiday-list` — 2026-10-21
-- Frontend tests: `6020049` — `FEAT-010: tests (frontend)` — branch `feature/FEAT-010-holiday-list` — 2026-10-21
+`2659028` — `FEAT-010: tests (backend) — add client_user DELETE test for AC-3` — branch `feature/FEAT-010-holiday-list` — 2026-10-21
+
+All five test files were committed at or before this SHA (database and frontend tests at fa86dbe and 6020049 respectively, which precede 2659028 in history) and none have been modified since.
 
 ## Assumptions
 - A-046 pattern applies: `src/aplx_ams_django/settings/base.py` must be modified by Mode B to add `'aplx_ams_django.sla'` to `INSTALLED_APPS`. This file is included in plan.md v0.4 Files To Create Or Modify (via SCR S-22), so it is not an undocumented gap. No new assumption number required.
@@ -163,3 +163,13 @@ FAILED FEAT-010 empty state: shows empty state message when no holidays — Unab
 | Conditions | None |
 | Comments | No comments |
 | Timestamp | 2026-10-21 18:36 UTC |
+
+## SCR S-26 Record
+| Field | Value |
+| --- | --- |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Architect / tech lead |
+| Version change | 0.1 → 0.2 |
+| Comments | Format fix only |
+| Timestamp | 2026-10-22 UTC |

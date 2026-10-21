@@ -1574,3 +1574,46 @@ Not applicable — no architecture or contract artifact changes.
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+## SCR S-26: FEAT-010-TESTS.md — fix Test Files section commit SHA format
+<!-- scr_approver: Mohanasunder -->
+<!-- scr_status: Approved -->
+
+### Summary
+`scripts/locked_tests.py` uses `BACKTICK.findall(line)` to extract file paths from each "Test Files" entry, picking up every backtick-quoted string on the line. The documentation-writer wrote entries in the form `` `src/.../test_holiday_list.py` — ... commit `fa86dbe`; locked ... ``, so the parser extracts both the file path and the commit SHA (`fa86dbe`, `2659028`, `6020049`) as file paths. This causes `locked_tests.py check` to report "locked test file missing: fa86dbe" and, for files committed after `fa86dbe`, "changed since fa86dbe". All other test sets (FEAT-002 through FEAT-006) use plain text for SHA references (e.g., `commit 9ececb7` without backticks). Additionally, FEAT-010-TESTS.md has a multi-SHA "Test Commit" section (one SHA per layer), but `locked_tests.py` uses only the first SHA found as the reference for all test files; the fix consolidates to the latest test commit SHA (`2659028`).
+
+### Changed Artifact
+- FEAT-010-TESTS (docs/06-build/FEAT-010-TESTS.md) v0.1 → v0.2
+
+Changes are documentation format only — no test logic, test coverage, or approval conditions change:
+1. **Test Files section** — remove backtick formatting from inline commit SHA references (plain text, matching FEAT-006-TESTS.md convention)
+2. **Test Commit section** — consolidate from per-layer entries to single latest SHA: `2659028` (all test files exist at this commit and none have been modified since)
+3. **Input References** — bump FEAT-010 plan citation from v0.4 to v0.5 (SCR S-25 applied)
+
+### Reason
+The locked_tests.py gate fails because `fa86dbe`, `2659028`, and `6020049` are extracted as file paths instead of metadata. The gate is non-overridable and blocks CI. The fix aligns FEAT-010-TESTS.md with the plain-text SHA convention that the parser expects and that all prior test sets follow.
+
+### Impact
+- No test files are changed. The actual test content is unmodified.
+- No acceptance criteria or approval conditions change.
+- The locked test files remain locked at commit `2659028` (the latest test commit). All five test files were committed at or before `2659028` and have not changed since.
+- `locked_tests.py check` will pass after this fix.
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes.
+
+### Traceability Links
+- Upstream: FEAT-010-TESTS.md v0.1 (Approved 2026-10-22); FEAT-010 plan.md v0.5
+- Downstream: FEAT-010-TESTS.md v0.2; Phase 6 locked_tests gate
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
