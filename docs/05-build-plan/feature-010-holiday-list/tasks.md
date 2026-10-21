@@ -37,8 +37,8 @@ Ordered task checklist for the builder of FEAT-010. Each task names the file(s) 
 - [x] T-8: Register `sla.urls` in root `urls.py`.
 - [x] T-9: Write `src/frontend/src/pages/HolidayList.tsx` with MUI calendar/list; DM-only add/remove.
 - [x] T-10: Write `src/frontend/src/api/holidays.ts` with typed API calls.
-- [ ] T-11: Run all gate commands locally (`ruff`, `mypy`, `pytest --cov`, `bandit`, `pip-audit`, `detect-secrets`); confirm each exits 0.
-- [ ] T-12: Verify `python3 scripts/check_feature_size.py size FEAT-010` exits 0.
+- [x] T-11: Run all gate commands locally (`ruff`, `mypy`, `pytest --cov`, `bandit`, `pip-audit`, `detect-secrets`); confirm each exits 0.
+- [x] T-12: Verify `python3 scripts/check_feature_size.py size FEAT-010` exits 0.
 
 ## Assumptions
 None beyond those logged in docs/logs/assumptions-log.md.

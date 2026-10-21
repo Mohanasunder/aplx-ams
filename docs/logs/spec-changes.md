@@ -1660,3 +1660,44 @@ Not applicable — wave ordering is not an architecture decision; ADR A-1 govern
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-28: Glossary fix — FEAT-003-TESTS.md removes avoided term 'issue'
+
+**Raised by:** FEAT-010 automated gate sweep (`glossary_check.py check`), 2026-10-22.
+**Approver:** Mohanasunder (Tech lead — owner of FEAT-003-TESTS artifact).
+
+### Changed Artifact
+- FEAT-003-TESTS (docs/06-build/FEAT-003-TESTS.md) v0.1 → v0.2
+- FEAT-003-TESTS v0.1 → v0.2
+
+Changes: Line 105 — replaces avoided term with 'formatting problem' (GLO-001 compliance). No test logic changed.
+Before: `pre-existing FEAT-002 <avoided-term>`
+After: `pre-existing FEAT-002 formatting problem`
+
+### Reason
+The `glossary_check.py check` gate (non-overridable) fails on an avoided GLO-001 synonym in FEAT-003-TESTS.md line 105. The avoided term was used as a general technical description (a ruff formatting problem found in FEAT-002's test file during FEAT-003's build); the word is not used in its business sense. Replacing it with 'formatting problem' removes the glossary violation without altering meaning.
+
+### Impact
+- FEAT-003-TESTS.md only. No test logic, no locked test files, no API, DB, or UI contracts change.
+- No features cite FEAT-003-TESTS.md by version for their spec inputs.
+
+### Decision Record
+Not applicable — glossary compliance fix in a documentation artifact; not an architecture or contract change.
+
+### Traceability Links
+- Upstream: FEAT-003-TESTS v0.1; GLO-001 v0.3
+- Downstream: FEAT-003-TESTS v0.2
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
