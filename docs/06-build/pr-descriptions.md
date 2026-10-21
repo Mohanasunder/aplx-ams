@@ -1072,10 +1072,10 @@ Deep review checklist:
 
 ## PR FEAT-036: AppShell — Global Navigation Shell and Sign Out
 
-<!-- pr_status: Draft -->
-<!-- pr_approver: -->
+<!-- pr_status: Approved -->
+<!-- pr_approver: Mohanasunder -->
 <!-- pr_depth: Deep -->
-<!-- pr_review_minutes: -->
+<!-- pr_review_minutes: 15 -->
 
 ### Input References
 - FEAT-036 plan.md v0.3 (Approved 2026-10-21, Mohanasunder)
