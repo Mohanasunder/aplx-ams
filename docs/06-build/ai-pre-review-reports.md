@@ -12,7 +12,7 @@ approver: Human developer reviewer
 default_approver: Human developer reviewer
 default_folder: docs/06-build
 date: 2026-10-18
-validation: Pass
+validation: Pass with warnings
 ---
 
 # Phase 6 AI Pre-Review Reports
@@ -559,3 +559,134 @@ Lockout persists to DB ✓ | Lockout check before password verify ✓ | Reset on
 ### Traceability Links
 - Upstream: FEAT-006 plan.md v0.4; FEAT-006-TESTS.md v0.1; REQ-001 v0.3 § S-21; API-001 v0.2; DBD-001 v0.1; PRM-001 v0.1; UIS-001 v0.1
 - Downstream: FEAT-006 PR human review; docs/logs/review-feedback-log.md
+
+---
+
+## AIR FEAT-036: AppShell -- Global Navigation Shell and Sign Out
+
+<!-- air_status: Draft -->
+<!-- air_author: ai-code-reviewer -->
+<!-- air_date: 2026-10-21 -->
+<!-- air_verdict: Conditional Pass -- minor findings only; core implementation ready for human review -->
+
+### Input References
+
+| Artifact | Version | Status | Path |
+|---|---|---|---|
+| FEAT-036 plan.md | v0.3 | Approved (Mohanasunder, 2026-10-21) | docs/05-build-plan/feature-036-appshell-nav/plan.md |
+| FEAT-036-ACC | v0.2 | Approved (Mohanasunder, 2026-10-21) | docs/05-build-plan/feature-036-appshell-nav/acceptance.md |
+| FEAT-036-TESTS | v0.1 | Approved (Mohanasunder, 2026-10-21) | docs/06-build/FEAT-036-TESTS.md |
+| FEAT-001-TESTS | v0.2 | Approved (Mohanasunder, 2026-10-21) | docs/06-build/FEAT-001-TESTS.md |
+| API-001 | v0.2 | Approved | docs/04-design/openapi.yaml section F-5 |
+| UIS-001 | v0.1 | Approved | section AppShell role-based nav link sets |
+| PRM-001 | v0.1 | Approved | section Authentication F-5 |
+| SCR S-17 | -- | Approved | docs/logs/spec-changes.md -- role name correction |
+| SCR S-18 | -- | Approved | docs/logs/spec-changes.md -- FEAT-001-TESTS.md unlock and App.test.tsx update |
+| .ai/standards/agent-charter.md | generated | -- | Agent charter |
+| .ai/standards/learned-rules.md | -- | -- | LRN L-1 only |
+| .ai/standards/coding-standards.md | STD-001 v0.1 | Approved | Coding standards |
+| docs/logs/review-feedback-log.md | -- | -- | Category reuse |
+
+### Purpose And Scope
+
+Advisory pre-review of FEAT-036 (AppShell -- Global Navigation Shell and Sign Out) on branch feature/FEAT-036-appshell-nav. Reviews all five source files: AppShell.tsx (new), AuthContext.tsx (modified), App.tsx (modified), AppShell.test.tsx (new, locked at commit aeb8323), and App.test.tsx (modified). Covers plan adherence, all four acceptance criteria, API and UI contract compliance, role-based nav correctness, security, and agent charter compliance. No backend files changed; LRN L-1 applies to backend only and is out of scope for this review. This review is advisory only; the human developer reviewer decides.
+
+### Plan Adherence
+
+**Files from plan.md v0.3 "Files To Create Or Modify":**
+
+| File | Present | Notes |
+|---|---|---|
+| src/frontend/src/components/AppShell.tsx (new) | Yes | Correctly implements MuiAppBar, MuiDrawer, role nav, loading state, sign-out |
+| src/frontend/src/context/AuthContext.tsx (update) | Yes | Adds loading, useEffect calling me() on mount, and signOut() |
+| src/frontend/src/App.tsx (update) | Yes | Wraps authenticated routes in AppShell layout route; /login stays outside AppShell |
+| src/frontend/src/components/AppShell.test.tsx (new) | Yes | 9 Vitest tests locked at commit aeb8323; file is unchanged from locked commit (git diff aeb8323 HEAD -- AppShell.test.tsx produces empty diff) |
+
+**Files changed outside plan.md v0.3 scope:**
+
+| File | Notes |
+|---|---|
+| src/frontend/src/App.test.tsx | Modified; not in plan.md Files list. Authorized by SCR S-18 (Approved), FEAT-001-TESTS.md v0.2 (Approved), and FEAT-036-TESTS.md (Approved). See finding F-1. |
+| .secrets.baseline | Modified; not in plan.md Files list. No SCR or DEC found covering this change. See finding F-2. |
+
+New Packages: None added or upgraded. Plan states "None." Compliant.
+
+**Plan adherence: Pass** for all four plan files. Two out-of-plan files noted (F-1, F-2).
+
+### Acceptance Criteria Coverage
+
+| Criterion | Implementation | Tests | Coverage |
+|---|---|---|---|
+| AC-1: AppShell renders "APLX AMS", role chip, "Sign out" button | AppShell.tsx lines 130-158: MuiTypography "APLX AMS" (line 139), MuiChip with user.role (lines 141-149), MuiButton "Sign out" (lines 150-157) | AppShell.test.tsx lines 156-184: three getByText/getByRole assertions | Fully covered |
+| AC-2: Sign out calls POST /api/auth/logout/, clears user, navigates to /login | AppShell.tsx lines 95-99: handleSignOut() calls logout(), setUser(null), navigate('/login') directly. Known deviation: not delegated to context.signOut() -- required by the locked AC-2 test | AppShell.test.tsx lines 199-225: verifies logout mock called once, setUser called with null, navigate called with '/login' | Fully covered |
+| AC-3: AuthProvider calls me() on mount; 200 sets user; 401 navigates to /login | AuthContext.tsx lines 64-85: useEffect calls me().then(setUser) on 200; .catch sets user null and calls navigate('/login') on any error | AppShell.test.tsx lines 242-290: two waitFor tests (200 path and 401/error path) | Fully covered |
+| AC-4: Role-based nav -- delivery_manager 7 links, l2l3_support 3 links, client_user 2 links | AppShell.tsx lines 59-81: NAV_BY_ROLE map rendered via React Router Link (role=link) in MuiDrawer | AppShell.test.tsx lines 304-369: three tests verify exact link texts and queryAllByRole('link') counts | Fully covered |
+
+All 4 acceptance criteria are covered. Nav link sets match UIS-001 v0.1 section AppShell exactly (verified against acceptance.md AC-4 and FEAT-036-TESTS.md criteria map).
+
+### Findings
+
+| # | File | Line | Category | Severity | Issue |
+|---|---|---|---|---|---|
+| F-1 | src/frontend/src/App.test.tsx | whole file | scope-deviation | Minor | File is modified but not listed in plan.md v0.3 Files To Create Or Modify. Change is authorized by SCR S-18 (Approved), FEAT-001-TESTS.md v0.2 (Approved, Mohanasunder 2026-10-21), and FEAT-036-TESTS.md (Approved). Modification updates TST-001 AC-1 from asserting "APLX AMS" text to asserting Login h1 visible for unauthenticated users -- correct behavior after AppShell removes that nav element. Human reviewer to confirm authorization chain. |
+| F-2 | .secrets.baseline | -- | scope-deviation | Minor | File is modified on branch but not listed in plan.md v0.3 Files To Create Or Modify. No SCR or DEC found covering this change. FEAT-036 is frontend-only and introduces no secrets. The baseline update may be an artifact of detect-secrets rescanning the working tree. Human reviewer to inspect the diff and record a DEC if accepted (precedent: FEAT-005 finding F-11). |
+| F-3 | src/frontend/src/components/AppShell.test.tsx | 127, 209 | stale-suppression-comment | Info | Two @ts-expect-error directives (comment: "loading and signOut are added to AuthContextValue in FEAT-036 Mode B") are now stale: Mode B has implemented both fields. tsconfig.json line 20 excludes test files from tsc --noEmit so no CI failure occurs. File is locked and cannot be modified without a human unlock. No action required; noted for completeness. |
+| F-4 | src/frontend/src/components/AppShell.tsx | 95-98 | missing-error-handling | Info | handleSignOut does not wrap await logout() in try/catch. A network error during POST /api/auth/logout/ exits the function before setUser(null) and navigate('/login') execute, leaving the user in an authenticated UI state. Retaining session state on a failed server-side logout is defensible (session cookie remains valid; user can retry), but the behavior is undocumented. No security vulnerability. |
+
+No Blocker findings. No Major findings.
+
+### Learned Rules Check
+
+**LRN L-1 (missing-input-validation):** "Add a validate() method to every DRF serializer that enforces cross-field DB constraints ... wrap every model.save() call in a try/except django.db.IntegrityError."
+
+This rule applies to backend DRF serializers and API views. FEAT-036 is frontend-only -- no Django views, serializers, or model saves are introduced or modified. **LRN L-1 is not applicable.** No violation.
+
+### Security Observations
+
+1. No hardcoded secrets. No production configuration paths touched. Compliant.
+2. me() on mount (AuthContext.tsx lines 67-80): catches all errors (401, 500, network) and navigates to /login. No unauthenticated state can persist after loading completes in the normal flow. Compliant.
+3. logout() call precedes setUser(null) and navigate('/login') in handleSignOut. Client state is not cleared until the server acknowledges the logout -- the safer ordering. Compliant.
+4. Role-based nav filtering: NAV_BY_ROLE[user.role] ?? [] falls back to empty array for unexpected role values, showing no nav items rather than all items. Compliant.
+5. l1_support role present in NAV_BY_ROLE (AppShell.tsx line 74) with only the Tickets link. Not in AC-4 test scope but is safe (fewer links, not more). Compliant.
+6. No sensitive data (PII, auth tokens) exposed in nav link labels or paths. Compliant.
+
+### Escalation to Human
+
+**Design concern -- absence of an explicit route guard in App.tsx.** AppShell.tsx lines 120-123 render Outlet when user === null && loading === false. Authentication protection relies entirely on the AuthContext useEffect navigate('/login') completing before child route content is meaningful. App.tsx has no Navigate-to-login component wrapping the authenticated route subtree. While the AuthContext catch block redirects on all me() errors, a React render can fire before the asynchronous navigate completes -- for one render cycle the protected route JSX may execute. In this project this presents no data-exposure risk because child component API calls would fail with 401, but the pattern differs from an explicit PrivateRoute guard. Tech lead should confirm this is the intended design for all protected routes in this application.
+
+### Verdict
+
+**Conditional Pass (advisory).** No Blockers. No Major findings. Core implementation is correct: all four acceptance criteria are fully covered; the role-based nav sets match UIS-001 v0.1 section AppShell exactly; the API contract (API-001 v0.2 section F-5) is honoured; LRN L-1 does not apply; coding standards are followed throughout.
+
+Two Minor findings require human review before merge:
+- **F-1 (scope-deviation -- App.test.tsx):** Authorization chain is present (SCR S-18, FEAT-001-TESTS.md v0.2, FEAT-036-TESTS.md); human to confirm.
+- **F-2 (scope-deviation -- .secrets.baseline):** No SCR/DEC found; human to inspect diff and record a DEC if accepted.
+
+One design concern escalated to tech lead: absence of an explicit Navigate-to-login route guard in App.tsx.
+
+### Assumptions
+
+Not applicable -- no new assumptions raised by this review.
+
+### Open Questions
+
+Not applicable -- no new open questions raised; design concern escalated to human reviewer above.
+
+### Traceability Links
+
+- Upstream: FEAT-036 plan.md v0.3; FEAT-036-ACC v0.2; FEAT-036-TESTS v0.1; FEAT-001-TESTS v0.2; API-001 v0.2 section F-5; UIS-001 v0.1 section AppShell; PRM-001 v0.1 section Authentication F-5; SCR S-17; SCR S-18; .ai/standards/learned-rules.md; .ai/standards/coding-standards.md
+- Downstream: Human PR review of feature/FEAT-036-appshell-nav; docs/logs/review-feedback-log.md (F-1 Minor scope-deviation, F-2 Minor scope-deviation)
+
+### Quality Checklist
+
+- [x] Every section is filled, or marked "Not applicable - reason"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] Vague words removed
+- [x] Every finding cites file and line and has a category
+- [x] Learned rules checked (LRN L-1 not applicable -- frontend-only feature)
+- [x] Plan adherence assessed explicitly
+- [x] Verdict stated as advisory

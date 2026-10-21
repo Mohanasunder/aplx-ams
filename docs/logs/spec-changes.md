@@ -1124,3 +1124,203 @@ Not applicable — no architecture or contract artifact changes; DEC-088 records
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+## SCR S-16: FEAT-036 plan.md — remove AppShell.tsx from Context Pack (file is created by this feature, not an existing file)
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
+
+### Summary
+FEAT-036 plan.md v0.1 lists `src/frontend/src/components/AppShell.tsx` in the Context Pack section. The Context Pack provides EXISTING files for the builder to read; AppShell.tsx is a NEW file to be created by this feature. Including it causes `context_pack.py check` to fail with "file not found" and `context_pack.py render` to emit UNRESOLVED. Removing it from the Context Pack fixes the check without affecting builder context (the builder creates this file from scratch using the UIS-001 spec already in the pack).
+
+### Changed Artifact
+- FEAT-036 v0.1 → v0.2
+
+### Reason
+Plan gap: a file-to-be-created was incorrectly listed in the Context Pack. The Context Pack should list only existing files (AuthContext.tsx, App.tsx) and spec sections. AppShell.tsx has no content to read for context because it does not yet exist.
+
+### Impact
+- FEAT-036 plan.md only — no API, DB, or UI contracts change
+- Builder context is unaffected: UIS-001 § AppShell, AuthContext.tsx, and App.tsx provide all necessary context
+- context_pack.py check will pass after this fix
+
+### scr_status: Pending approval
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes.
+
+### Traceability Links
+- Upstream: FEAT-036 plan.md v0.1; context_pack.py check failure
+- Downstream: FEAT-036 plan.md v0.2; context_pack.py check gate
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+
+## SCR S-17: FEAT-036 plan.md and acceptance.md — correct role name l2_l3_support_engineer → l2l3_support
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
+
+### Summary
+FEAT-036 plan.md v0.2 (Implementation Steps T-2, T-4) and acceptance.md v0.1 (AC-4, Test Scenarios) use the incorrect role label `l2_l3_support_engineer`. The canonical role enum value in API-001 v0.2 § F-5 and `src/frontend/src/api/auth.ts` is `l2l3_support`. This discrepancy was identified during Phase 6 entry phase-intake as Gap 1 (Blocker). Mohanasunder approved the correction via the phase-intake gap resolution (2026-10-21).
+
+### Changed Artifact
+- FEAT-036 v0.2 → v0.3 (docs/05-build-plan/feature-036-appshell-nav/plan.md)
+- FEAT-036-ACC v0.1 → v0.2 (docs/05-build-plan/feature-036-appshell-nav/acceptance.md)
+
+### Reason
+The plan and acceptance criteria reference `l2_l3_support_engineer` which is not a valid value in the `UserRole` type defined in `api/auth.ts`. The canonical DB enum values (API-001 v0.2 § F-5) are `l1_support`, `l2l3_support`, `delivery_manager`, `client_user`. Using the wrong value would cause the builder to write code and tests that use an undefined role, failing at runtime and in the type checker.
+
+### Impact
+- FEAT-036 plan.md and FEAT-036-ACC only — no API, DB, or UI contracts change
+- The three-role nav link list (delivery_manager, l2l3_support, client_user) is unchanged; only the label corrected
+- Builder and test assertions must use `l2l3_support` (matching api/auth.ts UserRole type)
+
+### scr_status: Pending approval
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes. Role enum values are defined by API-001 v0.2 § F-5 (Approved 2026-10-17); this SCR corrects a copy error in the plan.
+
+### Traceability Links
+- Upstream: FEAT-036 plan.md v0.2; FEAT-036-ACC v0.1; API-001 v0.2 § F-5; src/frontend/src/api/auth.ts
+- Downstream: FEAT-036 plan.md v0.3; FEAT-036-ACC v0.2; FEAT-036 Mode A tests (AppShell.test.tsx)
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
+
+## SCR S-18: FEAT-001-TESTS.md — update TST-001 AC-1 test (App.test.tsx) for FEAT-036 AppShell changes
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
+
+### Summary
+FEAT-001-TESTS.md v0.1 locked `src/frontend/src/App.test.tsx` with TST-001 AC-1 asserting `screen.getByText('APLX AMS')` on the App root. FEAT-036 removes `<nav>APLX AMS</nav>` from App.tsx and replaces it with AppShell (which renders 'APLX AMS' only for authenticated users). The old assertion would fail after FEAT-036 Mode B. FEAT-001-TESTS.md v0.1 was Rejected (Mohanasunder, Tech lead, 2026-10-21) to unlock App.test.tsx. The FEAT-036 frontend-builder updated App.test.tsx in Mode A (commit aeb8323) to assert the Login page renders for unauthenticated users. FEAT-001-TESTS.md v0.2 was created, validated (Pass), and approved (Mohanasunder, Tech lead, 2026-10-21).
+
+### Changed Artifact
+- FEAT-001-TESTS v0.1 → v0.2 (docs/06-build/FEAT-001-TESTS.md)
+
+### Reason
+TST-001 AC-1 in App.test.tsx was correct for FEAT-001 (the nav element was always in the DOM). FEAT-036 removes that element and replaces it with AppShell. The test must be updated to assert meaningful behavior that remains valid after FEAT-036: Login renders for unauthenticated users at the default route.
+
+### Impact
+- FEAT-001-TESTS.md only — no API, DB, or UI contracts change
+- App.test.tsx updated: TST-001 AC-1 now asserts Login page renders for unauthenticated users (me() mocked to 401)
+- Test passes in both current state (Login via `path="*"` catch-all) and FEAT-036 Mode B (Login after AuthProvider 401 redirect)
+
+### scr_status: Approved
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes. The unlock was approved by Mohanasunder (Tech lead) per the Phase 6 test-unlock process.
+
+### Traceability Links
+- Upstream: FEAT-001-TESTS.md v0.1; FEAT-036 plan.md v0.3; SCR S-17; src/frontend/src/App.test.tsx (aeb8323)
+- Downstream: FEAT-001-TESTS.md v0.2; AppShell FEAT-036 Mode B; Phase 7 regression suite
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
+- [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-20: API-001 api-spec.md + openapi.yaml — extend PATCH /api/accounts/users/{id}/ for REQ S-34
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
+
+### Summary
+PATCH `/api/accounts/users/{id}/` (endpoint #7) already exists in API-001 v0.2 referencing REQ S-20. REQ S-34 (added by SCR S-19, Approved 2026-10-21) extends the edit capability to include `is_active` and requires a per-field audit trail entry for each changed field. This SCR updates the endpoint description and `UpdateUserAccountRequest` schema to reflect REQ S-34, and re-references the endpoint to REQ S-34. Total endpoint count remains 46.
+
+### Changed Artifacts
+- API-001 (docs/04-design/api-spec.md) v0.2 → v0.3
+- docs/04-design/openapi.yaml (no version in front matter; updated in lockstep with api-spec.md)
+
+### Reason
+REQ S-34 AC-1 requires audit trail entries per changed field. AC-3 requires client_organization_id to be cleared automatically when role changes away from client_user. The `is_active` field was not in the original `UpdateUserAccountRequest` schema. These three gaps must be closed in the contract before a feature plan and builder can implement REQ S-34.
+
+### Impact
+- Endpoint #7 description in api-spec.md: updated to list all five editable fields and reference REQ S-34.
+- openapi.yaml `PATCH /api/accounts/users/{id}/` operation description: updated with audit trail, is_active, and auto-clear of client_organization_id behaviours.
+- openapi.yaml `UpdateUserAccountRequest` schema: `is_active: boolean` field added; schema description added.
+- No other endpoints change. No DB schema change required (is_active column already exists in the accounts_user table).
+- Downstream: FEAT-NNN feature plan (Phase 5) will consume API-001 v0.3.
+
+### Decision Record
+Not applicable — no architecture change; existing endpoint extended. DEC-089 (Mohanasunder, 2026-10-21) is the governing decision for this SCR.
+
+### Traceability Links
+- Upstream: REQ S-34; SCR S-19; API-001 v0.2; BR B-22; NFR N-6; DEC-089
+- Downstream: API-001 v0.3; openapi.yaml (updated); FEAT-NNN plan (Phase 5, TBD)
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-19: REQ-001 user-stories.md — add story S-34 (delivery manager edits user account fields)
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
+
+### Summary
+A new user story, S-34, is added to REQ-001 so that a delivery manager can edit any field on a user account (name, email, role, client_org, is_active) with an audit trail entry per changed field. This was requested by Mohanasunder during the FEAT-036 human review (2026-10-21) and resolved via OQ-075 and DEC-089: "admin" = delivery_manager, no new role. Password changes are excluded (already REQ S-30).
+
+### Changed Artifact
+- REQ-001 (docs/02-requirements/user-stories.md) v0.3 → v0.4 — adds S-34; updates Purpose And Scope and Input References.
+
+### Reason
+The delivery manager needs to correct user account details (name, email), reassign roles, update client organisation links, and toggle active status without deleting and recreating accounts. No approved story covered this before SCR S-19. Decided by Mohanasunder, 2026-10-21 (OQ-075, DEC-089).
+
+### Impact
+- REQ-001 user-stories.md only — adds one story (S-34). No API endpoint, DB schema, or UI contract changes with this SCR (those follow in a subsequent Phase 4 SCR on API-001).
+- No existing story changes. S-20 (create/deactivate/reactivate) and S-30 (temporary password) are unchanged.
+- Downstream: a new feature plan (FEAT-NNN) will be created in Phase 5 to build S-34. API-001 will need a new SCR (PATCH /api/users/{id}/ endpoint) before the feature plan is created.
+- Traceability matrix: REQ S-34 to be linked to the user-management epic (EPC), SCP IS-4, and BRF-001 G-4.
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes. DEC-089 (Mohanasunder, 2026-10-21) records the admin-role interpretation.
+
+### Traceability Links
+- Upstream: OQ-075; DEC-089; REQ-001 v0.3; REQ S-20; SCP IS-4; BRF-001 G-4
+- Downstream: REQ-001 v0.4; future API-001 SCR; future FEAT-NNN plan
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact

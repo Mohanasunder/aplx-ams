@@ -5,11 +5,11 @@ phase: 5
 version: 0.1
 template: feature-tasks
 template_version: 1.0
-status: Draft
+status: Approved
 author_agent: build-planner
-approver: Tech lead
+approver: Mohanasunder
 date: 2026-10-19
-validation: Pending
+validation: Pass
 ---
 # FEAT-036: AppShell - Global Navigation Shell and Sign Out - Tasks
 
@@ -23,10 +23,10 @@ validation: Pending
 Ordered task checklist for the builder of FEAT-036. Each task names the file(s) it produces or modifies. Tasks must be completed in order; T-1 and T-2 must be done before T-3 because App.tsx imports AppShell.
 
 ## Task Checklist
-- [ ] T-1: Update `src/frontend/src/context/AuthContext.tsx` — add `useEffect` that calls GET /api/auth/me/ on mount; on 200 set user in state; on 401 navigate to /login; add `signOut()` function that calls POST /api/auth/logout/, clears user to null, navigates to /login; add `signOut` to the context type definition.
-- [ ] T-2: Create `src/frontend/src/components/AppShell.tsx` — render MuiAppBar + MuiToolbar with MuiTypography "APLX AMS", MuiChip with role label from AuthContext, MuiButton "Sign out" calling `signOut()`; render MuiDrawer (variant="permanent") with nav links filtered by role per UIS-001 v0.1 § AppShell; show MuiCircularProgress centered while loading state is true (while GET /api/auth/me/ is pending on mount).
-- [ ] T-3: Update `src/frontend/src/App.tsx` — wrap authenticated routes in `<AppShell>` as a layout route; keep the /login route outside AppShell; remove any duplicate inline nav elements.
-- [ ] T-4: Write `src/frontend/src/components/AppShell.test.tsx` — test AC-1 (render check for title, chip, button), AC-2 (sign-out flow: POST called, user cleared, navigate to /login), AC-3 (me() on mount: 200 path sets user; 401 path navigates to /login), AC-4 (role-based nav: assert exact link set for each of the three roles per UIS-001 v0.1 § AppShell).
+- [x] T-1: Update `src/frontend/src/context/AuthContext.tsx` — add `useEffect` that calls GET /api/auth/me/ on mount; on 200 set user in state; on 401 navigate to /login; add `signOut()` function that calls POST /api/auth/logout/, clears user to null, navigates to /login; add `signOut` to the context type definition.
+- [x] T-2: Create `src/frontend/src/components/AppShell.tsx` — render MuiAppBar + MuiToolbar with MuiTypography "APLX AMS", MuiChip with role label from AuthContext, MuiButton "Sign out" calling `signOut()`; render MuiDrawer (variant="permanent") with nav links filtered by role per UIS-001 v0.1 § AppShell; show MuiCircularProgress centered while loading state is true (while GET /api/auth/me/ is pending on mount).
+- [x] T-3: Update `src/frontend/src/App.tsx` — wrap authenticated routes in `<AppShell>` as a layout route; keep the /login route outside AppShell; remove any duplicate inline nav elements.
+- [x] T-4: Write `src/frontend/src/components/AppShell.test.tsx` — test AC-1 (render check for title, chip, button), AC-2 (sign-out flow: POST called, user cleared, navigate to /login), AC-3 (me() on mount: 200 path sets user; 401 path navigates to /login), AC-4 (role-based nav: assert exact link set for each of the three roles per UIS-001 v0.1 § AppShell).
 - [ ] T-5: Run `npm run lint` and `npm run type-check` in `src/frontend/`; fix all errors before proceeding.
 - [ ] T-6: Run `py -3 scripts/check_feature_size.py size FEAT-036`; confirm exit code 0.
 
@@ -52,9 +52,10 @@ None.
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Tech lead |
+| Version | 0.1 |
 | Conditions | None |
-| Comments | None |
-| Timestamp | Pending |
+| Comments | Approved with plan.md at Phase 5 gate — build-planner task list for FEAT-036 AppShell |
+| Timestamp | 2026-10-21 12:38 UTC |

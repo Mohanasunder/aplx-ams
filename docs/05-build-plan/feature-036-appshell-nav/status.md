@@ -5,11 +5,11 @@ phase: 5
 version: 0.1
 template: feature-status
 template_version: 1.1
-status: Draft
+status: Approved
 author_agent: build-planner
-approver: Tech lead
+approver: Mohanasunder
 date: 2026-10-19
-validation: Pending
+validation: Pass
 ---
 # FEAT-036: AppShell - Global Navigation Shell and Sign Out - Status
 
@@ -20,15 +20,15 @@ validation: Pending
 Tracks the build-phase progress of FEAT-036. Updated by the builder agent during Phase 6.
 
 ## Branch And PR
-- Branch: Pending — feature/FEAT-036-appshell-nav (set when scripts/create-feature-branch.sh runs)
-- Base commit: Pending — set when branch is created from master after FEAT-006 merges
-- Started: Pending — set when Phase 6 begins
-- PR: Pending — draft PR link added when branch is created
+- Branch: feature/FEAT-036-appshell-nav
+- Base commit: a09fc6c
+- Started: 2026-10-21
+- PR: https://github.com/Mohanasunder/aplx-ams/pull/19
 
 ## Progress
-- State: Not started
-- Assigned agents: Pending — assigned in Phase 6
-- Last update: 2026-10-19
+- State: In review
+- Assigned agents: frontend-builder (Mode A + B), documentation-writer (PR description, SSR), ai-code-reviewer, security-scanner, checker
+- Last update: 2026-10-21
 
 ## Blockers
 Depends on FEAT-006 (PR #17) being merged to master before the feature branch is created. No other blockers.
@@ -55,9 +55,10 @@ None.
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Tech lead |
+| Version | 0.1 |
 | Conditions | None |
-| Comments | None |
-| Timestamp | Pending |
+| Comments | Approved with plan.md at Phase 5 gate — status tracker for FEAT-036 AppShell |
+| Timestamp | 2026-10-21 12:38 UTC |
