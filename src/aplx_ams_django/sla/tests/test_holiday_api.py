@@ -268,6 +268,38 @@ def test_ac3_l2_l3_cannot_remove_holiday() -> None:
     )
 
 
+@pytest.mark.django_db
+def test_ac3_client_user_cannot_remove_holiday() -> None:
+    """AC-3: A client_user (P4, role=client_user) DELETE /api/holidays/{id}/ must
+    return 403 Forbidden.
+
+    Mode A red reason: sla URLs are not registered → 404 (not 403).
+    Mode B expected: HasRolePermission returns 403 before any DB write.
+    """
+    from datetime import datetime, timezone
+
+    from aplx_ams_django.organizations.models import ClientOrg
+    from aplx_ams_django.sla.models import HolidayEntry
+
+    dm_owner = _make_user("dm_owner_del_cu", "delivery_manager")
+    entry = HolidayEntry.objects.create(
+        holiday_date="2027-07-03",
+        added_at=datetime(2027, 6, 3, 9, 0, tzinfo=timezone.utc),
+        added_by=dm_owner,
+    )
+
+    org = ClientOrg.objects.create(name="TestOrgAC3Delete")
+    cu = _make_user("cu_delete_ac3", "client_user", client_org=org)
+    client = _authenticated_client(cu)
+    response = client.delete(f"/api/holidays/{entry.pk}/")
+
+    assert response.status_code == 403, (
+        f"client_user DELETE /api/holidays/{entry.pk}/ expected 403 Forbidden, "
+        f"got {response.status_code}. "
+        f"Mode A: 404 expected (URL not registered); Mode B must return 403."
+    )
+
+
 # ---------------------------------------------------------------------------
 # AC-3 (GET): GET /api/holidays/ is accessible to all authenticated roles
 # ---------------------------------------------------------------------------
