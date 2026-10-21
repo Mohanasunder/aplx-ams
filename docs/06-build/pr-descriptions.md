@@ -905,10 +905,10 @@ None beyond those logged in docs/logs/assumptions-log.md.
 
 ## PR FEAT-006: S-21: User Signs In with a User Account
 
-<!-- pr_status: Draft -->
-<!-- pr_approver: -->
+<!-- pr_status: Approved -->
+<!-- pr_approver: Mohanasunder -->
 <!-- pr_depth: Deep -->
-<!-- pr_review_minutes: -->
+<!-- pr_review_minutes: 30 -->
 
 ### Feature
 FEAT-006: S-21: User Signs In with a User Account
@@ -1051,7 +1051,7 @@ Deep review checklist:
 
 ### Open Questions
 - OQ-071 (Answered, 2026-10-19): FEAT-006 plan.md step 9 referenced React Router routes but `react-router-dom` was absent from New Packages in plan v0.2. Resolved via SCR S-13 (plan.md v0.3); Mode B uses `react-router-dom @^7.18.4` (DEC-084, 2026-10-19). Logged in `docs/logs/open-questions-log.md`.
-- OQ-072 (Open, 2026-10-19): Scope and packages gates use `--base main`; repo uses `master`. Needs standards-author to update automated-gates.md to `--base master`. Logged in `docs/logs/open-questions-log.md`.
+- OQ-072 (Answered, 2026-10-19): Scope and packages gates use `--base main`; repo uses `master`. Resolved — standards-author updated automated-gates.md to `--base master` (DEC-085). Logged in `docs/logs/open-questions-log.md`.
 
 ### Traceability Links
 - Upstream: REQ-001 v0.3 § S-21; API-001 v0.2 § F-5; DBD-001 v0.1 § Module: accounts; UIS-001 v0.1 § S-21; FEAT-006 plan.md v0.4; FEAT-006-ACC v0.1; FEAT-006-TESTS v0.1; STD-001 v0.1; TST-001 v0.1; PRM-001 v0.1 § F-5; FEAT-005 (accounts.User model); SCR S-13; SCR S-14; DEC-042; DEC-084; DEC-086; DEC-087
@@ -1077,9 +1077,18 @@ None.
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Tech lead |
 | Conditions | None |
-| Comments | None |
-| Timestamp | Pending |
+| Comments | [review depth: Deep, tier Critical] [review: 30 min] All 4 acceptance criteria verified; automated gates passed; no blockers. |
+| Timestamp | 2026-10-21 12:08 UTC |
+
+| Field | Value |
+| --- | --- |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Release manager |
+| Conditions | None |
+| Comments | [review depth: Deep, tier Critical] [review: 30 min] Second approver sign-off for Critical-tier PR. |
+| Timestamp | 2026-10-21 12:08 UTC |

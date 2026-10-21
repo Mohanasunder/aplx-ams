@@ -1064,7 +1064,7 @@ Gate failure discovered during Phase 6 Step 6 (automated gates). The `packages` 
 - Builders are not affected: implementation is complete and tests pass; the fix is metadata only
 - Packages gate will pass once plan v0.4 is approved and the command uses `--base master`
 
-### scr_status: Pending approval
+### scr_status: Approved
 
 ### Decision Record
 Not applicable — no architecture or contract artifact changes.
@@ -1072,6 +1072,46 @@ Not applicable — no architecture or contract artifact changes.
 ### Traceability Links
 - Upstream: FEAT-006 plan.md v0.3; OQ-072; DEC-085
 - Downstream: FEAT-006 plan.md v0.4; scope gate; packages gate
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
+
+## SCR S-15: WAV-001 wave-plan.md — insert FEAT-036 (AppShell) as new Wave 8; renumber Waves 8–28 to Waves 9–29
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
+
+### Summary
+FEAT-036 (AppShell — Global Navigation Shell and Sign Out) was created as a new Enabling feature on 2026-10-21 (DEC-088, OQ-073). It must run after FEAT-006 (W7) and before authenticated-page features (formerly Wave 13, now Wave 14). WAV-001 v0.1 must be updated to insert FEAT-036 as Wave 8 and shift the 21 former Waves 8–28 to Waves 9–29. No dependency relationships change; FEAT-008 and FEAT-009 gain a new upstream dependency on FEAT-036 (AppShell) for UI integration.
+
+### Changed Artifact
+- WAV-001 v0.1 → v0.2
+
+### Reason
+FEAT-036 must be scheduled after FEAT-006 (W7) and before any feature that renders authenticated pages. Inserting it as Wave 8 is the minimal wave-plan change consistent with dependency ordering. All features formerly in Waves 8–28 shift by one wave; no feature changes its parallel group or Shared Path classification.
+
+### Impact
+- WAV-001 only — no API, DB, or UI contracts change
+- 37 features remain within max_parallel_builder_agents (3) and review_capacity_prs_per_week (6) capacity limits
+- FEAT-036 is a 1-PR Wave 8 singleton (no Shared Path files; alone by dependency ordering)
+- FEAT-008 and FEAT-009 dependency column updated to cite FEAT-036 (W8) instead of FEAT-006 (W7)
+
+### scr_status: Approved
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes; DEC-088 records the AppShell feature classification decision.
+
+### Traceability Links
+- Upstream: WAV-001 v0.1; FEAT-036 plan.md v0.1; DEC-088; OQ-073
+- Downstream: WAV-001 v0.2; FEAT-036 build branch (Wave 8); FEAT-008, FEAT-009 (dependency updated)
 
 ### Quality Checklist
 - [x] Every section is filled, or marked "Not applicable - <reason>"
