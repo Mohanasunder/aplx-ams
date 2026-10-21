@@ -288,3 +288,5 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-21 18:04 | SCR S-24 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | - |
 | 2026-10-21 18:05 | FEAT-010 | 0.4 | Approve | Mohanasunder | Architect / tech lead | Pass | - | SCR S-24 applied: added test_holiday_api.py and HolidayList.test.tsx to Tests list; OQ-076 closed. |
 | 2026-10-21 18:36 | FEAT-010-TESTS | 0.1 | Approve | Mohanasunder | Tech lead | Pass | - | No comments |
+| 2026-10-21 18:50 | SCR S-25 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | No comments |
+| 2026-10-21 18:51 | FEAT-010 | 0.5 | Approve | Mohanasunder | Architect / tech lead | Pass | - | SCR S-25 applied: added App.tsx to Frontend source files; Size Check 14->15. |

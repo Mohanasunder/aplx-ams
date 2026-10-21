@@ -27,16 +27,16 @@ validation: Pass
 Ordered task checklist for the builder of FEAT-010. Each task names the file(s) it produces.
 
 ## Task Checklist
-- [ ] T-1: Create `src/aplx_ams_django/sla/` app with `models.py` defining `HolidayEntry` (date, description) per DBD-001.
-- [ ] T-2: Generate `sla/migrations/0001_initial.py`.
-- [ ] T-3: Write `serializers.py` for `HolidayEntry`.
-- [ ] T-4: Write `services.py` with `add_holiday`, `remove_holiday`, `is_holiday(date)` functions.
-- [ ] T-5: Write `dal.py` with `get_holidays_in_range(start, end)` query.
-- [ ] T-6: Write `views.py` with `HolidayEntryViewSet` (DM-only write; all authenticated users read).
-- [ ] T-7: Write `urls.py` registering holiday endpoints.
-- [ ] T-8: Register `sla.urls` in root `urls.py`.
-- [ ] T-9: Write `src/frontend/src/pages/HolidayList.tsx` with MUI calendar/list; DM-only add/remove.
-- [ ] T-10: Write `src/frontend/src/api/holidays.ts` with typed API calls.
+- [x] T-1: Create `src/aplx_ams_django/sla/` app with `models.py` defining `HolidayEntry` (date, description) per DBD-001.
+- [x] T-2: Generate `sla/migrations/0001_initial.py`.
+- [x] T-3: Write `serializers.py` for `HolidayEntry`.
+- [x] T-4: Write `services.py` with `add_holiday`, `remove_holiday`, `is_holiday(date)` functions.
+- [x] T-5: Write `dal.py` with `get_holidays_in_range(start, end)` query.
+- [x] T-6: Write `views.py` with `HolidayEntryViewSet` (DM-only write; all authenticated users read).
+- [x] T-7: Write `urls.py` registering holiday endpoints.
+- [x] T-8: Register `sla.urls` in root `urls.py`.
+- [x] T-9: Write `src/frontend/src/pages/HolidayList.tsx` with MUI calendar/list; DM-only add/remove.
+- [x] T-10: Write `src/frontend/src/api/holidays.ts` with typed API calls.
 - [ ] T-11: Run all gate commands locally (`ruff`, `mypy`, `pytest --cov`, `bandit`, `pip-audit`, `detect-secrets`); confirm each exits 0.
 - [ ] T-12: Verify `python3 scripts/check_feature_size.py size FEAT-010` exits 0.
 

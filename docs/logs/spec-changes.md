@@ -1530,3 +1530,47 @@ Not applicable — no architecture or contract artifact changes.
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-25: FEAT-010 plan.md — add App.tsx to Files To Create Or Modify
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
+
+### Summary
+FEAT-010 delivers the `HolidayList` page at route `/admin/holidays`. The approved plan.md v0.4 lists `HolidayList.tsx` and `holidays.ts` as the frontend files, but does not list `src/frontend/src/App.tsx` (modify — add `/admin/holidays` route). Without registering the route in `App.tsx`, the page is unreachable in the running application. This gap was identified during Mode B implementation by the frontend-builder. The scope gate would reject an `App.tsx` modification without this SCR.
+
+### Changed Artifact
+- FEAT-010 (docs/05-build-plan/feature-010-holiday-list/plan.md) v0.4 → v0.5
+
+Changes:
+1. **Files To Create Or Modify — Frontend** section: add:
+   - `src/frontend/src/App.tsx` (modify — add `/admin/holidays` route for HolidayList; protected by DM role guard)
+2. **Size Check table** — source file count: 14 → 15
+
+### Reason
+The frontend component-level route guard (data-testid="redirect-to-tickets") is implemented and tested, but without a route entry in `App.tsx`, users cannot navigate to `/admin/holidays` in the running application. AC-3 tests pass at the component level; end-to-end route access requires `App.tsx` to be updated.
+
+### Impact
+- No acceptance criteria content changes. The new file is an additive modification to App.tsx that adds one protected route.
+- Size Check source file count increases by 1 (14 → 15), still within limit of 30.
+- FEAT-010-TESTS.md is unaffected (no new tests required; the route guard is already tested at the component level).
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes.
+
+### Traceability Links
+- Upstream: FEAT-010 plan.md v0.4; UIS-001 v0.1 § REQ S-24 (route `/admin/holidays`); FEAT-036 (AppShell)
+- Downstream: FEAT-010 plan.md v0.5; Phase 6 scope gate
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
