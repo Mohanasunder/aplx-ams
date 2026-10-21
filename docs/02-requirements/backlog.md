@@ -23,10 +23,11 @@ validation: Pass with warnings
 - RSK-001 v0.2 § Risk R-2 (MoSCoW so that a scope cut is an early named human decision).
 - SCR S-3 (`docs/logs/spec-changes.md`): password set, reset and change, decided by Mohanasunder (Product owner / BA), chat, 2026-10-17 (adds BL-30, BL-31).
 - SCR S-4 (`docs/logs/spec-changes.md`): security events in the audit trail, OQ-062 answered by Mohanasunder (Product owner / BA), chat, 2026-10-17 (adds BL-32, BL-33).
+- SCR S-19 (`docs/logs/spec-changes.md`): edit user account fields, OQ-075 and DEC-089 (Mohanasunder, 2026-10-21) (adds BL-34).
 
 ## Purpose And Scope
 <!-- guidance: What this artifact covers and what it does not -->
-Covers: the release 1 backlog of APLX AMS: one entry per story, BL-1 to BL-33 (BL-N links to REQ S-N with the same number), each with MoSCoW priority and release. Every entry is Must for release 1 (pilot go-live 2027-01-17) because the human set IS-1 to IS-5 all Must (INT-002 Q1); no Should, Could or Won't items exist, and no item is mapped to a later release. Items out of scope for release 1 are the PRS-001 non-goals NG-1 to NG-7, not backlog entries.
+Covers: the release 1 backlog of APLX AMS: one entry per story, BL-1 to BL-34 (BL-N links to REQ S-N with the same number), each with MoSCoW priority and release. Every entry is Must for release 1 (pilot go-live 2027-01-17) because the human set IS-1 to IS-5 all Must (INT-002 Q1); no Should, Could or Won't items exist, and no item is mapped to a later release. BL-34 (REQ S-34) added by SCR S-19 (Approved 2026-10-21, Mohanasunder). Items out of scope for release 1 are the PRS-001 non-goals NG-1 to NG-7, not backlog entries.
 
 Does not cover: build order, waves or feature slicing (Phase 5). No priority conflict was found; if capacity forces a cut (RSK R-2), the product owner decides which Must becomes Should, recorded as a decision.
 
@@ -461,13 +462,26 @@ Release 1 (MVP, go-live 2027-01-17)
 
 ---
 
+## Entry BL-34: Delivery manager edits user account fields
+
+### Item
+REQ S-34 (EPC E-5, SCP IS-4)
+
+### Priority
+Must: the delivery manager must correct user account details, role assignments and organization links without deleting and recreating accounts (SCR S-19, Mohanasunder, 2026-10-21; DEC-089; OQ-075 answered; SCP IS-4; BRF-001 G-4).
+
+### Release
+Release 1 (MVP, go-live 2027-01-17). Feature plan (FEAT-NNN) to be created after Phase 4 SCR on API-001 (PATCH /api/users/{id}/) is Approved.
+
+---
+
 ## Assumptions
 <!-- guidance: Each labeled A-NNN and logged in docs/logs/assumptions-log.md -->
 None for the backlog. Story-level assumptions A-009 to A-025 (A-009 to A-011, A-013, A-017, A-018, A-023 to A-025 Confirmed; A-012 Rejected) are in REQ-001, BR-001 and GLO-001.
 
 ## Open Questions
 <!-- guidance: Each labeled OQ-NNN and logged in docs/logs/open-questions-log.md -->
-None for the backlog. OQ-037 to OQ-048 answered 2026-10-17 added BL-24 to BL-28 and criteria within existing entries; OQ-049 to OQ-051, answered the same day, added REQ S-24 AC-4 and BL-29. SCR S-3 (2026-10-17) added BL-30 and BL-31; their questions OQ-053, OQ-054 are Answered (2026-10-17) and listed in REQ-001. SCR S-4 (2026-10-17; OQ-062, OQ-064, OQ-065 Answered) added BL-32 and BL-33. Each story has at most 4 criteria. No other open question remains.
+None for the backlog. OQ-037 to OQ-048 answered 2026-10-17 added BL-24 to BL-28 and criteria within existing entries; OQ-049 to OQ-051, answered the same day, added REQ S-24 AC-4 and BL-29. SCR S-3 (2026-10-17) added BL-30 and BL-31; their questions OQ-053, OQ-054 are Answered (2026-10-17) and listed in REQ-001. SCR S-4 (2026-10-17; OQ-062, OQ-064, OQ-065 Answered) added BL-32 and BL-33. SCR S-19 (2026-10-21; OQ-075 Answered, DEC-089) added BL-34. Each story has at most 4 criteria. No other open question remains.
 
 ## Traceability Links
 <!-- guidance: Upstream and downstream IDs, or 'Not applicable - reason'.

@@ -25,6 +25,7 @@ validation: Pass with warnings
 - PER-001 v0.2 § Persona P-1 to P-4; PRC-001 v0.2 § Process M-1 to M-3 (Pain Points).
 - SCR S-3 (`docs/logs/spec-changes.md`): password set, reset and change (REQ S-30, S-31 in E-5), decided by Mohanasunder (Product owner / BA), chat, 2026-10-17.
 - SCR S-4 (`docs/logs/spec-changes.md`): security events in the audit trail (REQ S-32, S-33 in E-5), OQ-062 answered by Mohanasunder (Product owner / BA), chat, 2026-10-17.
+- SCR S-19 (`docs/logs/spec-changes.md`): edit user account fields (REQ S-34 in E-5), OQ-075 and DEC-089, Mohanasunder, 2026-10-21.
 
 ## Purpose And Scope
 <!-- guidance: What this artifact covers and what it does not -->
@@ -116,7 +117,7 @@ BRF-001 G-4
 A client organization counts as on the dashboard (G-4, denominator 1 in release 1) only once it is set up, its client users can sign in, and they see only their own organization's data (DEC-022, RSK R-6). The audit trail (REQ S-23, S-32, S-33) serves G-3, as PRS F-8 serves PRS G-3: ticket changes are recorded in the one tool instead of the shared mailbox and spreadsheet.
 
 ### Stories
-REQ S-18, REQ S-20, REQ S-21, REQ S-22, REQ S-23, REQ S-30, REQ S-31, REQ S-32, REQ S-33
+REQ S-18, REQ S-20, REQ S-21, REQ S-22, REQ S-23, REQ S-30, REQ S-31, REQ S-32, REQ S-33, REQ S-34
 
 ---
 
@@ -126,7 +127,7 @@ None specific to the epics. Story-level assumptions A-009 to A-025 (A-009 to A-0
 
 ## Open Questions
 <!-- guidance: Each labeled OQ-NNN and logged in docs/logs/open-questions-log.md -->
-None specific to the epics. OQ-037 to OQ-051 are Answered (2026-10-17); all logged in `docs/logs/open-questions-log.md`. No brief goal is left uncovered, so no product owner scope decision is needed. Scope decision DEC-026 (client comments, part of IS-4) adds REQ S-28 and REQ S-29 to E-1. SCR S-3 adds REQ S-30 and REQ S-31 to E-5; their questions OQ-053, OQ-054 are Answered (2026-10-17) and listed in REQ-001. SCR S-4 (OQ-062, OQ-064, OQ-065 Answered, 2026-10-17) adds REQ S-32 and REQ S-33 to E-5; the questions are listed in REQ-001.
+None specific to the epics. OQ-037 to OQ-051 are Answered (2026-10-17); all logged in `docs/logs/open-questions-log.md`. No brief goal is left uncovered, so no product owner scope decision is needed. Scope decision DEC-026 (client comments, part of IS-4) adds REQ S-28 and REQ S-29 to E-1. SCR S-3 adds REQ S-30 and REQ S-31 to E-5; their questions OQ-053, OQ-054 are Answered (2026-10-17) and listed in REQ-001. SCR S-4 (OQ-062, OQ-064, OQ-065 Answered, 2026-10-17) adds REQ S-32 and REQ S-33 to E-5; the questions are listed in REQ-001. SCR S-19 (OQ-075 Answered, DEC-089, 2026-10-21, Mohanasunder) adds REQ S-34 to E-5; the question and decision are listed in REQ-001.
 
 ## Traceability Links
 <!-- guidance: Upstream and downstream IDs, or 'Not applicable - reason'.

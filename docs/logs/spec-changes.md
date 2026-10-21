@@ -1242,3 +1242,85 @@ Not applicable — no architecture or contract artifact changes. The unlock was 
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-20: API-001 api-spec.md + openapi.yaml — extend PATCH /api/accounts/users/{id}/ for REQ S-34
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
+
+### Summary
+PATCH `/api/accounts/users/{id}/` (endpoint #7) already exists in API-001 v0.2 referencing REQ S-20. REQ S-34 (added by SCR S-19, Approved 2026-10-21) extends the edit capability to include `is_active` and requires a per-field audit trail entry for each changed field. This SCR updates the endpoint description and `UpdateUserAccountRequest` schema to reflect REQ S-34, and re-references the endpoint to REQ S-34. Total endpoint count remains 46.
+
+### Changed Artifacts
+- API-001 (docs/04-design/api-spec.md) v0.2 → v0.3
+- docs/04-design/openapi.yaml (no version in front matter; updated in lockstep with api-spec.md)
+
+### Reason
+REQ S-34 AC-1 requires audit trail entries per changed field. AC-3 requires client_organization_id to be cleared automatically when role changes away from client_user. The `is_active` field was not in the original `UpdateUserAccountRequest` schema. These three gaps must be closed in the contract before a feature plan and builder can implement REQ S-34.
+
+### Impact
+- Endpoint #7 description in api-spec.md: updated to list all five editable fields and reference REQ S-34.
+- openapi.yaml `PATCH /api/accounts/users/{id}/` operation description: updated with audit trail, is_active, and auto-clear of client_organization_id behaviours.
+- openapi.yaml `UpdateUserAccountRequest` schema: `is_active: boolean` field added; schema description added.
+- No other endpoints change. No DB schema change required (is_active column already exists in the accounts_user table).
+- Downstream: FEAT-NNN feature plan (Phase 5) will consume API-001 v0.3.
+
+### Decision Record
+Not applicable — no architecture change; existing endpoint extended. DEC-089 (Mohanasunder, 2026-10-21) is the governing decision for this SCR.
+
+### Traceability Links
+- Upstream: REQ S-34; SCR S-19; API-001 v0.2; BR B-22; NFR N-6; DEC-089
+- Downstream: API-001 v0.3; openapi.yaml (updated); FEAT-NNN plan (Phase 5, TBD)
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-19: REQ-001 user-stories.md — add story S-34 (delivery manager edits user account fields)
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
+
+### Summary
+A new user story, S-34, is added to REQ-001 so that a delivery manager can edit any field on a user account (name, email, role, client_org, is_active) with an audit trail entry per changed field. This was requested by Mohanasunder during the FEAT-036 human review (2026-10-21) and resolved via OQ-075 and DEC-089: "admin" = delivery_manager, no new role. Password changes are excluded (already REQ S-30).
+
+### Changed Artifact
+- REQ-001 (docs/02-requirements/user-stories.md) v0.3 → v0.4 — adds S-34; updates Purpose And Scope and Input References.
+
+### Reason
+The delivery manager needs to correct user account details (name, email), reassign roles, update client organisation links, and toggle active status without deleting and recreating accounts. No approved story covered this before SCR S-19. Decided by Mohanasunder, 2026-10-21 (OQ-075, DEC-089).
+
+### Impact
+- REQ-001 user-stories.md only — adds one story (S-34). No API endpoint, DB schema, or UI contract changes with this SCR (those follow in a subsequent Phase 4 SCR on API-001).
+- No existing story changes. S-20 (create/deactivate/reactivate) and S-30 (temporary password) are unchanged.
+- Downstream: a new feature plan (FEAT-NNN) will be created in Phase 5 to build S-34. API-001 will need a new SCR (PATCH /api/users/{id}/ endpoint) before the feature plan is created.
+- Traceability matrix: REQ S-34 to be linked to the user-management epic (EPC), SCP IS-4, and BRF-001 G-4.
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes. DEC-089 (Mohanasunder, 2026-10-21) records the admin-role interpretation.
+
+### Traceability Links
+- Upstream: OQ-075; DEC-089; REQ-001 v0.3; REQ S-20; SCP IS-4; BRF-001 G-4
+- Downstream: REQ-001 v0.4; future API-001 SCR; future FEAT-NNN plan
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact

@@ -2,7 +2,7 @@
 id: API-001
 title: APLX AMS: API Specification
 phase: 4
-version: 0.2
+version: 0.3
 template: api-spec
 template_version: 2.0
 status: Approved
@@ -18,7 +18,7 @@ validation: Pass
 ## Input References
 
 - SUM-003 v0.2 — Phase 3 Summary (Approved 2026-10-17).
-- REQ-001 v0.3 — APLX AMS: User Stories, S-1 to S-33 (Approved 2026-10-17).
+- REQ-001 v0.4 — APLX AMS: User Stories, S-1 to S-34 (Approved 2026-10-21; S-34 added by SCR S-19).
 - BR-001 v0.3 — APLX AMS: Business Rules, B-1 to B-24 (Approved 2026-10-17).
 - NFR-001 v0.3 — APLX AMS: Non-Functional Requirements, N-1 to N-9 (Approved 2026-10-17).
 - GLO-001 v0.3 — APLX AMS: Domain Glossary (Approved 2026-10-17).
@@ -30,10 +30,11 @@ validation: Pass
 - SCR S-3 (Approved 2026-10-17): password management endpoints S-30, S-31.
 - SCR S-4 (Approved 2026-10-17): security events in audit trail, S-32, S-33.
 - SCR S-6 (2026-10-18): AssignTicketRequest request-body field rename → engineer_id for glossary compliance (ADR A-18).
+- SCR S-20 (Approved 2026-10-21): extend PATCH /api/accounts/users/{id}/ — add is_active field and audit trail behaviour for REQ S-34.
 
 ## Purpose And Scope
 
-Covers: the complete REST API contract for APLX AMS release 1, including authentication, authorization, pagination, error model, security controls, and one endpoint per story need (S-1 to S-33). The contract spans 8 features: ticket management (F-1, F-2), SLA timer and status (F-3), service reporting and dashboards (F-4), effort tracking (F-5), client log-in and client-facing portal (F-6), user account management (F-6), audit trail (F-8), and finance export (F-5). All 46 endpoints are listed in the Endpoint Summary and defined in `docs/04-design/openapi.yaml`.
+Covers: the complete REST API contract for APLX AMS release 1, including authentication, authorization, pagination, error model, security controls, and one endpoint per story need (S-1 to S-34; S-34 added by SCR S-20). The contract spans 8 features: ticket management (F-1, F-2), SLA timer and status (F-3), service reporting and dashboards (F-4), effort tracking (F-5), client log-in and client-facing portal (F-6), user account management (F-6), audit trail (F-8), and finance export (F-5). All 46 endpoints are listed in the Endpoint Summary and defined in `docs/04-design/openapi.yaml`.
 
 Does not cover: screen layout, CSS, component design (Phase 4 UI spec), database DDL (Phase 4 database design), infrastructure or deployment configuration (Phase 8), third-party API integrations (none in scope, PRS Non-Goals).
 
@@ -143,7 +144,7 @@ No version segment in the path for release 1. The API is an internal tool servin
 | 4 | POST | /api/accounts/users/ | Create user account | P3 | Y | REQ S-20, S-30 |
 | 5 | GET | /api/accounts/users/ | List user accounts | P3 | Y | REQ S-20 |
 | 6 | GET | /api/accounts/users/{id}/ | Get user account detail | P3 | Y | REQ S-20 |
-| 7 | PATCH | /api/accounts/users/{id}/ | Update user account (name, email, role, client org) | P3 | Y | REQ S-20 |
+| 7 | PATCH | /api/accounts/users/{id}/ | Update user account fields (name, email, role, client org, active status); one audit trail entry per changed field | P3 | Y | REQ S-34 |
 | 8 | POST | /api/accounts/users/{id}/deactivate/ | Deactivate user account | P3 | Y | REQ S-20 |
 | 9 | POST | /api/accounts/users/{id}/set-temp-password/ | Set temporary password; clears lockout | P3 | Y | REQ S-30 |
 | 10 | POST | /api/accounts/me/change-password/ | Change own password (current password required) | P1, P2, P3, P4 | Y | REQ S-31 |
@@ -280,10 +281,10 @@ None raised by this artifact. Inherited open assumptions A-008, A-026 to A-029, 
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Approve; Approve |
-| Approver | Mohanasunder; Mohanasunder |
-| Role | Architect / tech lead; Architect / tech lead |
-| Version | 0.2 |
-| Conditions | None; None |
-| Comments | v0.2: AssignTicketRequest request-body field renamed to engineer_id per SCR S-6 / ADR A-18.; API-001 v0.2: AssignTicketRequest field rename to engineer_id per SCR S-6 and ADR A-18. No behavioral change. |
-| Timestamp | 2026-10-18 UTC; 2026-10-17 22:34 UTC |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Architect / tech lead |
+| Version | 0.3 |
+| Conditions | None |
+| Comments | API-001 v0.3: PATCH /api/accounts/users/{id}/ extended per SCR S-20 (is_active field, per-field audit trail, REQ S-34 reference). Approved alongside SCR S-20 (2026-10-21). |
+| Timestamp | 2026-10-21 16:31 UTC |

@@ -2,7 +2,7 @@
 id: REQ-001
 title: APLX AMS: User Stories
 phase: 2
-version: 0.3
+version: 0.4
 template: user-story
 template_version: 2.0
 status: Approved
@@ -29,11 +29,12 @@ validation: Pass with warnings
 - Phase 2 drafts referenced, not used as input: BR-001 (business rules), NFR-001 (NFRs), GLO-001 (domain glossary).
 - SCR S-3 (`docs/logs/spec-changes.md`): password set, reset and change, decided by Mohanasunder (Product owner / BA), chat, 2026-10-17 (option C on VAL-013 F-1); adds REQ S-30, S-31.
 - SCR S-4 (`docs/logs/spec-changes.md`): security events in the audit trail, OQ-062 answered by Mohanasunder (Product owner / BA), chat, 2026-10-17; adds REQ S-32, S-33.
+- SCR S-19 (`docs/logs/spec-changes.md`): edit user account fields, OQ-075 and DEC-089 (Mohanasunder, 2026-10-21); adds REQ S-34.
 - NFR-001 v0.3 § NFR N-5 (password policy), § NFR N-6 (audit trail completeness).
 
 ## Purpose And Scope
 <!-- guidance: What this artifact covers and what it does not -->
-Covers: the release 1 user stories of APLX AMS, S-1 to S-33 (S-30 and S-31 added by SCR S-3; S-32 and S-33 by SCR S-4), with Given/When/Then acceptance criteria (AC-n) including edge, error and permission cases. Personas: PER P-1 L1 support engineer, PER P-2 L2/L3 support engineer, PER P-3 delivery manager, PER P-4 client user. All stories are Must for the 2027-01-17 go-live (INT-002 Q1). Each story has at most 4 criteria (`project.md` max_acceptance_criteria_per_feature, used as sizing guidance). Terms follow GLO-001.
+Covers: the release 1 user stories of APLX AMS, S-1 to S-34 (S-30 and S-31 added by SCR S-3; S-32 and S-33 by SCR S-4; S-34 added by SCR S-19), with Given/When/Then acceptance criteria (AC-n) including edge, error and permission cases. Personas: PER P-1 L1 support engineer, PER P-2 L2/L3 support engineer, PER P-3 delivery manager, PER P-4 client user. All stories are Must for the 2027-01-17 go-live (INT-002 Q1). Each story has at most 4 criteria (`project.md` max_acceptance_criteria_per_feature, used as sizing guidance). Terms follow GLO-001.
 
 Does not cover: screens, colours, layout, endpoints, tables or technology (Phases 3 and 4), NFR targets (NFR-001), or the rule detail held in BR-001. Examples use business hours per BR B-2 on business days with no holiday.
 
@@ -764,6 +765,28 @@ Must: who views security events was decided with OQ-064 (answered, Mohanasunder,
 
 ---
 
+## Story S-34: Delivery manager edits user account fields
+
+### Story Statement
+As a delivery manager (PER P-3), I want to edit any field — name, email, role, client organization and active status — on any user account, so that user details and access rights stay accurate without recreating the account.
+
+### Acceptance Criteria
+1. Given the delivery manager, when they edit the name and email on any user account, then both changes are saved and the audit trail holds one entry per changed field, each with the old value, new value, the delivery manager and the time (BR B-22).
+2. Given a user account with role L1 support engineer, L2/L3 support engineer or delivery manager, when the delivery manager changes the role to client user without selecting a client organization, then the change is refused; when the delivery manager selects a client organization and saves, then the role is client user, the client organization is saved, and the audit trail holds one entry for each changed field (BR B-21).
+3. Given a user account with role client user and client organization A, when the delivery manager changes the role to L1 support engineer, L2/L3 support engineer or delivery manager, then the client organization is set to null, both changes are saved, and the audit trail holds one entry for the role change and one entry for the client organization clearance, each with the old value, new value, the delivery manager and the time (BR B-21).
+4. Given a user who is not a delivery manager, when they try to edit any field — name, email, role, client organization or active status — on any user account, then each edit is refused and no field on that account changes (BR B-21).
+
+### Business Rules
+BR B-21, BR B-22
+
+### NFR References
+NFR N-6
+
+### Priority
+Must: the delivery manager must correct user account details, role assignments and organization links in APLX AMS without deleting and recreating accounts (DEC-089, Mohanasunder, 2026-10-21; OQ-075 answered, Mohanasunder, 2026-10-21; SCP IS-4; BRF-001 G-4). Added by SCR S-19 alongside REQ S-20. Active status (is_active) is an editable field per DEC-089; deactivate and reactivate detail in REQ S-20 AC-3. Password changes are REQ S-30.
+
+---
+
 ## Assumptions
 <!-- guidance: Each labeled A-NNN and logged in docs/logs/assumptions-log.md -->
 Logged in `docs/logs/assumptions-log.md`:
@@ -807,8 +830,8 @@ Logged in `docs/logs/open-questions-log.md`, owner Mohanasunder. Answered 2026-1
 | --- | --- |
 | Decision | Approve |
 | Approver | Mohanasunder |
-| Role | Product owner / BA |
-| Version | 0.3 |
+| Role | Business owner / BA |
+| Version | 0.4 |
 | Conditions | None |
-| Comments | Security events in the audit trail per SCR S-4 (OQ-062, OQ-064, OQ-065); R-10 accepted. |
-| Timestamp | 2026-10-17 10:59 UTC |
+| Comments | Corrective entry: artifact bumped to v0.4 after SCR S-19 approval. S-34 approved as written. REQ-001 is now v0.4. |
+| Timestamp | 2026-10-21 16:20 UTC |

@@ -134,3 +134,24 @@ OQ-074 [RESOLVED: DEC-088 (2026-10-21, Mohanasunder)]: FEAT-036 AppShell has no 
 **Impact if not resolved:** FEAT-036 cannot pass the size gate in its current form; a retroactive REQ SCR would require Phase 2 rework.
 
 **Proposed resolution:** DEC-088 (2026-10-21) accepts UIS-001 v0.1 § AppShell sourcing and reclassifies FEAT-036 as Type: Enabling. The size gate failure on Enabling type is accepted as an exception per DEC-088; DoD note added to plan.md.
+
+---
+
+OQ-075: Should a user account edit capability be added to release 1, and if so what are the rules?
+
+**Raised by:** Mohanasunder (human reviewer, 2026-10-21, FEAT-036 review session)
+**Status:** Answered — DEC-089 (2026-10-21, Mohanasunder)
+**Assigned to:** Mohanasunder (Business owner / BA, Product owner)
+**Priority:** Medium
+
+**Question:** Should APLX AMS release 1 include the ability for an authorised user to edit an existing user account (e.g., update name, role, status, or reset a password), and if so: (1) Which roles are allowed to edit accounts — delivery manager only, or others? (2) Which fields may be edited — name, role, is_active, client_org, temporary password, or a subset? (3) Is an audit trail entry required for each field change, and if so which fields are audited? (4) Should this be a new Phase 2 story (a new REQ story with Given/When/Then criteria), or an extension of the existing user management story REQ S-20?
+
+**Context:** FEAT-005 built the user management list and deactivate/reactivate actions (REQ S-20). No approved story or API endpoint covers editing a user account's fields (name, role, or client_org). The delivery manager can already set a temporary password via REQ S-30 (FEAT-034). Adding an edit capability requires: a new or extended requirement in Phase 2, a new or extended API endpoint in Phase 4 (API-001 SCR), and a new feature plan in Phase 5.
+
+**Impact if not resolved:** No edit-user capability will be built in release 1. Accounts with incorrect names, roles, or client_org assignments can only be fixed by a developer directly in the database.
+
+**Answer (Mohanasunder, 2026-10-21):** (1) Delivery manager and admin role users. (2) All fields. (3) Yes, audit trail required for each field change. (4) New story alongside REQ S-20.
+
+**Answer (Mohanasunder, 2026-10-21):** (1) Delivery manager and admin role users. (2) All fields. (3) Yes, audit trail required for each field change. (4) New story alongside REQ S-20.
+
+**OQ-075a answered (Mohanasunder, 2026-10-21):** "Admin" = delivery_manager. No new role needed. Delivery managers can edit all fields on any user account. DEC-089 records this decision.

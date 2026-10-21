@@ -272,3 +272,10 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-21 13:26 | FEAT-036-TESTS | 0.1 | Approve | Mohanasunder | Tech lead | Pass | - | All 9 tests correctly express AC-1 through AC-4. AC-4 link-count assertion noted; Mode B builder must use react-router-dom Link for nav items. |
 | 2026-10-21 13:26 | FEAT-001-TESTS | 0.2 | Approve | Mohanasunder | Tech lead | Pass | - | TST-001 AC-1 correctly updated to test Login-renders-for-unauthenticated-users. me() mock included for FEAT-036 AuthProvider compatibility. |
 | 2026-10-21 13:44 | SCR S-18 | 0.1 | Approve | Mohanasunder | Tech lead | n/a | - | - |
+| 2026-10-21 16:16 | REQ-001 | 0.3 | Approve | Mohanasunder | Business owner / BA | Pass with warnings | - | S-34 approved as written. SCR S-19 approved. REQ-001 advances to v0.4. |
+| 2026-10-21 16:20 | REQ-001 | 0.4 | Approve | Mohanasunder | Business owner / BA | Pass with warnings | - | Corrective entry: artifact bumped to v0.4 after SCR S-19 approval. S-34 approved as written. REQ-001 is now v0.4. |
+| 2026-10-21 16:27 | SCR S-20 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | SCR S-20 approved as written. API-001 advances to v0.3. |
+| 2026-10-21 16:31 | API-001 | 0.3 | Approve | Mohanasunder | Architect / tech lead | Pass | - | API-001 v0.3: PATCH /api/accounts/users/{id}/ extended per SCR S-20 (is_active field, per-field audit trail, REQ S-34 reference). Approved alongside SCR S-20 (2026-10-21). |
+| 2026-10-21 16:43 | FEAT-037 | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | FEAT-037 plan approved. Wave 30, Tier High, 5 source files, 4 ACs from REQ S-34. |
+| 2026-10-21 16:43 | FEAT-037-ACC | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | FEAT-037 acceptance criteria AC-1 through AC-4 approved as written. |
+| 2026-10-21 16:43 | WAV-001 | 0.3 | Approve | Mohanasunder | Architect / tech lead | Pass | - | WAV-001 v0.3 approved: Wave 30 added for FEAT-037 (Edit User Account). |

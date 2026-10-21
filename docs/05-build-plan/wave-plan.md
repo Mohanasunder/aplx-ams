@@ -2,7 +2,7 @@
 id: WAV-001
 title: APLX AMS Build Wave Plan
 phase: 5
-version: 0.2
+version: 0.3
 template: wave-plan
 template_version: 1.1
 status: Approved
@@ -16,13 +16,15 @@ validation: Pass
 ## Input References
 - FBD-001 v0.1 — APLX AMS: Feature Breakdown (In review 2026-10-17; in-phase co-produced artifact — approved at the Phase 5 gate) — 36 features FEAT-000 to FEAT-035, dependency graph, risk tiers
 - SCR S-15 v0.1 — WAV-001: insert FEAT-036 (AppShell) as Wave 8; renumber Waves 8–28 to Waves 9–29 (Approved 2026-10-21, Mohanasunder)
+- SCR S-19 v0.1 — REQ-001 v0.4: new story S-34 (Delivery Manager Edits User Account) added (Approved 2026-10-21, Mohanasunder)
+- SCR S-20 v0.1 — API-001 v0.3: PATCH /api/accounts/users/{id}/ (endpoint #7) updated with UpdateUserAccountRequest schema and audit trail behaviour (Approved 2026-10-21, Mohanasunder)
 - STD-001 v0.1 — APLX AMS: Coding Standards (Approved 2026-10-17) § Shared Paths — globs that force a feature to be alone in its wave
 - PIB-005 v0.1 — Phase 5 Build Planning Input Brief (Approved 2026-10-17) — capacity constraints cited from project.md
 - project.md — max_parallel_builder_agents: 3; review_capacity_prs_per_week: 6; max_open_feature_branches: 3
 - docs/05-build-plan/feature-NNN-*/plan.md — Files To Create Or Modify and Dependencies sections for all 36 features
 
 ## Purpose And Scope
-Schedules all 37 features (FEAT-000 to FEAT-036) into 29 sequential build waves for APLX AMS Release 1 (target go-live 2027-01-17). Each wave lists features that can be built in parallel; no wave exceeds max_parallel_builder_agents (3) or review_capacity_prs_per_week (6). Dependencies are satisfied in prior waves; every feature touching a Shared Path glob in STD-001 is alone in its wave. The plan covers wave ordering, reviewer load per wave, and the rationale for parallel groupings.
+Schedules all 38 features (FEAT-000 to FEAT-037) into 30 sequential build waves for APLX AMS Release 1 (target go-live 2027-01-17). Each wave lists features that can be built in parallel; no wave exceeds max_parallel_builder_agents (3) or review_capacity_prs_per_week (6). Dependencies are satisfied in prior waves; every feature touching a Shared Path glob in STD-001 is alone in its wave. The plan covers wave ordering, reviewer load per wave, and the rationale for parallel groupings.
 
 Does not cover: sprint schedules, calendar dates, resource assignment, or any design decision that belongs to Phase 4.
 
@@ -35,7 +37,7 @@ Source: project.md (Approved 2026-10-17).
 | review_capacity_prs_per_week | 6 | No wave produces more than 6 PRs; max in this plan is 3 PRs (Waves 13, 14, 15) |
 | max_open_feature_branches | 3 | Branches for Wave N+1 are not opened until Wave N branches are merged |
 
-15 of 37 features touch a Shared Path glob (migrations, CI YAML, package manifests, pyproject.toml, requirements.txt) and must each occupy a wave alone; see STD-001 v0.1 § Shared Paths. This is the primary driver of the 29-wave count. FEAT-036 (Enabling, no Shared Path files) is alone in Wave 8 by dependency ordering, not by Shared Path classification.
+15 of 38 features touch a Shared Path glob (migrations, CI YAML, package manifests, pyproject.toml, requirements.txt) and must each occupy a wave alone; see STD-001 v0.1 § Shared Paths. This is the primary driver of the 30-wave count. FEAT-036 (Enabling, no Shared Path files) is alone in Wave 8 by dependency ordering, not by Shared Path classification. FEAT-037 (Feature, no Shared Path files) is alone in Wave 30 by dependency ordering, not by Shared Path classification.
 
 ## Waves
 
@@ -72,28 +74,29 @@ Source: project.md (Approved 2026-10-17).
 | Wave 27 | FEAT-015 | 1 | No | Standard | FEAT-011 (W10) | FEAT-015 (tickets/services.py, tickets/views.py, tickets/serializers.py, tickets/dal.py, tickets/urls.py, TicketDetail.tsx) conflicts with all remaining ticket features. No compatible non-ticket partner after W25. Alone by file conflict. |
 | Wave 28 | FEAT-017 | 1 | No | Standard | FEAT-016 (W18) | FEAT-017 (tickets/services.py, tickets/views.py, tickets/serializers.py, tickets/dal.py, tickets/urls.py, TicketDetail.tsx) conflicts with FEAT-023. Alone by file conflict. |
 | Wave 29 | FEAT-023 | 1 | No | Standard | FEAT-022 (W21) | FEAT-023 (tickets/services.py, tickets/views.py, tickets/serializers.py, tickets/urls.py, TicketDetail.tsx) is the last unscheduled feature. Alone by file conflict with all prior ticket features. |
+| Wave 30 | FEAT-037 | 1 | No | High | FEAT-005 (W6) | Edit user account. No Shared Path files; accounts/ files are unused by any later wave. Alone by dependency ordering: FEAT-037 extends FEAT-005 (accounts/views.py, serializers.py, services.py) which was alone in W6; no other open feature conflicts with these files. Added by SCR S-19 + SCR S-20 (2026-10-21). |
 
 ## Review Load
 
-Reviewer capacity: 6 PRs per week (project.md). Maximum PRs in any wave: 3 (Waves 14, 15, 16). All 29 waves are within capacity.
+Reviewer capacity: 6 PRs per week (project.md). Maximum PRs in any wave: 3 (Waves 14, 15, 16). All 30 waves are within capacity.
 
 | PRs per wave | Wave count | Waves |
 |---|---|---|
-| 1 PR | 24 | W1, W2, W3, W4, W5, W6, W8, W9, W10, W11, W12, W13, W17, W18, W19, W20, W21, W22, W23, W24, W26, W27, W28, W29 |
+| 1 PR | 25 | W1, W2, W3, W4, W5, W6, W8, W9, W10, W11, W12, W13, W17, W18, W19, W20, W21, W22, W23, W24, W26, W27, W28, W29, W30 |
 | 2 PRs | 2 | W7, W25 |
 | 3 PRs | 3 | W14, W15, W16 |
 
 No staggering is required: every wave is at or below the 6 PR/week limit. The single reviewer (Mohanasunder) reviews and merges before the next wave opens. Waves with 3 PRs (Waves 14–16) represent the highest review load; if approval turnaround exceeds 1 business day (approval_sla_business_days: 1), the tech lead may reduce to 2 features per wave for those waves — this requires a human decision recorded in the decision log.
 
 ## Assumptions
-- A-040: Wave sequencing treats every feature that lists a file matching any Shared Path glob in STD-001 § Shared Paths as "alone in its wave." This is the definition used by `check_feature_size.py waves`. 15 of 37 features are so classified (FEAT-036 is not a Shared Path feature; its Wave 8 singleton is due to dependency ordering, not a Shared Path file), producing 15 SP singleton waves and driving the 29-wave count. Logged in docs/logs/assumptions-log.md.
+- A-040: Wave sequencing treats every feature that lists a file matching any Shared Path glob in STD-001 § Shared Paths as "alone in its wave." This is the definition used by `check_feature_size.py waves`. 15 of 38 features are so classified (FEAT-036 and FEAT-037 are not Shared Path features; their singleton waves are due to dependency ordering, not Shared Path files), producing 15 SP singleton waves and driving the 30-wave count. Logged in docs/logs/assumptions-log.md.
 
 ## Open Questions
 - OQ-067 — Answered 2026-10-17: FEAT-007/plan.md uses migration 0003_roles_and_rls.py (Wave 25); DEC-048 records this decision.
 
 ## Traceability Links
-- Upstream: FBD-001 v0.1; PIB-005 v0.1; STD-001 v0.1 § Shared Paths; project.md capacity settings
-- Downstream: FEAT-000 through FEAT-035 plan.md (Phase 6 build order); Phase 6 PRs (feature/FEAT-NNN-slug branches opened in wave order)
+- Upstream: FBD-001 v0.1; PIB-005 v0.1; STD-001 v0.1 § Shared Paths; project.md capacity settings; SCR S-19 (REQ S-34 added); SCR S-20 (API-001 v0.3 PATCH endpoint #7 added)
+- Downstream: FEAT-000 through FEAT-037 plan.md (Phase 6 build order); Phase 6 PRs (feature/FEAT-NNN-slug branches opened in wave order)
 
 ## Quality Checklist
 - [x] Every template section is filled, or marked "Not applicable - <reason>"
@@ -110,15 +113,7 @@ No staggering is required: every wave is at or below the 6 PR/week limit. The si
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Architect / tech lead |
-| Version | 0.1 |
+| Version | 0.3 |
 | Conditions | None |
-| Comments | Phase 5 validation passed (VAL-023). 28 waves, 0 collisions, OQ-067 resolved. |
-| Timestamp | 2026-10-17 16:50 UTC |
-
-| Decision | Approve |
-| Approver | Mohanasunder |
-| Role | Tech lead |
-| Version | 0.2 |
-| Conditions | None |
-| Comments | SCR S-15 approved. 29 waves, 37 features, FEAT-036 inserted as Wave 8. Review load within capacity. |
-| Timestamp | 2026-10-21 12:02 UTC |
+| Comments | WAV-001 v0.3 approved: Wave 30 added for FEAT-037 (Edit User Account). |
+| Timestamp | 2026-10-21 16:43 UTC |

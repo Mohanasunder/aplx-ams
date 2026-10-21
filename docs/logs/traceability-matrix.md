@@ -4,9 +4,11 @@ Maintained by the traceability agent. One row per requirement.
 
 Goal / KPI rule (Phase 2, 2026-10-17): the story's epic, then exactly the brief goals cited in the story's Priority line in REQ-001, written `BRF-001 G-n` (the form `scripts/traceability.py` accepts).
 
-Design column rule (Phase 4, 2026-10-17): `API-001`, `BED-001`, `UIS-001`, `PRM-001`, `TST-001` apply to all in-scope user stories (REQ S-1 to S-33). `DBD-001` is linked downstream from `BR-001` and `GLO-001`, and is covered transitively through `BED-001`. See cross-artifact link notes below.
+Design column rule (Phase 4, 2026-10-17): `API-001`, `BED-001`, `UIS-001`, `PRM-001`, `TST-001` apply to all in-scope user stories (REQ S-1 to S-33). `DBD-001` is linked downstream from `BR-001` and `GLO-001`, and is covered transitively through `BED-001`. See cross-artifact link notes below. REQ S-34 (added SCR S-19, 2026-10-21): same design artifacts cited as placeholders; a Phase 4 SCR on API-001 (PATCH /api/users/{id}/) is required before the design column is confirmed for S-34.
 
 API-001 contract update (Phase 6, 2026-10-18): API-001 v0.2 Approved 2026-10-18 by Mohanasunder per SCR S-6 and ADR A-18. Field `AssignTicketRequest.assignee_id` renamed to `engineer_id` in both `api-spec.md` and `openapi.yaml`. API-001 v0.2 is upstream for any feature implementing `POST /api/tickets/{id}/assign/`.
+
+API-001 contract update (Phase 6, 2026-10-21): API-001 v0.3 Approved 2026-10-21 by Mohanasunder (Architect / tech lead) per SCR S-20. Endpoint #7 `PATCH /api/accounts/users/{id}/` schema updated: `UpdateUserAccountRequest` gains `is_active` field; description updated. No new endpoints; total remains 46. `openapi.yaml` updated with the new `UpdateUserAccountRequest` schema. API-001 v0.3 is the confirmed design for REQ S-34 (user account activation/deactivation).
 
 | REQ | Goal / KPI | Design (API, DBD, UIS) | Feature | PR | Test cases | Status |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -43,6 +45,7 @@ API-001 contract update (Phase 6, 2026-10-18): API-001 v0.2 Approved 2026-10-18 
 | REQ S-31 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-009 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-32 | EPC E-5; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-033 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-33 | EPC E-5; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-034 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-34 | EPC E-5; BRF-001 G-4 | API-001 v0.3 (PATCH /api/accounts/users/{id}/ — endpoint #7, schema updated per SCR S-20; UpdateUserAccountRequest adds is_active field), openapi.yaml (UpdateUserAccountRequest schema with is_active), BED-001, UIS-001, PRM-001, TST-001 | FEAT-037 (Wave 30, Approved 2026-10-21) | - | - | REQ Added via SCR S-19 (Approved 2026-10-21, Mohanasunder); upstream: SCP IS-4, BRF-001 G-4, BR B-21, BR B-22, NFR N-6; Design: API-001 v0.3 Approved 2026-10-21 per SCR S-20 (Mohanasunder, Architect / tech lead); endpoint #7 (PATCH /api/accounts/users/{id}/) already existed in v0.2; schema and description updated only — no new endpoints; total remains 46; Feature plan: FEAT-037 plan.md v0.1 Approved 2026-10-21 (Mohanasunder, Architect / tech lead); ACC v0.1 Approved 2026-10-21 (AC-1 to AC-4); WAV-001 v0.3 Approved 2026-10-21 (Wave 30); Phase 6 build may begin after FEAT-036 merges |
 
 ## Phase 4 Cross-Artifact Traceability Links
 
@@ -52,7 +55,7 @@ Approved 2026-10-17 by Mohanasunder (Architect / tech lead + UX).
 
 | Upstream artifact | Downstream design artifacts |
 | --- | --- |
-| REQ-001 v0.3 (user stories S-1 to S-33) | API-001 v0.2, BED-001 v0.1, UIS-001 v0.1, PRM-001 v0.1, TST-001 v0.1 |
+| REQ-001 v0.3 (user stories S-1 to S-33) and SCR S-19 (REQ S-34) | API-001 v0.3, BED-001 v0.1, UIS-001 v0.1, PRM-001 v0.1, TST-001 v0.1 |
 | BR-001 v0.3 (business rules B-1 to B-24) | DBD-001 v0.1, BED-001 v0.1 |
 | NFR-001 v0.3 (N-1 to N-9) | STD-001 v0.1, TST-001 v0.1 |
 | GLO-001 v0.3 (domain glossary) | DBD-001 v0.1, API-001 v0.2 (via SCR S-6 / ADR A-18, Approved 2026-10-18) |
@@ -64,7 +67,7 @@ Approved 2026-10-17 by Mohanasunder (Architect / tech lead + UX).
 | --- | --- |
 | DBD-001 v0.1 | BED-001 v0.1, PRM-001 v0.1 |
 | API-001 v0.2 | BED-001 v0.1, UIS-001 v0.1, PRM-001 v0.1, TST-001 v0.1 |
-| openapi.yaml (companion to API-001 v0.2; AssignTicketRequest.engineer_id per ADR A-18) | API-001 v0.2 |
+| openapi.yaml (companion to API-001 v0.3; AssignTicketRequest.engineer_id per ADR A-18; UpdateUserAccountRequest.is_active per SCR S-20) | API-001 v0.3 |
 
 ### Phase 4 → Phase 5 Downstream Links
 
@@ -73,7 +76,7 @@ All Phase 4 design artifacts feed Phase 5 feature slices. Approved 2026-10-17 by
 | Phase 4 artifact | Phase 5 features (downstream) |
 | --- | --- |
 | DBD-001 v0.1 | FEAT-000, FEAT-002, FEAT-003, FEAT-004, FEAT-005, FEAT-006, FEAT-007, FEAT-008, FEAT-009, FEAT-010, FEAT-011, FEAT-012, FEAT-013, FEAT-014, FEAT-015, FEAT-016, FEAT-017, FEAT-018, FEAT-019, FEAT-020, FEAT-021, FEAT-022, FEAT-023, FEAT-024, FEAT-025, FEAT-026, FEAT-027, FEAT-028, FEAT-029, FEAT-030, FEAT-031, FEAT-032, FEAT-033, FEAT-034 |
-| API-001 v0.2 | FEAT-002, FEAT-003, FEAT-004, FEAT-005, FEAT-006, FEAT-007, FEAT-008, FEAT-009, FEAT-010, FEAT-011, FEAT-012, FEAT-013, FEAT-014, FEAT-015, FEAT-016, FEAT-017, FEAT-018, FEAT-019, FEAT-020, FEAT-021, FEAT-022, FEAT-023, FEAT-024, FEAT-025, FEAT-026, FEAT-027, FEAT-028, FEAT-029, FEAT-030, FEAT-031, FEAT-032, FEAT-033, FEAT-034 |
+| API-001 v0.3 | FEAT-002, FEAT-003, FEAT-004, FEAT-005, FEAT-006, FEAT-007, FEAT-008, FEAT-009, FEAT-010, FEAT-011, FEAT-012, FEAT-013, FEAT-014, FEAT-015, FEAT-016, FEAT-017, FEAT-018, FEAT-019, FEAT-020, FEAT-021, FEAT-022, FEAT-023, FEAT-024, FEAT-025, FEAT-026, FEAT-027, FEAT-028, FEAT-029, FEAT-030, FEAT-031, FEAT-032, FEAT-033, FEAT-034; FEAT-037 (REQ S-34, Wave 30, Approved 2026-10-21) |
 | BED-001 v0.1 | FEAT-000, FEAT-002, FEAT-003, FEAT-004, FEAT-005, FEAT-006, FEAT-007, FEAT-008, FEAT-009, FEAT-010, FEAT-011, FEAT-012, FEAT-013, FEAT-014, FEAT-015, FEAT-016, FEAT-017, FEAT-018, FEAT-019, FEAT-020, FEAT-021, FEAT-022, FEAT-023, FEAT-024, FEAT-025, FEAT-026, FEAT-027, FEAT-028, FEAT-029, FEAT-030, FEAT-031, FEAT-032, FEAT-033, FEAT-034 |
 | UIS-001 v0.1 | FEAT-001, FEAT-002, FEAT-003, FEAT-004, FEAT-005, FEAT-006, FEAT-007, FEAT-008, FEAT-009, FEAT-010, FEAT-011, FEAT-012, FEAT-013, FEAT-014, FEAT-015, FEAT-016, FEAT-017, FEAT-018, FEAT-019, FEAT-020, FEAT-021, FEAT-022, FEAT-023, FEAT-024, FEAT-025, FEAT-026, FEAT-027, FEAT-028, FEAT-029, FEAT-030, FEAT-031, FEAT-032, FEAT-033, FEAT-034 |
 | PRM-001 v0.1 | FEAT-006, FEAT-007 |
@@ -97,13 +100,14 @@ These four features carry no REQ story (they are enabling features). They are li
 
 ### Phase 5 Supplementary Artifact Approvals (all features, 2026-10-18)
 
-111 supplementary files approved by Mohanasunder at v0.1 (37 ACC + 37 TASKS + 37 STATUS, covering FEAT-000 through FEAT-036). FEAT-000–FEAT-035 approved 2026-10-18; FEAT-036 approved 2026-10-21. Each set is upstream from its parent `FEAT-NNN` plan.md (Approved) and downstream to the Phase 6 feature branch for the same FEAT-NNN.
+111 supplementary files approved by Mohanasunder at v0.1 (37 ACC + 37 TASKS + 37 STATUS, covering FEAT-000 through FEAT-036). FEAT-000–FEAT-035 approved 2026-10-18; FEAT-036 approved 2026-10-21. FEAT-037-ACC v0.1 Approved 2026-10-21 (Mohanasunder, Architect / tech lead); FEAT-037 TASKS and STATUS pending. Each set is upstream from its parent `FEAT-NNN` plan.md (Approved) and downstream to the Phase 6 feature branch for the same FEAT-NNN.
 
 | Artifact set | Scope | Upstream | Downstream |
 | --- | --- | --- | --- |
 | FEAT-000-ACC, FEAT-000-TASKS, FEAT-000-STATUS | Walking Skeleton | FEAT-000 plan.md Approved | Phase 6 feature/FEAT-000-* branch |
 | FEAT-001-ACC, FEAT-001-TASKS, FEAT-001-STATUS | Frontend Scaffold | FEAT-001 plan.md Approved | Phase 6 feature/FEAT-001-* branch |
 | FEAT-002-ACC through FEAT-034-ACC; FEAT-002-TASKS through FEAT-034-TASKS; FEAT-002-STATUS through FEAT-034-STATUS | Story features (REQ S-1 to S-33) | FEAT-NNN plan.md Approved | Phase 6 feature/FEAT-NNN-* branch |
+| FEAT-037-ACC | Story feature (REQ S-34 Edit User Account, Wave 30) | FEAT-037 plan.md Approved 2026-10-21 | Phase 6 feature/FEAT-037-* branch (after FEAT-036 merges) |
 | FEAT-035-ACC, FEAT-035-TASKS, FEAT-035-STATUS | E2E CI Scaffold | FEAT-035 plan.md Approved | Phase 6 feature/FEAT-035-* branch |
 
 ### Phase 5 Phase-Scoped Artifact Links
@@ -112,7 +116,7 @@ These four features carry no REQ story (they are enabling features). They are li
 | --- | --- | --- |
 | FBD-001 v0.1 (feature-breakdown.md) | REQ-001 v0.3, API-001 v0.1, DBD-001 v0.1, BED-001 v0.1, UIS-001 v0.1, PRM-001 v0.1, STD-001 v0.1, TST-001 v0.1 | FEAT-000 through FEAT-035 |
 | DOD-001 v0.1 (definition-of-done.md) | STD-001 v0.1, TST-001 v0.1 | FEAT-000 through FEAT-035 |
-| WAV-001 v0.2 (wave-plan.md) | FBD-001 v0.1; SCR S-15 | FEAT-000 through FEAT-036 (37 features, 29 waves, ordered by wave; SCR S-15 inserted FEAT-036 as Wave 8, Approved 2026-10-21) |
+| WAV-001 v0.3 (wave-plan.md) | FBD-001 v0.1; SCR S-15 | FEAT-000 through FEAT-037 (38 features, 30 waves, ordered by wave; SCR S-15 inserted FEAT-036 as Wave 8, Approved 2026-10-21; WAV-001 v0.3 added FEAT-037 as Wave 30, Approved 2026-10-21) |
 | ENV-001 v0.1 (environment-plan.md) | STD-001 v0.1, BED-001 v0.1, DBD-001 v0.1 | FEAT-000 through FEAT-035 |
 
 ## Phase 6 Cross-Artifact Traceability Links
@@ -213,6 +217,18 @@ Traceability chain: REQ-001 v0.3 § S-21 → API-001 v0.2, DBD-001 v0.1, UIS-001
 
 Build status: Mode A complete; Mode B (implementation) in progress. Test files locked at commits 9ececb7 (backend) and 8bd2f25 (frontend). SCR S-13 (plan v0.3, adds `react-router-dom` to New Packages); DEC-084 (2026-10-19, `useNavigate` from `react-router-dom` approved for Mode B).
 
+### Contract Update: SCR S-20 / API-001 v0.3 (Approved 2026-10-21)
+
+SCR S-20 Approved 2026-10-21 by Mohanasunder (Architect / tech lead). API-001 advanced from v0.2 to v0.3.
+
+| Event | Detail |
+| --- | --- |
+| SCR S-20 Approved | Mohanasunder (Architect / tech lead), 2026-10-21. Upstream: REQ S-34 (added SCR S-19), BRF-001 G-4, BR B-21, BR B-22, NFR N-6. Downstream: API-001 v0.3, openapi.yaml. |
+| API-001 v0.2 → v0.3 | Approved by Mohanasunder, 2026-10-21. Endpoint #7 `PATCH /api/accounts/users/{id}/` schema updated: `UpdateUserAccountRequest` gains `is_active` field; endpoint description updated. No new endpoints; total remains 46. Upstream: SCR S-20. Downstream: FEAT-037 (REQ S-34, Wave 30, plan.md v0.1 Approved 2026-10-21). |
+| openapi.yaml updated | Companion to API-001 v0.3. `UpdateUserAccountRequest` schema gains `is_active` boolean field. Upstream: SCR S-20. |
+
+Note: endpoint #7 (`PATCH /api/accounts/users/{id}/`) already existed in API-001 v0.2 (user accounts). SCR S-20 added only the `is_active` field to its request schema and updated the description. No features in Phase 6 were in progress for this endpoint on 2026-10-21; no work needed to be stopped.
+
 ### Contract Update: SCR S-6 / ADR A-18 / API-001 v0.2 (Approved 2026-10-18)
 
 All three artifacts approved 2026-10-18 by Mohanasunder on branch `feature/FEAT-001-frontend-scaffold`.
@@ -228,7 +244,12 @@ Affected downstream features: all features that call `POST /api/tickets/{id}/ass
 
 ## Requirements with No Design ID
 
-None. All 33 in-scope stories (REQ S-1 to S-33, Priority: Must / Should / Could) are covered by API-001, BED-001, UIS-001, PRM-001, and TST-001. DBD-001 is linked to user stories transitively via BED-001.
+All 34 in-scope stories (REQ S-1 to S-34, Priority: Must) now have confirmed API design IDs:
+
+- REQ S-1 to S-33: covered by API-001 v0.2, BED-001, UIS-001, PRM-001, and TST-001. DBD-001 is linked transitively via BED-001.
+- REQ S-34: covered by API-001 v0.3 (PATCH /api/accounts/users/{id}/ — endpoint #7, schema updated per SCR S-20, Approved 2026-10-21), openapi.yaml (UpdateUserAccountRequest with is_active), BED-001, UIS-001, PRM-001, and TST-001.
+
+No stories currently lack a design ID. Feature plan for REQ S-34 is FEAT-037 (Wave 30, plan.md v0.1 and ACC v0.1 Approved 2026-10-21 by Mohanasunder, Architect / tech lead). Phase 6 build may begin after FEAT-036 merges.
 
 ## `scripts/traceability.py report` Output (Phase 6 update, 2026-10-19, run via `py -3`)
 

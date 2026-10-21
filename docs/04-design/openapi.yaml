@@ -183,6 +183,11 @@ components:
 
     UpdateUserAccountRequest:
       type: object
+      description: >
+        All fields are optional; only supplied fields are updated.
+        Each changed field creates one audit trail entry (BR B-22; REQ S-34 AC-1).
+        If role is changed to client_user, client_organization_id is required.
+        If role is changed away from client_user, client_organization_id is set to null (REQ S-34 AC-3).
       properties:
         name:
           type: string
@@ -194,6 +199,11 @@ components:
           $ref: '#/components/schemas/RoleEnum'
         client_organization_id:
           type: ['integer', 'null']
+        is_active:
+          type: boolean
+          description: >
+            Set false to deactivate or true to reactivate.
+            Audit trail entry created on change (REQ S-34 AC-1; REQ S-20 AC-3 for deactivate/reactivate detail).
 
     PaginatedUserAccountList:
       type: object
@@ -1212,8 +1222,12 @@ paths:
       operationId: accounts_users_update
       summary: Update user account
       description: >
-        Delivery manager updates name, email, role, or client organization (REQ S-20).
+        Delivery manager updates any combination of name, email, role, client organization,
+        or active status on any user account (REQ S-34; SCR S-20).
+        Each field that changes creates one audit trail entry with old value, new value,
+        actor (delivery manager) and timestamp (BR B-22; NFR N-6).
         Changing role to client_user without a client_organization_id returns HTTP 400.
+        Changing role away from client_user sets client_organization_id to null automatically.
       x-roles: [delivery_manager]
       x-csrf-required: true
       requestBody:
