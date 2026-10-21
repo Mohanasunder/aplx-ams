@@ -1487,3 +1487,46 @@ Not applicable — no architecture or contract artifact changes.
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-24: FEAT-010 plan.md — add test_holiday_api.py and HolidayList.test.tsx to Tests file list
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
+
+### Summary
+The backend builder (Mode A) created `test_holiday_api.py` (not in plan.md) for API-layer tests covering AC-1, AC-2, AC-3. The plan listed only `test_holiday_list.py` (DB-layer tests). The frontend builder will similarly create `HolidayList.test.tsx` (Vitest component tests for AC-3 permission guard). Neither test file is in the plan's Tests section; the scope gate rejects unlisted files. This SCR covers both to avoid a further SCR cycle after the frontend builder completes Mode A.
+
+### Changed Artifact
+- FEAT-010 (docs/05-build-plan/feature-010-holiday-list/plan.md) v0.3 → v0.4
+
+Changes to Tests sub-section of Files To Create Or Modify:
+- Add `src/aplx_ams_django/sla/tests/test_holiday_api.py` (new — 10 pytest-django API tests: POST/DELETE/GET for all four ACs)
+- Add `src/frontend/src/pages/HolidayList.test.tsx` (new — Vitest tests: DM sees add/remove controls; non-DM route guard)
+
+Also close OQ-076 as answered by this SCR.
+
+### Reason
+The database-builder's test file covers DB/DAL layer behavior (HolidayEntry model, get_holidays_in_range DAL). The API layer (views, serializers, permissions) and the frontend component require separate test files per layer. Both test files are required for the FEAT-010-TESTS approval to formally cover all four acceptance criteria.
+
+### Impact
+No acceptance criteria, API contract, or implementation logic changes. Source file count unchanged; test file count increases from 2 to 4.
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes.
+
+### Traceability Links
+- Upstream: FEAT-010 plan.md v0.3; SCR S-23; backend-builder Mode A commit c0a609c; OQ-076
+- Downstream: FEAT-010 plan.md v0.4; FEAT-010-TESTS; Phase 6 scope gate
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact

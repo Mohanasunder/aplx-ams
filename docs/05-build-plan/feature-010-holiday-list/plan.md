@@ -3,7 +3,7 @@ id: FEAT-010
 id_prefix: FEAT
 title: "FEAT-010: S-24: Delivery Manager Maintains the Company Holiday List"
 phase: 5
-version: 0.3
+version: 0.4
 template: feature-plan
 template_version: 1.6
 status: Approved
@@ -27,6 +27,7 @@ validation: Pass
 - PRM-001 v0.1 — APLX AMS: Permission Matrix (Approved 2026-10-17)
 - SCR S-22 (Approved 2026-10-21) — adds Django boilerplate files and test file to Files To Create Or Modify; corrects Size Check limit
 - SCR S-23 (Approved 2026-10-21) — adds conftest.py to Tests file list
+- SCR S-24 (Approved 2026-10-21) — adds test_holiday_api.py and HolidayList.test.tsx to Tests file list; closes OQ-076
 
 ## Purpose And Scope
 Implements REQ S-24: S-24: Delivery Manager Maintains the Company Holiday List. Delivers end-to-end behavior (data, API, UI) for 4 acceptance criteria.
@@ -79,7 +80,9 @@ Deliver all 4 acceptance criteria of REQ S-24 end-to-end: backend models, migrat
 **Tests**
 - `src/aplx_ams_django/sla/tests/__init__.py`
 - `src/aplx_ams_django/sla/tests/conftest.py` (new — pytest fixtures: SQLite switch + sla app registry injection)
-- `src/aplx_ams_django/sla/tests/test_holiday_list.py` (new — pytest tests for AC-1 through AC-4)
+- `src/aplx_ams_django/sla/tests/test_holiday_list.py` (new — pytest DB/DAL tests for AC-1, AC-2, AC-4)
+- `src/aplx_ams_django/sla/tests/test_holiday_api.py` (new — pytest API tests for AC-1, AC-2, AC-3)
+- `src/frontend/src/pages/HolidayList.test.tsx` (new — Vitest component tests for AC-3 permission guard and DM controls)
 
 ## New Packages
 - None
@@ -157,7 +160,7 @@ None.
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Architect / tech lead |
-| Version | 0.3 |
+| Version | 0.4 |
 | Conditions | None |
-| Comments | SCR S-23 applied: conftest.py added to Tests file list. |
-| Timestamp | 2026-10-21 17:54 UTC |
+| Comments | SCR S-24 applied: added test_holiday_api.py and HolidayList.test.tsx to Tests list; OQ-076 closed. |
+| Timestamp | 2026-10-21 18:05 UTC |

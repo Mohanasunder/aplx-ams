@@ -285,3 +285,5 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-21 17:34 | FEAT-010 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass | - | SCR S-22 applied: added Django boilerplate files and test file entries; corrected Size Check count to 14 and limit to 30. |
 | 2026-10-21 17:54 | SCR S-23 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | - |
 | 2026-10-21 17:54 | FEAT-010 | 0.3 | Approve | Mohanasunder | Architect / tech lead | Pass | - | SCR S-23 applied: conftest.py added to Tests file list. |
+| 2026-10-21 18:04 | SCR S-24 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | - |
+| 2026-10-21 18:05 | FEAT-010 | 0.4 | Approve | Mohanasunder | Architect / tech lead | Pass | - | SCR S-24 applied: added test_holiday_api.py and HolidayList.test.tsx to Tests list; OQ-076 closed. |
