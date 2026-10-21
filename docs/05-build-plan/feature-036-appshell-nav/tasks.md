@@ -5,11 +5,11 @@ phase: 5
 version: 0.1
 template: feature-tasks
 template_version: 1.0
-status: Draft
+status: Approved
 author_agent: build-planner
-approver: Tech lead
+approver: Mohanasunder
 date: 2026-10-19
-validation: Pending
+validation: Pass
 ---
 # FEAT-036: AppShell - Global Navigation Shell and Sign Out - Tasks
 
@@ -52,9 +52,10 @@ None.
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Tech lead |
+| Version | 0.1 |
 | Conditions | None |
-| Comments | None |
-| Timestamp | Pending |
+| Comments | Approved with plan.md at Phase 5 gate — build-planner task list for FEAT-036 AppShell |
+| Timestamp | 2026-10-21 12:38 UTC |

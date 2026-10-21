@@ -262,3 +262,5 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-21 12:02 | WAV-001 | 0.2 | Approve | Mohanasunder | Tech lead | Pass | - | 29-wave plan, 37 features; FEAT-036 Wave 8 singleton; review load within capacity |
 | 2026-10-21 12:08 | PRD FEAT-006 | 0.1 | Approve | Mohanasunder | Tech lead | n/a | - | [review depth: Deep, tier Critical] [review: 30 min] |
 | 2026-10-21 12:08 | PRD FEAT-006 | 0.1 | Approve | Mohanasunder | Release manager | n/a | - | [review depth: Deep, tier Critical] [review: 30 min] |
+| 2026-10-21 12:38 | FEAT-036-TASKS | 0.1 | Approve | Mohanasunder | Tech lead | Pass | - | Approved with plan.md at Phase 5 gate — build-planner task list for FEAT-036 AppShell |
+| 2026-10-21 12:38 | FEAT-036-STATUS | 0.1 | Approve | Mohanasunder | Tech lead | Pass | - | Approved with plan.md at Phase 5 gate — status tracker for FEAT-036 AppShell |
