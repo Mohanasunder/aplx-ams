@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-032: S-23: Internal User Views a Ticket Audit Trail â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-23
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-23
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-032 (REQ S-23). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-23.
+Covers the 4 acceptance criteria for FEAT-032 (REQ S-23). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-23.
 
 ## Acceptance Criteria
 REQ-023 AC-1 REQ S-23 AC-1: Given a ticket whose priority, status, assignment and effort were each changed once, when the delivery manager views its audit trail, then it shows 4 entries, each with the user, date and time, old value and new value.
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-23; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-23; PIB-005 v0.1
 - Downstream: FEAT-032-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

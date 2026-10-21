@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-033: S-32: Security Events Are Recorded in the Audit Trail â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-32
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-32
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-033 (REQ S-32). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-32.
+Covers the 4 acceptance criteria for FEAT-033 (REQ S-32). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-32.
 
 ## Acceptance Criteria
 REQ-032 AC-1 REQ S-32 AC-1: Given active, unlocked user account X, when X signs in with the correct password at 10:00:05 IST and a sign-in on X with a wrong password is refused at 10:01:10 IST, then the audit trail holds a successful sign-in entry and a failed sign-in entry, each with user account X and its date and time to the second (BR B-24).
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-32; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-32; PIB-005 v0.1
 - Downstream: FEAT-033-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

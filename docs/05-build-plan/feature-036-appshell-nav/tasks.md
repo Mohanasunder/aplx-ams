@@ -16,7 +16,7 @@ validation: Pass
 ## Input References
 - FEAT-036 plan.md — implementation steps and file list
 - UIS-001 v0.1 § AppShell — component spec and role-based nav link sets
-- API-001 v0.2 § F-5 — GET /api/auth/me/ and POST /api/auth/logout/ contracts
+- API-001 v0.3 § F-5 — GET /api/auth/me/ and POST /api/auth/logout/ contracts
 - STD-001 v0.1 — coding standards
 
 ## Purpose And Scope
@@ -37,7 +37,7 @@ Ordered task checklist for the builder of FEAT-036. Each task names the file(s) 
 None.
 
 ## Traceability Links
-- Upstream: FEAT-036 plan.md; UIS-001 v0.1 § AppShell; API-001 v0.2 § F-5; STD-001 v0.1
+- Upstream: FEAT-036 plan.md; UIS-001 v0.1 § AppShell; API-001 v0.3 § F-5; STD-001 v0.1
 - Downstream: Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-028: S-16: Delivery Manager Reviews Effort Against a Contract â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-16
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-16
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-028 (REQ S-16). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-16.
+Covers the 4 acceptance criteria for FEAT-028 (REQ S-16). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-16.
 
 ## Acceptance Criteria
 REQ-016 AC-1 REQ S-16 AC-1: Given client organization A has an hours bank contract of 100 contracted hours and 30 hours recorded, when the delivery manager reviews it, then it shows 30 hours recorded and an hours bank balance of 70 hours (BR B-16).
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-16; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-16; PIB-005 v0.1
 - Downstream: FEAT-028-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

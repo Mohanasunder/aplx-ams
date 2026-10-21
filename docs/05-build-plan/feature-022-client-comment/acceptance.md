@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-022: S-28: Client User Adds a Comment on Their Ticket â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-28
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-28
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-022 (REQ S-28). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-28.
+Covers the 4 acceptance criteria for FEAT-022 (REQ S-28). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-28.
 
 ## Acceptance Criteria
 REQ-028 AC-1 REQ S-28 AC-1: Given a client user of client organization A, when they add a comment on a ticket of organization A, then the comment is saved on the ticket with the client user and the time, and internal users viewing the ticket see it.
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-28; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-28; PIB-005 v0.1
 - Downstream: FEAT-022-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

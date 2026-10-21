@@ -280,3 +280,4 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-21 16:43 | FEAT-037-ACC | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | FEAT-037 acceptance criteria AC-1 through AC-4 approved as written. |
 | 2026-10-21 16:43 | WAV-001 | 0.3 | Approve | Mohanasunder | Architect / tech lead | Pass | - | WAV-001 v0.3 approved: Wave 30 added for FEAT-037 (Edit User Account). |
 | 2026-10-21 16:52 | PRD FEAT-036 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | [review depth: Deep, tier High] [review: 15 min] |
+| 2026-10-21 17:21 | SCR S-21 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | - |

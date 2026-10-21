@@ -15,11 +15,11 @@ validation: Pass
 
 ## Input References
 - UIS-001 v0.1 — APLX AMS: UI Specification (Approved 2026-10-17) § AppShell
-- API-001 v0.2 — APLX AMS: API Specification (Approved 2026-10-17) § F-5
+- API-001 v0.3 — APLX AMS: API Specification (Approved 2026-10-17) § F-5
 - PRM-001 v0.1 — APLX AMS: Permission Matrix (Approved 2026-10-17) § Authentication F-5
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-036. Criteria are derived from UIS-001 v0.1 § AppShell and API-001 v0.2 § F-5 (the AppShell was not covered by any REQ story; the gap was identified as OQ-073 and resolved by creating this feature).
+Covers the 4 acceptance criteria for FEAT-036. Criteria are derived from UIS-001 v0.1 § AppShell and API-001 v0.3 § F-5 (the AppShell was not covered by any REQ story; the gap was identified as OQ-073 and resolved by creating this feature).
 
 ## Acceptance Criteria
 UIS-001 v0.1 § AppShell AC-1: Given a user is authenticated, when any authenticated route renders, then the AppShell is visible with MuiTypography text "APLX AMS", a MuiChip showing the user's role label, and a MuiButton labelled "Sign out".
@@ -34,14 +34,14 @@ UIS-001 v0.1 § AppShell AC-3 (200 path): Mount AuthProvider with GET /api/auth/
 UIS-001 v0.1 § AppShell AC-4: For each role (delivery_manager, l2l3_support, client_user), mount AppShell with the role set in AuthContext; assert the nav drawer contains exactly the links specified in UIS-001 v0.1 § AppShell for that role, verified by link text.
 
 ## Assumptions
-- A-048: These criteria are spec-derived from UIS-001 v0.1 § AppShell and API-001 v0.2 § F-5 because the AppShell was not assigned to any REQ story. Logged in docs/logs/assumptions-log.md.
+- A-048: These criteria are spec-derived from UIS-001 v0.1 § AppShell and API-001 v0.3 § F-5 because the AppShell was not assigned to any REQ story. Logged in docs/logs/assumptions-log.md.
 
 ## Open Questions
 - OQ-073: Answered — Mohanasunder approved creating FEAT-036 (2026-10-19).
 - OQ-074: Answered — DEC-088 (2026-10-19, Mohanasunder): UIS-001 v0.1 § AppShell sourcing accepted; plan.md reclassified to Type: Enabling.
 
 ## Traceability Links
-- Upstream: UIS-001 v0.1 § AppShell; API-001 v0.2 § F-5; PRM-001 v0.1 § Authentication F-5; docs/logs/open-questions-log.md; docs/logs/decision-log.md
+- Upstream: UIS-001 v0.1 § AppShell; API-001 v0.3 § F-5; PRM-001 v0.1 § Authentication F-5; docs/logs/open-questions-log.md; docs/logs/decision-log.md
 - Downstream: FEAT-036-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

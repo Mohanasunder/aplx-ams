@@ -18,8 +18,8 @@ validation: Pass
 
 ## Input References
 - PIB-005 v0.1 — Phase 5 Build Planning Input Brief (Approved 2026-10-17)
-- REQ-001 v0.3 — APLX AMS: User Stories (Approved 2026-10-17) § S-14
-- API-001 v0.2 — APLX AMS: API Specification (Approved 2026-10-17)
+- REQ-001 v0.4 — APLX AMS: User Stories (Approved 2026-10-17) § S-14
+- API-001 v0.3 — APLX AMS: API Specification (Approved 2026-10-17)
 - DBD-001 v0.1 — APLX AMS: Database Design (Approved 2026-10-17)
 - STD-001 v0.1 — APLX AMS: Coding Standards (Approved 2026-10-17)
 - BED-001 v0.1 — APLX AMS: Backend Design (Approved 2026-10-17)
@@ -39,14 +39,14 @@ Deliver all 4 acceptance criteria of REQ S-14 end-to-end: backend models, migrat
 - Depends on: FEAT-025
 
 ## Inputs And Contracts
-- REQ-001 v0.3 § S-14 — acceptance criteria (copied verbatim into acceptance.md)
-- API-001 v0.2 — endpoint contracts for this feature
+- REQ-001 v0.4 § S-14 — acceptance criteria (copied verbatim into acceptance.md)
+- API-001 v0.3 — endpoint contracts for this feature
 - DBD-001 v0.1 — table definitions and migration order
 - PRM-001 v0.1 — role-based permission matrix
 
 ## Context Pack
-- REQ-001 v0.3 § S-14
-- API-001 v0.2 § Service reporting and dashboards (F-3)
+- REQ-001 v0.4 § S-14
+- API-001 v0.3 § Service reporting and dashboards (F-3)
 - DBD-001 v0.1 § Module: reports
 - STD-001 v0.1 § Naming And Structure
 - PRM-001 v0.1 § Service reporting and dashboards (F-3)
@@ -118,7 +118,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: PIB-005 v0.1; REQ-001 v0.3 § S-14; API-001 v0.2; DBD-001 v0.1; STD-001 v0.1; BED-001 v0.1; UIS-001 v0.1
+- Upstream: PIB-005 v0.1; REQ-001 v0.4 § S-14; API-001 v0.3; DBD-001 v0.1; STD-001 v0.1; BED-001 v0.1; UIS-001 v0.1
 - Downstream: FEAT-026-TASKS; FEAT-026-ACC; FEAT-026-STATUS; Phase 6 PR
 
 ## Quality Checklist

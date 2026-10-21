@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-006: S-21: User Signs In with a User Account â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-21
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-21
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-006 (REQ S-21). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-21.
+Covers the 4 acceptance criteria for FEAT-006 (REQ S-21). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-21.
 
 ## Acceptance Criteria
 REQ-021 AC-1 REQ S-21 AC-1: Given an active user account with a correct password, when the user signs in, then they reach APLX AMS with the tasks of their role, and no second factor is asked for (NFR N-5).
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-21; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-21; PIB-005 v0.1
 - Downstream: FEAT-006-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

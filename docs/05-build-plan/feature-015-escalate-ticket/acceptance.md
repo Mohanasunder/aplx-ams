@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-015: S-5: L1 Support Engineer Escalates a Ticket to L2/L3 â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-5
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-5
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-015 (REQ S-5). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-5.
+Covers the 4 acceptance criteria for FEAT-015 (REQ S-5). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-5.
 
 ## Acceptance Criteria
 REQ-005 AC-1 REQ S-5 AC-1: Given a P2 ticket raised at 10:00 IST in the L1 queue with no L1 action yet, when an L1 support engineer assigns it to an L2/L3 support engineer at 11:00 IST, then the ticket appears in that L2/L3 support engineer's assigned tickets, leaves the L1 queue, and the response clock stops at 1 business hour because the assignment is the first L1 action (BR B-4).
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-5; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-5; PIB-005 v0.1
 - Downstream: FEAT-015-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

@@ -1324,3 +1324,79 @@ Not applicable — no architecture or contract artifact changes. DEC-089 (Mohana
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+---
+
+## SCR S-21: Batch citation update — REQ-001 v0.3 → v0.4 and API-001 v0.2 → v0.3 in all unbuilt feature plan files
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
+
+### Summary
+SCR S-19 bumped REQ-001 to v0.4 and SCR S-20 bumped API-001 to v0.3. All feature plan files created before these SCRs still cite REQ-001 v0.3 and API-001 v0.2 in their Input References and Traceability Links sections. This causes spec_impact.py check to fail at Phase 6 entry for every affected feature, blocking builds. The change is purely bibliographic: no scope, criteria, or implementation content changes.
+
+### Changed Artifacts
+All files listed below receive only citation string replacements: `REQ-001 v0.3` → `REQ-001 v0.4` and `API-001 v0.2` → `API-001 v0.3`. No other content changes. Files that do not cite either string are unchanged.
+
+- docs/05-build-plan/feature-002-org-sap-setup/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-003-contract-setup/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-004-end-contract/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-005-user-accounts/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-006-sign-in-auth/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-007-client-data-boundary/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-008-temp-password/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-009-change-password/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-010-holiday-list/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-011-raise-ticket/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-012-follow-tickets/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-013-l1-acknowledge/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-014-priority-change/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-015-escalate-ticket/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-016-set-resolved/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-017-close-ticket/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-018-awaiting-client/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-019-sla-computation/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-020-sla-states-visible/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-021-escalation-flag/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-022-client-comment/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-023-internal-comment/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-024-live-dashboard/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-025-generate-report/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-026-view-download-report/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-027-record-effort/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-028-review-effort/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-029-finance-export/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-030-engineer-edit-effort/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-031-dm-correct-effort/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-032-ticket-audit-trail/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-033-security-events-recorded/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-034-view-security-events/plan.md, acceptance.md, tasks.md
+- docs/05-build-plan/feature-036-appshell-nav/plan.md, acceptance.md, tasks.md (merged; cosmetic update)
+- docs/05-build-plan/phase-input-brief.md
+- docs/05-build-plan/feature-breakdown.md
+
+### Reason
+Every unbuilt feature's Phase 6 entry is blocked by spec_impact.py detecting stale citations. The citations are stale because SCR S-19 and SCR S-20 bumped the approved versions of REQ-001 and API-001 after all existing feature plans were written. No feature's scope or acceptance criteria are affected: S-34 (the S-19 addition) belongs to FEAT-037 only; the API-001 v0.3 extension (PATCH /api/accounts/users/{id}/) is for FEAT-037 only.
+
+### Impact
+- No requirement, design, or implementation content changes in any affected feature.
+- After this SCR is applied, spec_impact.py check passes for all affected features.
+- FEAT-037's plan.md, acceptance.md, and tasks.md were created after SCR S-19/S-20 and already cite the correct versions; they are not changed.
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes.
+
+### Traceability Links
+- Upstream: SCR S-19 (REQ-001 v0.4); SCR S-20 (API-001 v0.3); all affected Phase 5 plan files
+- Downstream: Phase 6 spec_impact.py checks for FEAT-010 through FEAT-035
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact

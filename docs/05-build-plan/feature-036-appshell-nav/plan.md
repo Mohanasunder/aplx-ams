@@ -15,14 +15,14 @@ validation: Pass
 
 ## Input References
 - UIS-001 v0.1 — APLX AMS: UI Specification (Approved 2026-10-17) § AppShell
-- API-001 v0.2 — APLX AMS: API Specification (Approved 2026-10-17) § F-5
+- API-001 v0.3 — APLX AMS: API Specification (Approved 2026-10-17) § F-5
 - PRM-001 v0.1 — APLX AMS: Permission Matrix (Approved 2026-10-17) § Authentication F-5
 - FEAT-006 plan.md (Approved 2026-10-18) — AuthContext.tsx stub and auth API already built
 - OQ-073 — AppShell gap identified in FEAT-006 live review; Mohanasunder approved creating FEAT-036 (2026-10-19)
 - DEC-088 (2026-10-19, Mohanasunder) — UIS-001 v0.1 § AppShell sourcing accepted; Type reclassified to Enabling (OQ-074)
 
 ## Purpose And Scope
-Delivers the global AppShell (MuiAppBar + MuiDrawer) that wraps every authenticated page. Fixes the two gaps identified in FEAT-006 AIR F-04: AuthContext.tsx must call GET /api/auth/me/ on mount to restore session, and must expose signOut() to clear AuthContext and redirect to /login after POST /api/auth/logout/. Covers UIS-001 v0.1 § AppShell (layout, role badge chip, sign-out button, role-based nav drawer) and API-001 v0.2 § F-5 (GET /api/auth/me/, POST /api/auth/logout/).
+Delivers the global AppShell (MuiAppBar + MuiDrawer) that wraps every authenticated page. Fixes the two gaps identified in FEAT-006 AIR F-04: AuthContext.tsx must call GET /api/auth/me/ on mount to restore session, and must expose signOut() to clear AuthContext and redirect to /login after POST /api/auth/logout/. Covers UIS-001 v0.1 § AppShell (layout, role badge chip, sign-out button, role-based nav drawer) and API-001 v0.3 § F-5 (GET /api/auth/me/, POST /api/auth/logout/).
 
 ## Feature Type
 Type: Enabling
@@ -35,12 +35,12 @@ Implement the AppShell component (MuiAppBar, MuiDrawer, role badge chip, sign-ou
 
 ## Inputs And Contracts
 - UIS-001 v0.1 § AppShell — layout, MUI component spec, role-based nav link sets, loading state (MuiCircularProgress), session expiry redirect
-- API-001 v0.2 § F-5 — GET /api/auth/me/ (returns `{"role": ..., "org": ...}`; 401 if unauthenticated); POST /api/auth/logout/ (200 on success)
+- API-001 v0.3 § F-5 — GET /api/auth/me/ (returns `{"role": ..., "org": ...}`; 401 if unauthenticated); POST /api/auth/logout/ (200 on success)
 - PRM-001 v0.1 § Authentication F-5 — all authenticated roles can call /api/auth/me/ for their own record
 
 ## Context Pack
 - UIS-001 v0.1 § AppShell
-- API-001 v0.2 § Authentication (F-5)
+- API-001 v0.3 § Authentication (F-5)
 - PRM-001 v0.1 § Authentication (F-5)
 - src/frontend/src/context/AuthContext.tsx
 - src/frontend/src/App.tsx
@@ -113,7 +113,7 @@ Open design decisions: None
 - OQ-074: Answered — DEC-088 (2026-10-19, Mohanasunder): UIS-001 v0.1 § AppShell sourcing accepted; Type reclassified to Enabling.
 
 ## Traceability Links
-- Upstream: UIS-001 v0.1 § AppShell; API-001 v0.2 § F-5; PRM-001 v0.1 § Authentication F-5; FEAT-006 plan.md; docs/logs/open-questions-log.md; docs/logs/decision-log.md
+- Upstream: UIS-001 v0.1 § AppShell; API-001 v0.3 § F-5; PRM-001 v0.1 § Authentication F-5; FEAT-006 plan.md; docs/logs/open-questions-log.md; docs/logs/decision-log.md
 - Downstream: FEAT-036-TASKS; FEAT-036-ACC; FEAT-036-STATUS; Phase 6 PR
 
 ## Quality Checklist

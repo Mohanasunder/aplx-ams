@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-002: S-18: Delivery Manager Sets Up Client Organizations and SAP Applications â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-18
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-18
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 3 acceptance criteria for FEAT-002 (REQ S-18). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-18.
+Covers the 3 acceptance criteria for FEAT-002 (REQ S-18). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-18.
 
 ## Acceptance Criteria
 REQ-018 AC-1 REQ S-18 AC-1: Given the delivery manager, when they create client organization Applexus and add an SAP application to it, then client users of Applexus can choose that SAP application when raising a ticket.
@@ -40,7 +40,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-18; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-18; PIB-005 v0.1
 - Downstream: FEAT-002-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

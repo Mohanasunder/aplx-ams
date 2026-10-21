@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-017: S-7: L1 Support Engineer Closes a Resolved Ticket â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-7
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-7
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-017 (REQ S-7). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-7.
+Covers the 4 acceptance criteria for FEAT-017 (REQ S-7). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-7.
 
 ## Acceptance Criteria
 REQ-007 AC-1 REQ S-7 AC-1: Given a Resolved ticket in the L1 queue, when an L1 support engineer closes it, then its status is Closed, it leaves the L1 queue, and the client user of its client organization sees it as Closed.
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-7; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-7; PIB-005 v0.1
 - Downstream: FEAT-017-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

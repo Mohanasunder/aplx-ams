@@ -56,7 +56,7 @@ The tech lead invoked `/run-build-planning` on 2026-10-17 after Phase 4 approval
 ## Referenced Artifact Versions
 - SUM-004 v0.1 (Approved 2026-10-17) — DBD-001 v0.1, API-001 v0.1, BED-001 v0.1, UIS-001 v0.1, PRM-001 v0.1, STD-001 v0.1, TST-001 v0.1 (all Approved 2026-10-17)
 - BKL-001 v0.3 (Approved 2026-10-17)
-- REQ-001 v0.3, NFR-001 v0.3, BR-001 v0.3 (Approved 2026-10-17)
+- REQ-001 v0.4, NFR-001 v0.3, BR-001 v0.3 (Approved 2026-10-17)
 
 ## Constraints
 - max_parallel_builder_agents: 3

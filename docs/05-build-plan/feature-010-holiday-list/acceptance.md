@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-010: S-24: Delivery Manager Maintains the Company Holiday List â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-24
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-24
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-010 (REQ S-24). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-24.
+Covers the 4 acceptance criteria for FEAT-010 (REQ S-24). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-24.
 
 ## Acceptance Criteria
 REQ-024 AC-1 REQ S-24 AC-1: Given the delivery manager adds 2027-01-26 (a Tuesday) to the company holiday list before that date, when a P3 ticket raised at 10:00 IST on Monday 2027-01-25 has its elapsed business time counted, then 2027-01-26 contributes 0 business hours (BR B-2).
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-24; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-24; PIB-005 v0.1
 - Downstream: FEAT-010-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

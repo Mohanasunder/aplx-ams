@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-031: S-26: Delivery Manager Corrects an Effort Entry â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-26
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-26
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-031 (REQ S-26). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-26.
+Covers the 4 acceptance criteria for FEAT-031 (REQ S-26). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-26.
 
 ## Acceptance Criteria
 REQ-026 AC-1 REQ S-26 AC-1: Given support engineer X recorded an effort entry of 2 hours dated 2026-10-15 on an hours bank contract with balance 70 hours, when the delivery manager changes it to 1.5 hours on 2026-11-10, then the change is saved, the hours bank balance is 70.5 hours, and the audit trail holds old value 2, new value 1.5, the delivery manager and the time (BR B-15, BR B-16, BR B-22).
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-26; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-26; PIB-005 v0.1
 - Downstream: FEAT-031-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist
