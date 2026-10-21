@@ -9,7 +9,7 @@ status: Draft
 author_agent: documentation-writer
 approver: Human developer reviewer
 date: 2026-10-18
-validation: Fail
+validation: Pass with warnings
 ---
 # Phase 6 PR Descriptions
 
@@ -1155,7 +1155,7 @@ cd src/frontend && npm run test -- --run
 | vitest coverage (--coverage.threshold.lines=70) | Pass — 97.74% lines; threshold 70% (36/36 tests pass; run: `cd src/frontend && npm run test -- --run --coverage`) |
 | E2E (`playwright test` — FEAT-035 scaffold.spec.ts, CI job) | No new E2E tests added; FEAT-035 scaffold (1 test) runs in CI on every push |
 | SDLC methodology gates (spec_impact, locked_tests, context_pack, learned_rules, pr_summary, log_decision, build_charter, glossary) | Pass — 0 violations (all run with `--base master` or equivalent; no missing SCRs, no locked-test SHA drift, no spec-version skew) |
-| check_feature_size scope (--base master) | 3 SDLC doc files outside plan.md scope — expected; authorized via SCR process (acceptance.md per SCR S-17; plan.md per SCR S-17; tasks.md per builder task-tick). App.test.tsx (in plan scope), .secrets.baseline (not committed) — not flagged. |
+| check_feature_size scope (--base master) | exit 1 — 3 SDLC doc files outside plan.md scope; accepted deviation (see Known Gaps 3): acceptance.md and plan.md changed per SCR S-17; tasks.md is the builder task-tick file. App.test.tsx (in plan scope), .secrets.baseline (not committed) — not flagged. All 14 source/test files within plan scope. |
 
 ### Requirements Covered
 - UIS-001 v0.1 § AppShell AC-1: `FEAT-036 AC-1: renders APLX AMS typography`, `FEAT-036 AC-1: renders role chip with role label`, `FEAT-036 AC-1: renders Sign out button` — all PASSING.
