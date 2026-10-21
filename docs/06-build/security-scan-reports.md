@@ -12,7 +12,7 @@ approver: Human developer reviewer
 default_approver: Human developer reviewer
 default_folder: docs/06-build
 date: 2026-10-18
-validation: Pass
+validation: Fail
 ---
 
 # Security Scan Reports
@@ -520,6 +520,8 @@ Does not cover: infrastructure-as-code (Phase 8), runtime penetration testing, o
 | bandit | 1.9.4 | `python -m bandit -r src/aplx_ams_django/ -ll -q` | 0 | **Pass** — No MEDIUM/HIGH findings; no new Python files; low-severity B101 findings unchanged from prior SSRs |
 | pip-audit | 2.10.1 | `python -m pip_audit -r requirements.txt` | 0 | **Pass** — No known vulnerabilities; no new backend dependencies added |
 | detect-secrets | 1.5.0 | `python -m detect_secrets scan --baseline .secrets.baseline` | 0 | **Pass** — No new secrets detected beyond committed baseline |
+| ESLint | (installed) | `npx eslint src/frontend/src/ --max-warnings=0` | 0 | **Pass** — 0 errors, 0 warnings (see PR FEAT-036 gate results table) |
+| tsc | (installed) | `npx tsc --noEmit` | 0 | **Pass** — 0 type errors (see PR FEAT-036 gate results table) |
 
 ### Findings
 
@@ -535,7 +537,7 @@ Does not cover: infrastructure-as-code (Phase 8), runtime penetration testing, o
 
 | Finding | Severity | File | Detail |
 | --- | --- | --- | --- |
-| A-1: `.secrets.baseline` generated_at timestamp updated | Advisory | `.secrets.baseline` | The file's `generated_at` field was updated by detect-secrets when the scan ran on this branch. The `results` section is unchanged — no new secrets added or removed. This is the same pattern as SSR FEAT-035 A-SEC-035-01. Not a plan deviation requiring an SCR; the human reviewer should record a DEC if accepted (per AIR FEAT-036 F-2). |
+| A-1: `.secrets.baseline` generated_at timestamp (reverted) | Advisory (resolved) | `.secrets.baseline` | The file's `generated_at` field was updated by detect-secrets when the scan ran locally. The `results` section was unchanged. The working-tree change was reverted before commit (`git checkout -- .secrets.baseline`) — the file is identical to master on this branch. No deviation; no DEC required. |
 
 ### Secrets Check
 
@@ -547,11 +549,11 @@ The `.secrets.baseline` modification on this branch is limited to the `generated
 
 **Clean**
 
-All three non-overridable gate commands exited 0. No MEDIUM or HIGH SAST findings. No new secrets detected. No vulnerable dependencies. No Python changes to scan. One Advisory finding (A-1: `.secrets.baseline` timestamp update) is consistent with prior SSR patterns and does not constitute a new secret or a policy violation. No Blockers.
+All gate commands exited 0. No MEDIUM or HIGH SAST findings. No new secrets detected. No vulnerable dependencies. No Python changes to scan. ESLint and tsc (frontend-specific gates) both pass. Advisory A-1 (`.secrets.baseline` timestamp update) is resolved — the file was reverted to master state before commit; no secrets and no deviation. No Blockers.
 
 ### Assumptions
 
-- A-SEC-036-01: The `.secrets.baseline` `generated_at` timestamp update is standard detect-secrets behavior when run locally. The `results` section is unchanged from the committed baseline. Consistent with A-SEC-035-01 in SSR FEAT-035.
+- A-SEC-036-01: The `.secrets.baseline` `generated_at` timestamp update from running detect-secrets locally is standard behavior (consistent with A-SEC-035-01 in SSR FEAT-035). The file was reverted (`git checkout -- .secrets.baseline`) before commit; no impact on the PR.
 
 ### Open Questions
 

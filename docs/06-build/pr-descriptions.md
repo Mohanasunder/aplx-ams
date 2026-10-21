@@ -9,7 +9,7 @@ status: Draft
 author_agent: documentation-writer
 approver: Human developer reviewer
 date: 2026-10-18
-validation: Pass
+validation: Fail
 ---
 # Phase 6 PR Descriptions
 
@@ -1152,8 +1152,10 @@ cd src/frontend && npm run test -- --run
 | bandit -ll | Pass (exit 0) |
 | pip-audit -r requirements.txt | Pass (0 vulnerabilities) |
 | detect-secrets | Pass (exit 0) |
-| vitest coverage (--coverage.threshold.lines=70) | Not run — requires Docker and backend services (see Known Gaps 4) |
-| check_feature_size scope (--base master) | 3 SDLC doc files outside plan.md scope — expected; approved via SCR S-16, S-17, S-18 (see Known Gaps 3) |
+| vitest coverage (--coverage.threshold.lines=70) | Pass — 97.74% lines; threshold 70% (36/36 tests pass; run: `cd src/frontend && npm run test -- --run --coverage`) |
+| E2E (`playwright test` — FEAT-035 scaffold.spec.ts, CI job) | No new E2E tests added; FEAT-035 scaffold (1 test) runs in CI on every push |
+| SDLC methodology gates (spec_impact, locked_tests, context_pack, learned_rules, pr_summary, log_decision, build_charter, glossary) | Pass — 0 violations (all run with `--base master` or equivalent; no missing SCRs, no locked-test SHA drift, no spec-version skew) |
+| check_feature_size scope (--base master) | 3 SDLC doc files outside plan.md scope — expected; authorized via SCR process (acceptance.md per SCR S-17; plan.md per SCR S-17; tasks.md per builder task-tick). App.test.tsx (in plan scope), .secrets.baseline (not committed) — not flagged. |
 
 ### Requirements Covered
 - UIS-001 v0.1 § AppShell AC-1: `FEAT-036 AC-1: renders APLX AMS typography`, `FEAT-036 AC-1: renders role chip with role label`, `FEAT-036 AC-1: renders Sign out button` — all PASSING.
@@ -1165,7 +1167,7 @@ cd src/frontend && npm run test -- --run
 1. AppShell sign-out handler calls `logout()`, `setUser(null)`, and `navigate('/login')` directly rather than delegating to `context.signOut()`. This is required by the locked AC-2 test (FEAT-036-TESTS v0.1) which provides a no-op `signOut` spy and independently asserts on the three individual calls. Changing to `context.signOut()` would break the locked test. The `signOut` method on AuthContext remains available for external callers.
 2. `App.test.tsx` TST-001 AC-1 updated from asserting "APLX AMS" text (which no longer renders in unauthenticated state) to asserting Login renders for unauthenticated users. Authorized by SCR S-18 (Approved 2026-10-21, Mohanasunder).
 3. `check_feature_size.py scope --base master` reports 3 SDLC doc files outside plan.md as of the test-set commit (`acceptance.md`, `plan.md`, `tasks.md`). These are expected: plan.md and acceptance.md were amended via SCR S-16 and S-17 respectively; tasks.md is the builder task-tick file. All three are in scope per the approved SCRs and the build task process.
-4. Vitest coverage gate (`vitest run --coverage --coverage.threshold.lines=70`) was not run locally — requires Docker and backend services, which are set up in CI (FEAT-000/FEAT-001 infrastructure). All 36 tests pass; coverage is expected to exceed 70% given the high density of component assertions.
+4. Vitest coverage gate (`vitest run --coverage --coverage.threshold.lines=70`) confirmed Pass: 97.74% lines (threshold 70%), run post-Mode B with all 36 tests passing. Coverage runs locally via `cd src/frontend && npm run test -- --run --coverage` without Docker; mocked API calls ensure no network dependencies.
 
 ### Deviations From Plan
 - **SCR S-18 (Approved 2026-10-21, Mohanasunder) — App.test.tsx TST-001 AC-1 updated:** `App.test.tsx` asserted `screen.getByText('APLX AMS')` from FEAT-001. FEAT-036 removes the `<nav>APLX AMS</nav>` stub and wraps authenticated routes in AppShell. The test was updated to assert Login renders for unauthenticated users; FEAT-001-TESTS v0.2 re-locks it.

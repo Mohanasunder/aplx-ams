@@ -12,7 +12,7 @@ approver: Human developer reviewer
 default_approver: Human developer reviewer
 default_folder: docs/06-build
 date: 2026-10-18
-validation: Pass
+validation: Fail
 ---
 
 # Phase 6 AI Pre-Review Reports
