@@ -19,6 +19,7 @@ import UserManagement from './pages/UserManagement';
 import { AuthProvider } from './context/AuthContext';
 import Login from './pages/Login';
 import AppShell from './components/AppShell';
+import HolidayList from './pages/HolidayList';
 
 export default function App(): React.JSX.Element {
   return (
@@ -38,6 +39,9 @@ export default function App(): React.JSX.Element {
                 </UserContext.Provider>
               }
             />
+            {/* Holiday list — DM-only admin route (FEAT-010, SCR S-25) */}
+            <Route path="/admin/holidays" element={<HolidayList />} />
+
             {/* /tickets placeholder — full implementation in a later feature */}
             <Route
               path="/tickets"
