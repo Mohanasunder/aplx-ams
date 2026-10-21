@@ -23,12 +23,12 @@ Tracks the build-phase progress of FEAT-036. Updated by the builder agent during
 - Branch: feature/FEAT-036-appshell-nav
 - Base commit: a09fc6c
 - Started: 2026-10-21
-- PR: Pending — draft PR link added when branch is created
+- PR: https://github.com/Mohanasunder/aplx-ams/pull/19
 
 ## Progress
-- State: In progress
-- Assigned agents: Pending — assigned in Phase 6
-- Last update: 2026-10-19
+- State: In review
+- Assigned agents: frontend-builder (Mode A + B), documentation-writer (PR description, SSR), ai-code-reviewer, security-scanner, checker
+- Last update: 2026-10-21
 
 ## Blockers
 Depends on FEAT-006 (PR #17) being merged to master before the feature branch is created. No other blockers.
