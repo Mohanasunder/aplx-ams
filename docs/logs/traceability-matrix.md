@@ -94,7 +94,7 @@ Approved 2026-10-17 by Mohanasunder (Architect / tech lead).
 | FEAT-000 | Walking Skeleton — Backend Scaffold and CI Pipeline | none (foundation) | FEAT-000-ACC, FEAT-000-TASKS, FEAT-000-STATUS Approved v0.1 (2026-10-18); FEAT-000-TESTS Approved v0.1 (2026-10-18, Mohanasunder, Tech lead); PR #4 Approved 2026-10-18 by Mohanasunder (Tech lead, Release manager); not yet merged |
 | FEAT-001 | Frontend Scaffold — React + Vite + Tailwind | FEAT-000 | FEAT-001-ACC, FEAT-001-TASKS, FEAT-001-STATUS Approved v0.1 (2026-10-18); FEAT-001-TESTS Approved v0.1 (2026-10-18, Mohanasunder, Tech lead); PRD FEAT-001 Approved 2026-10-18 by Mohanasunder (Architect / tech lead) and Mohanasunder (Release manager / DevOps); PR #5 https://github.com/Mohanasunder/aplx-ams/pull/5; all automated gates passed; merged 2026-10-18 (PR #5) |
 | FEAT-035 | E2E CI Scaffold | FEAT-000, FEAT-001 | FEAT-035-ACC, FEAT-035-TASKS, FEAT-035-STATUS Approved v0.1 (2026-10-18); FEAT-035-TESTS Approved v0.2 (SCR S-11, 2026-10-18, Mohanasunder, Tech lead); PRD FEAT-035 Approved 2026-10-18 by Mohanasunder (Tech lead) and Mohanasunder (Release manager); PR #9 https://github.com/Mohanasunder/aplx-ams/pull/9; all automated gates passed |
-| FEAT-036 | AppShell — Global Navigation Shell and Sign Out | FEAT-006 | FEAT-036-ACC, FEAT-036-TASKS, FEAT-036-STATUS Approved v0.1 (2026-10-21, Mohanasunder, Tech lead); Wave 8; WAV-001 v0.2 (SCR S-15, Approved 2026-10-21); DEC-088 (UIS-001 v0.1 § AppShell sourcing; Type: Enabling classification) |
+| FEAT-036 | AppShell — Global Navigation Shell and Sign Out | FEAT-006 | FEAT-036-ACC v0.2 Approved 2026-10-21 (Mohanasunder, Tech lead; SCR S-17 role-name correction); FEAT-036-TASKS, FEAT-036-STATUS Approved v0.1 (2026-10-21, Mohanasunder, Tech lead); FEAT-036-TESTS v0.1 Approved 2026-10-21 (Mohanasunder, Tech lead; test commit aeb8323; 9 tests in AppShell.test.tsx); PRD FEAT-036 Approved 2026-10-21 by Mohanasunder (Architect / tech lead, Deep review, 15 min); PR #19 (https://github.com/Mohanasunder/aplx-ams/pull/19; branch: feature/FEAT-036-appshell-nav); status: In review; Wave 8; WAV-001 v0.2 (SCR S-15, Approved 2026-10-21); DEC-088 (UIS-001 v0.1 § AppShell sourcing; Type: Enabling classification); SCRs: S-15, S-16, S-17, S-18 |
 
 These four features carry no REQ story (they are enabling features). They are linked to all Phase 4 design artifacts via STD-001, TST-001, UIS-001 (FEAT-036), and API-001 (FEAT-036).
 
@@ -217,6 +217,22 @@ Traceability chain: REQ-001 v0.3 § S-21 → API-001 v0.2, DBD-001 v0.1, UIS-001
 
 Build status: Mode A complete; Mode B (implementation) in progress. Test files locked at commits 9ececb7 (backend) and 8bd2f25 (frontend). SCR S-13 (plan v0.3, adds `react-router-dom` to New Packages); DEC-084 (2026-10-19, `useNavigate` from `react-router-dom` approved for Mode B).
 
+### FEAT-036 Test Set (Approved v0.1, 2026-10-21)
+
+Traceability chain: UIS-001 v0.1 § AppShell, API-001 v0.2 § F-5, PRM-001 v0.1 → FEAT-036-ACC v0.2 → FEAT-036-TESTS v0.1
+
+| Link | Detail |
+|---|---|
+| UIS-001 v0.1 § AppShell → FEAT-036-TESTS | AppShell layout (AC-1), sign-out flow (AC-2), session restore on mount (AC-3), and role-based nav links (AC-4) drive all 9 tests |
+| API-001 v0.2 § F-5 → FEAT-036-TESTS | GET /api/auth/me/ (AC-3: 200 and 401 paths) and POST /api/auth/logout/ (AC-2) drive API mock assertions |
+| PRM-001 v0.1 § Authentication F-5 → FEAT-036-TESTS | All authenticated roles can call /api/auth/me/ for their own record; drives role-chip and nav-link assertions in AC-1 and AC-4 |
+| FEAT-036-ACC v0.2 → FEAT-036-TESTS | AC-1: 3 tests (typography "APLX AMS", role chip, Sign out button); AC-2: 1 test (logout call, user cleared, navigate /login); AC-3: 2 tests (200 mount path + 401 redirect); AC-4: 3 tests (delivery_manager 7 links, l2l3_support 3 links, client_user 2 links) |
+| FEAT-036-TESTS v0.1 (Approved) | Approver: Mohanasunder (Tech lead), 2026-10-21; branch: feature/FEAT-036-appshell-nav; test commit: aeb8323 |
+| Test files (locked) | `src/frontend/src/components/AppShell.test.tsx` (9 tests — frontend Vitest); `src/frontend/src/App.test.tsx` re-locked under FEAT-001-TESTS v0.2 per SCR S-18 |
+| PRD FEAT-036 → GitHub PR #19 | https://github.com/Mohanasunder/aplx-ams/pull/19; approved 2026-10-21 by Mohanasunder (Architect / tech lead, Deep review, 15 min); branch: feature/FEAT-036-appshell-nav → master; gate results: vitest 36/36 pass (9 new + 27 pre-existing), tsc 0 errors, eslint 0 errors, coverage 97.74% (threshold 70%); SCRs: S-15, S-16, S-17, S-18 |
+
+Build status: Approved (PR #19, https://github.com/Mohanasunder/aplx-ams/pull/19; approved 2026-10-21 by Mohanasunder, Architect / tech lead, Deep review, 15 min; 9 locked tests: AppShell.test.tsx AC-1 (3), AC-2 (1), AC-3 (2), AC-4 (3); 36 total tests pass; no gate overrides; SCRs S-15, S-16, S-17, S-18; In review awaiting merge).
+
 ### Contract Update: SCR S-20 / API-001 v0.3 (Approved 2026-10-21)
 
 SCR S-20 Approved 2026-10-21 by Mohanasunder (Architect / tech lead). API-001 advanced from v0.2 to v0.3.
@@ -250,6 +266,160 @@ All 34 in-scope stories (REQ S-1 to S-34, Priority: Must) now have confirmed API
 - REQ S-34: covered by API-001 v0.3 (PATCH /api/accounts/users/{id}/ — endpoint #7, schema updated per SCR S-20, Approved 2026-10-21), openapi.yaml (UpdateUserAccountRequest with is_active), BED-001, UIS-001, PRM-001, and TST-001.
 
 No stories currently lack a design ID. Feature plan for REQ S-34 is FEAT-037 (Wave 30, plan.md v0.1 and ACC v0.1 Approved 2026-10-21 by Mohanasunder, Architect / tech lead). Phase 6 build may begin after FEAT-036 merges.
+
+## `scripts/traceability.py report` Output (Phase 6 update, 2026-10-21, run via `py -3`)
+
+```
+| Criterion | Feature | State | In test set | Test cases | Result | Fixes |
+| --- | --- | --- | --- | --- | --- | --- |
+| REQ S-1 AC-1 | FEAT-011 | Not started | no | none | - | - |
+| REQ S-1 AC-2 | FEAT-011 | Not started | no | none | - | - |
+| REQ S-1 AC-3 | FEAT-011 | Not started | no | none | - | - |
+| REQ S-1 AC-4 | FEAT-011 | Not started | no | none | - | - |
+| REQ S-10 AC-1 | FEAT-020 | Not started | no | none | - | - |
+| REQ S-10 AC-2 | FEAT-020 | Not started | no | none | - | - |
+| REQ S-10 AC-3 | FEAT-020 | Not started | no | none | - | - |
+| REQ S-10 AC-4 | FEAT-020 | Not started | no | none | - | - |
+| REQ S-11 AC-1 | FEAT-021 | Not started | no | none | - | - |
+| REQ S-11 AC-2 | FEAT-021 | Not started | no | none | - | - |
+| REQ S-11 AC-3 | FEAT-021 | Not started | no | none | - | - |
+| REQ S-11 AC-4 | FEAT-021 | Not started | no | none | - | - |
+| REQ S-12 AC-1 | FEAT-024 | Not started | no | none | - | - |
+| REQ S-12 AC-2 | FEAT-024 | Not started | no | none | - | - |
+| REQ S-12 AC-3 | FEAT-024 | Not started | no | none | - | - |
+| REQ S-12 AC-4 | FEAT-024 | Not started | no | none | - | - |
+| REQ S-13 AC-1 | FEAT-025 | Not started | no | none | - | - |
+| REQ S-13 AC-2 | FEAT-025 | Not started | no | none | - | - |
+| REQ S-13 AC-3 | FEAT-025 | Not started | no | none | - | - |
+| REQ S-13 AC-4 | FEAT-025 | Not started | no | none | - | - |
+| REQ S-14 AC-1 | FEAT-026 | Not started | no | none | - | - |
+| REQ S-14 AC-2 | FEAT-026 | Not started | no | none | - | - |
+| REQ S-14 AC-3 | FEAT-026 | Not started | no | none | - | - |
+| REQ S-14 AC-4 | FEAT-026 | Not started | no | none | - | - |
+| REQ S-15 AC-1 | FEAT-027 | Not started | no | none | - | - |
+| REQ S-15 AC-2 | FEAT-027 | Not started | no | none | - | - |
+| REQ S-15 AC-3 | FEAT-027 | Not started | no | none | - | - |
+| REQ S-15 AC-4 | FEAT-027 | Not started | no | none | - | - |
+| REQ S-16 AC-1 | FEAT-028 | Not started | no | none | - | - |
+| REQ S-16 AC-2 | FEAT-028 | Not started | no | none | - | - |
+| REQ S-16 AC-3 | FEAT-028 | Not started | no | none | - | - |
+| REQ S-16 AC-4 | FEAT-028 | Not started | no | none | - | - |
+| REQ S-17 AC-1 | FEAT-029 | Not started | no | none | - | - |
+| REQ S-17 AC-2 | FEAT-029 | Not started | no | none | - | - |
+| REQ S-17 AC-3 | FEAT-029 | Not started | no | none | - | - |
+| REQ S-17 AC-4 | FEAT-029 | Not started | no | none | - | - |
+| REQ S-18 AC-1 | FEAT-002 | Merged | no | none | - | - |
+| REQ S-18 AC-2 | FEAT-002 | Merged | no | none | - | - |
+| REQ S-18 AC-3 | FEAT-002 | Merged | no | none | - | - |
+| REQ S-19 AC-1 | FEAT-003 | Merged | yes | none | - | - |
+| REQ S-19 AC-2 | FEAT-003 | Merged | yes | none | - | - |
+| REQ S-19 AC-3 | FEAT-003 | Merged | yes | none | - | - |
+| REQ S-19 AC-4 | FEAT-003 | Merged | yes | none | - | - |
+| REQ S-2 AC-1 | FEAT-012 | Not started | no | none | - | - |
+| REQ S-2 AC-2 | FEAT-012 | Not started | no | none | - | - |
+| REQ S-2 AC-3 | FEAT-012 | Not started | no | none | - | - |
+| REQ S-2 AC-4 | FEAT-012 | Not started | no | none | - | - |
+| REQ S-20 AC-1 | FEAT-005 | Approved — awaiting merge | yes | none | - | - |
+| REQ S-20 AC-2 | FEAT-005 | Approved — awaiting merge | yes | none | - | - |
+| REQ S-20 AC-3 | FEAT-005 | Approved — awaiting merge | yes | none | - | - |
+| REQ S-20 AC-4 | FEAT-005 | Approved — awaiting merge | yes | none | - | - |
+| REQ S-21 AC-1 | FEAT-006 | Merged (PR #17, 2026-10-21) | yes | none | test_auth_api.py | - |
+| REQ S-21 AC-2 | FEAT-006 | Merged (PR #17, 2026-10-21) | yes | none | test_auth_api.py | - |
+| REQ S-21 AC-3 | FEAT-006 | Merged (PR #17, 2026-10-21) | yes | none | Login.test.tsx | - |
+| REQ S-21 AC-4 | FEAT-006 | Merged (PR #17, 2026-10-21) | yes | none | Login.test.tsx | - |
+| REQ S-22 AC-1 | FEAT-007 | Not started | no | none | - | - |
+| REQ S-22 AC-2 | FEAT-007 | Not started | no | none | - | - |
+| REQ S-22 AC-3 | FEAT-007 | Not started | no | none | - | - |
+| REQ S-22 AC-4 | FEAT-007 | Not started | no | none | - | - |
+| REQ S-23 AC-1 | FEAT-032 | Not started | no | none | - | - |
+| REQ S-23 AC-2 | FEAT-032 | Not started | no | none | - | - |
+| REQ S-23 AC-3 | FEAT-032 | Not started | no | none | - | - |
+| REQ S-23 AC-4 | FEAT-032 | Not started | no | none | - | - |
+| REQ S-24 AC-1 | FEAT-010 | Not started | no | none | - | - |
+| REQ S-24 AC-2 | FEAT-010 | Not started | no | none | - | - |
+| REQ S-24 AC-3 | FEAT-010 | Not started | no | none | - | - |
+| REQ S-24 AC-4 | FEAT-010 | Not started | no | none | - | - |
+| REQ S-25 AC-1 | FEAT-030 | Not started | no | none | - | - |
+| REQ S-25 AC-2 | FEAT-030 | Not started | no | none | - | - |
+| REQ S-25 AC-3 | FEAT-030 | Not started | no | none | - | - |
+| REQ S-25 AC-4 | FEAT-030 | Not started | no | none | - | - |
+| REQ S-26 AC-1 | FEAT-031 | Not started | no | none | - | - |
+| REQ S-26 AC-2 | FEAT-031 | Not started | no | none | - | - |
+| REQ S-26 AC-3 | FEAT-031 | Not started | no | none | - | - |
+| REQ S-26 AC-4 | FEAT-031 | Not started | no | none | - | - |
+| REQ S-27 AC-1 | FEAT-004 | Not started | no | none | - | - |
+| REQ S-27 AC-2 | FEAT-004 | Not started | no | none | - | - |
+| REQ S-27 AC-3 | FEAT-004 | Not started | no | none | - | - |
+| REQ S-27 AC-4 | FEAT-004 | Not started | no | none | - | - |
+| REQ S-28 AC-1 | FEAT-022 | Not started | no | none | - | - |
+| REQ S-28 AC-2 | FEAT-022 | Not started | no | none | - | - |
+| REQ S-28 AC-3 | FEAT-022 | Not started | no | none | - | - |
+| REQ S-28 AC-4 | FEAT-022 | Not started | no | none | - | - |
+| REQ S-29 AC-1 | FEAT-023 | Not started | no | none | - | - |
+| REQ S-29 AC-2 | FEAT-023 | Not started | no | none | - | - |
+| REQ S-29 AC-3 | FEAT-023 | Not started | no | none | - | - |
+| REQ S-29 AC-4 | FEAT-023 | Not started | no | none | - | - |
+| REQ S-3 AC-1 | FEAT-013 | Not started | no | none | - | - |
+| REQ S-3 AC-2 | FEAT-013 | Not started | no | none | - | - |
+| REQ S-3 AC-3 | FEAT-013 | Not started | no | none | - | - |
+| REQ S-3 AC-4 | FEAT-013 | Not started | no | none | - | - |
+| REQ S-30 AC-1 | FEAT-008 | Not started | no | none | - | - |
+| REQ S-30 AC-2 | FEAT-008 | Not started | no | none | - | - |
+| REQ S-30 AC-3 | FEAT-008 | Not started | no | none | - | - |
+| REQ S-30 AC-4 | FEAT-008 | Not started | no | none | - | - |
+| REQ S-31 AC-1 | FEAT-009 | Not started | no | none | - | - |
+| REQ S-31 AC-2 | FEAT-009 | Not started | no | none | - | - |
+| REQ S-31 AC-3 | FEAT-009 | Not started | no | none | - | - |
+| REQ S-31 AC-4 | FEAT-009 | Not started | no | none | - | - |
+| REQ S-32 AC-1 | FEAT-033 | Not started | no | none | - | - |
+| REQ S-32 AC-2 | FEAT-033 | Not started | no | none | - | - |
+| REQ S-32 AC-3 | FEAT-033 | Not started | no | none | - | - |
+| REQ S-32 AC-4 | FEAT-033 | Not started | no | none | - | - |
+| REQ S-33 AC-1 | FEAT-034 | Not started | no | none | - | - |
+| REQ S-33 AC-2 | FEAT-034 | Not started | no | none | - | - |
+| REQ S-33 AC-3 | FEAT-034 | Not started | no | none | - | - |
+| REQ S-33 AC-4 | FEAT-034 | Not started | no | none | - | - |
+| REQ S-34 AC-1 | FEAT-037 | Not started | no | none | - | - |
+| REQ S-34 AC-2 | FEAT-037 | Not started | no | none | - | - |
+| REQ S-34 AC-3 | FEAT-037 | Not started | no | none | - | - |
+| REQ S-34 AC-4 | FEAT-037 | Not started | no | none | - | - |
+| REQ S-4 AC-1 | FEAT-014 | Not started | no | none | - | - |
+| REQ S-4 AC-2 | FEAT-014 | Not started | no | none | - | - |
+| REQ S-4 AC-3 | FEAT-014 | Not started | no | none | - | - |
+| REQ S-4 AC-4 | FEAT-014 | Not started | no | none | - | - |
+| REQ S-5 AC-1 | FEAT-015 | Not started | no | none | - | - |
+| REQ S-5 AC-2 | FEAT-015 | Not started | no | none | - | - |
+| REQ S-5 AC-3 | FEAT-015 | Not started | no | none | - | - |
+| REQ S-5 AC-4 | FEAT-015 | Not started | no | none | - | - |
+| REQ S-6 AC-1 | FEAT-016 | Not started | no | none | - | - |
+| REQ S-6 AC-2 | FEAT-016 | Not started | no | none | - | - |
+| REQ S-6 AC-3 | FEAT-016 | Not started | no | none | - | - |
+| REQ S-6 AC-4 | FEAT-016 | Not started | no | none | - | - |
+| REQ S-7 AC-1 | FEAT-017 | Not started | no | none | - | - |
+| REQ S-7 AC-2 | FEAT-017 | Not started | no | none | - | - |
+| REQ S-7 AC-3 | FEAT-017 | Not started | no | none | - | - |
+| REQ S-7 AC-4 | FEAT-017 | Not started | no | none | - | - |
+| REQ S-8 AC-1 | FEAT-018 | Not started | no | none | - | - |
+| REQ S-8 AC-2 | FEAT-018 | Not started | no | none | - | - |
+| REQ S-8 AC-3 | FEAT-018 | Not started | no | none | - | - |
+| REQ S-8 AC-4 | FEAT-018 | Not started | no | none | - | - |
+| REQ S-9 AC-1 | FEAT-019 | Not started | no | none | - | - |
+| REQ S-9 AC-2 | FEAT-019 | Not started | no | none | - | - |
+| REQ S-9 AC-3 | FEAT-019 | Not started | no | none | - | - |
+| REQ S-9 AC-4 | FEAT-019 | Not started | no | none | - | - |
+```
+
+Note: FEAT-036 is an enabling feature (Type: Enabling, no REQ story) and does not appear in the report output. FEAT-005 (REQ S-20) shows "Approved — awaiting merge"; FEAT-006 (REQ S-21) shows "Merged (PR #17, 2026-10-21)". REQ S-34 rows now appear (FEAT-037, Not started; added via SCR S-19). Total: 135 criteria across 34 stories (REQ S-18 has 3 AC; all others 4); 38 features (including FEAT-036, FEAT-037 as enabling/new).
+
+## `scripts/traceability.py check --phase 5` Output (re-run 2026-10-21, via `py -3`)
+
+```
+Traceability (phase 5 gate): 34 stories, 135 story criteria, 38 features, 0 orphan(s).
+```
+
+Phase 5 gate: PASS. 0 orphans. 34 in-scope stories (S-1 to S-34) each have a feature assignment. 38 approved feature plans exist (FEAT-000 through FEAT-037). No requirements are missing a feature ID.
+
+---
 
 ## `scripts/traceability.py report` Output (Phase 6 update, 2026-10-19, run via `py -3`)
 
