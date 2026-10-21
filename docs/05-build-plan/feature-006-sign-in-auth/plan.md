@@ -3,7 +3,7 @@ id: FEAT-006
 id_prefix: FEAT
 title: "FEAT-006: S-21: User Signs In with a User Account"
 phase: 5
-version: 0.1
+version: 0.4
 template: feature-plan
 template_version: 1.6
 status: Approved
@@ -62,9 +62,11 @@ Deliver all 4 acceptance criteria of REQ S-21 end-to-end: backend models, migrat
 - `src/frontend/src/api/auth.ts`
 - `src/frontend/src/context/AuthContext.tsx`
 - `src/frontend/src/App.tsx`
+- `nginx/nginx.conf`
+- `src/frontend/package.json`
 
 ## New Packages
-- None
+- npm: react-router-dom @^7.18.4
 
 ## Out Of Scope
 Temporary password — FEAT-008. Change own password — FEAT-009. Security event recording of sign-in events — FEAT-033. Session timeout in middleware — already stubbed in FEAT-001 middleware.py; session settings are added to base.py in this feature.
@@ -95,7 +97,7 @@ See acceptance.md for the full Given/When/Then text of each criterion above.
 | Metric | Count | Limit |
 |---|---|---|
 | Acceptance criteria | 4 | 4 |
-| Source files (non-test) | 9 | 10 |
+| Source files (non-test) | 11 | 30 |
 
 Expected test runtime: 5 minutes
 Open design decisions: None
@@ -117,7 +119,7 @@ Open design decisions: None
 None beyond those logged in docs/logs/assumptions-log.md.
 
 ## Open Questions
-None.
+- OQ-072: gate commands use `--base main` but repo uses `master`; ALWAYS_IN_SCOPE does not cover plan.md, tasks.md, or package-lock.json. Logged for standards-author.
 
 ## Traceability Links
 - Upstream: PIB-005 v0.1; REQ-001 v0.3 § S-21; API-001 v0.2; DBD-001 v0.1; STD-001 v0.1; BED-001 v0.1; UIS-001 v0.1
@@ -138,7 +140,7 @@ None.
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Architect / tech lead |
-| Version | 0.1 |
+| Version | 0.4 |
 | Conditions | None |
-| Comments | Phase 5 validation passed (VAL-023). |
-| Timestamp | 2026-10-17 16:50 UTC |
+| Comments | SCR S-14: metadata-only fix, implementation already correct |
+| Timestamp | 2026-10-18 21:04 UTC |

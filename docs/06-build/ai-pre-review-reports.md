@@ -12,7 +12,7 @@ approver: Human developer reviewer
 default_approver: Human developer reviewer
 default_folder: docs/06-build
 date: 2026-10-18
-validation: Pending
+validation: Pass
 ---
 
 # Phase 6 AI Pre-Review Reports
@@ -486,3 +486,76 @@ A PATCH of `{"client_org_id": null}` on an existing `client_user` passes validat
 ### Traceability Links
 - Upstream: FEAT-005 plan.md v0.2; FEAT-005-TESTS v0.3; API-001 v0.2; DEC-080; DEC-081; commit `ee574e1`
 - Downstream: FEAT-005 PR human review
+
+## AIR FEAT-006: S-21 — User Signs In with a User Account
+
+<!-- air_status: Draft -->
+<!-- air_author: ai-code-reviewer -->
+<!-- air_date: 2026-10-19 -->
+<!-- air_verdict: Needs changes -->
+
+### Input References
+
+| Artifact | Version | Status |
+|---|---|---|
+| FEAT-006 plan.md | v0.4 | Approved (Mohanasunder, 2026-10-18) |
+| FEAT-006-TESTS.md | v0.1 | Approved (Mohanasunder, 2026-10-18) |
+| REQ-001 § S-21 | v0.3 | Approved |
+| API-001 § Authentication (F-5) | v0.2 | Approved |
+| DBD-001 § accounts module | v0.1 | Approved |
+| PRM-001 § Authentication (F-5) | v0.1 | Approved |
+| UIS-001 § S-21 | v0.1 | Approved |
+
+### Purpose and Scope
+
+Phase 6 Mode B implementation review for FEAT-006 on branch `feature/FEAT-006-sign-in-auth`. Reviews the 11 source files listed in plan.md v0.4 plus 2 files found in the diff outside plan scope. Read-only; advisory only.
+
+### Plan Adherence
+
+All 11 plan.md v0.4 files present and implemented. Two out-of-plan files found in diff:
+
+1. `src/aplx_ams_django/accounts/serializers.py` — formatting-only diff (ruff format rewrapped one multi-line conditional in existing validate()); no logic change; scope gate (--base master) did not flag; DEC-087 recorded.
+2. `pyproject.toml` — adds test_auth_api.py to ruff format.exclude; DEC-086 recorded.
+
+### Acceptance Criteria Coverage
+
+- AC-1 (valid creds → 200, session, role+org; deactivated → 401): implemented ✓
+- AC-2 (wrong/unknown → 401, identical body via `_INVALID_CREDENTIALS`): implemented ✓
+- AC-3 (PasswordComplexityValidator 4 rules): implemented ✓
+- AC-4 (5 failures → locked_until in DB; locked → 401; expired → 200): implemented ✓
+
+### Findings
+
+| ID | File | Line(s) | Category | Severity | Issue |
+|---|---|---|---|---|---|
+| F-01 | `src/aplx_ams_django/accounts/serializers.py` | whole file | scope-deviation | **Major** | Modified outside plan scope. Actual diff: formatting-only (ruff format rewrapped effective_org assignment). DEC-087 records decision to accept. Scope gate did not flag. Human reviewer to confirm. |
+| F-02 | `pyproject.toml` | 16–19 | scope-deviation | Minor | Not in plan file list. DEC-086 covers this addition. |
+| F-03 | `src/frontend/src/api/auth.ts` | 38–46 | api-contract-field-mismatch | Minor | `UserMe` interface declares `id`, `name`, `email`, `is_active`, `client_organization_id`, `client_organization_name` but API returns only `role`+`org`. Extra fields will be `undefined`. Verify against API-001 v0.2; trim or document as forward-looking. |
+| F-04 | `Login.tsx` / `App.tsx` / `AuthContext.tsx` | Login.tsx:65; App.tsx:8–29 | functional-gap | Minor | `me()` result discarded; `setUser()` never called (AuthContext always null). No `/tickets` route — success nav lands on catch-all (Login again). Deferred to follow-on feature; documented in PR Known Gaps. |
+| F-05 | `src/aplx_ams_django/settings/base.py` | absent | session-cookie-missing-secure | Minor | `SESSION_COOKIE_SECURE` not in base.py. Verify it is set in `settings/production.py`. |
+
+Design concern (escalate to human reviewer — not a code defect):
+- F-06 (`authentication.py` 105–123): category: timing-side-channel. Write-path timing difference between unknown-username (SELECT only) and wrong-password (SELECT + UPDATE) is a timing side-channel for account enumeration. A-019 is satisfied at the message level. Whether this is in scope for this release is a design decision for the tech lead.
+
+### Learned Rules Check
+
+Rule from `.ai/standards/learned-rules.md` active at this review: **LRN L-1 (missing-input-validation)** — "DRF serializers and API views that write model instances subject to multi-column or cross-field DB constraints must include a `validate()` method with instance-awareness and a `try/except IntegrityError`."
+
+- `LoginView.post()` (`views.py` lines 127–138): uses Django's `authenticate()` builtin; no serializer, no direct `model.save()` in the view. LRN L-1 not applicable. ✓
+- `LogoutView.post()` and `MeView.get()`: no model writes. Not applicable. ✓
+- `UserUpdateSerializer` (`serializers.py`, out-of-plan, formatting-only change): has `validate()` with instance-aware effective-role/org resolution; `partial_update` wraps `user.save()` in `try/except IntegrityError`. LRN L-1 followed. ✓
+- `SessionAuthBackend.authenticate()` (`authentication.py`): calls `user.save(update_fields=[...])` for lockout counters. LRN L-1 applies to "DRF serializers and API views" — an authentication backend is neither, and the `chk_failed_attempts_non_negative` constraint cannot be triggered by `+= 1` or `= 0` logic. Not a LRN L-1 violation.
+
+**Verdict: No LRN L-1 violation in in-plan code.**
+
+### Security Observations
+
+Lockout persists to DB ✓ | Lockout check before password verify ✓ | Reset on success ✓ | A-019 identical error bodies ✓ | SameSiteSessionAuthentication → 401 not 403 ✓ | SESSION_COOKIE_HTTPONLY+SAMESITE ✓ | Argon2id first in PASSWORD_HASHERS ✓ | Nginx rate limit 10r/m burst=5 nodelay ✓ | No hardcoded secrets ✓ | PasswordComplexityValidator all 4 rules ✓
+
+### Verdict
+
+**Advisory: Needs changes.** F-01 (Major) must have a recorded decision before merge — DEC-087 records it. F-02 through F-05 are Minor; F-03, F-04, F-05 should be deferred with OQs or fixed. F-06 escalated to tech-lead review. Core authentication implementation is sound.
+
+### Traceability Links
+- Upstream: FEAT-006 plan.md v0.4; FEAT-006-TESTS.md v0.1; REQ-001 v0.3 § S-21; API-001 v0.2; DBD-001 v0.1; PRM-001 v0.1; UIS-001 v0.1
+- Downstream: FEAT-006 PR human review; docs/logs/review-feedback-log.md

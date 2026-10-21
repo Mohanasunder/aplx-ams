@@ -12,7 +12,7 @@ approver: Human developer reviewer
 default_approver: Human developer reviewer
 default_folder: docs/06-build
 date: 2026-10-18
-validation: Pending
+validation: Pass
 ---
 
 # Security Scan Reports
@@ -447,3 +447,40 @@ None.
 ### Traceability Links
 - Upstream: FEAT-005 plan; FEAT-005-TESTS v0.3; automated-gates.md; DEC-079; DEC-081; prior SSR FEAT-005 (initial, HEAD `02e32a5`)
 - Downstream: PR FEAT-005 human review
+
+## SSR FEAT-006: S-21 — User Signs In with a User Account
+
+<!-- ssr_status: Draft -->
+<!-- ssr_author: security-scanner -->
+<!-- ssr_date: 2026-10-19 -->
+<!-- ssr_verdict: Clean -->
+
+### Input References
+
+- FEAT-006 plan: `docs/05-build-plan/feature-006-sign-in-auth/plan.md` (branch `feature/FEAT-006-sign-in-auth`, HEAD `c662986`)
+- FEAT-006-TESTS v0.1 (status: Approved)
+- `.ai/standards/automated-gates.md`
+- `.secrets.baseline` (committed; `generated_at: 2026-10-18T21:09:43Z`)
+- `requirements.txt`
+
+### Scan Tools And Scope
+
+| Tool | Version | Command | Exit Code | Result |
+|---|---|---|---|---|
+| bandit | 1.9.4 | `bandit -r src/aplx_ams_django/accounts/authentication.py src/aplx_ams_django/accounts/views.py src/aplx_ams_django/settings/base.py -ll` | 0 | **Pass** — No MEDIUM/HIGH findings; 4 Low (below -ll threshold) |
+| detect-secrets | 1.5.0 | `detect-secrets scan src/aplx_ams_django/accounts/ src/aplx_ams_django/settings/` | 0 | **Pass** — 3 findings; all pre-existing baseline entries; no new secrets |
+| pip-audit | 2.10.1 | `pip-audit -r requirements.txt` | 0 | **Pass** — No known vulnerabilities |
+
+**Scope rationale:** bandit targets the 3 new/modified auth files rather than full `src/` because FEAT-006 adds no new Python modules outside `accounts/`; full-src scans in prior SSRs provide repository-wide baseline coverage. detect-secrets covers the `accounts/` and `settings/` directories where new credential-adjacent code lives. pip-audit is project-wide via `requirements.txt`.
+
+### Secrets Check
+
+All 3 detect-secrets findings are pre-existing baseline entries (`test_auth_api.py` lines 170, 187 — test fixture passwords; `test_models.py` line 89 — mock argon2 string). No new secrets introduced by FEAT-006.
+
+### Verdict
+
+**Clean.** All three non-overridable gate commands exited 0. No secrets committed. No vulnerable dependencies. No Blockers.
+
+### Traceability Links
+- Upstream: FEAT-006 plan.md v0.4; FEAT-006-TESTS.md v0.1; automated-gates.md; `.secrets.baseline` commit `c662986`
+- Downstream: FEAT-006 PR human review

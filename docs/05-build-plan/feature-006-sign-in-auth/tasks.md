@@ -27,15 +27,15 @@ validation: Pass
 Ordered task checklist for the builder of FEAT-006. Each task names the file(s) it produces.
 
 ## Task Checklist
-- [ ] T-1: Write `accounts/authentication.py` with `SessionAuthBackend` that checks `is_active`, Argon2id password, and lockout (5 failures in 30 minutes per NFR N-5).
-- [ ] T-2: Update `accounts/views.py`: add `LoginView` (POST /api/auth/login/), `LogoutView` (POST /api/auth/logout/), `MeView` (GET /api/auth/me/) returning role and org.
-- [ ] T-3: Update `accounts/urls.py` with auth endpoints.
-- [ ] T-4: Update `settings/base.py`: add `SESSION_COOKIE_HTTPONLY=True`, `SESSION_COOKIE_SAMESITE='Lax'`, session timeout, `AUTHENTICATION_BACKENDS`, password validators (length 8, upper, lower, digit).
-- [ ] T-5: Register auth URLs in root `urls.py`.
-- [ ] T-6: Write `src/frontend/src/pages/Login.tsx` with MUI form; calls POST /api/auth/login/.
-- [ ] T-7: Write `src/frontend/src/api/auth.ts` with `login`, `logout`, `me` typed calls.
-- [ ] T-8: Write `src/frontend/src/context/AuthContext.tsx` providing current user and role.
-- [ ] T-9: Update `src/frontend/src/App.tsx` with React Router routes; guard by `AuthContext`.
+- [x] T-1: Write `accounts/authentication.py` with `SessionAuthBackend` that checks `is_active`, Argon2id password, and lockout (5 failures in 30 minutes per NFR N-5). Also adds `SameSiteSessionAuthentication` (DRF auth class, CSRF-exempt via SameSite Lax, returns WWW-Authenticate header for correct 401 responses).
+- [x] T-2: Update `accounts/views.py`: add `LoginView` (POST /api/auth/login/), `LogoutView` (POST /api/auth/logout/), `MeView` (GET /api/auth/me/) returning role and org.
+- [x] T-3: Update `accounts/urls.py` with auth endpoints. (Already done in Mode A; verified.)
+- [x] T-4: Update `settings/base.py`: add `SESSION_COOKIE_HTTPONLY=True`, `SESSION_COOKIE_SAMESITE='Lax'`, session timeout, `AUTHENTICATION_BACKENDS`, password validators, `AuthenticationMiddleware`, `REST_FRAMEWORK` with `SameSiteSessionAuthentication`.
+- [x] T-5: Register auth URLs in root `urls.py`. (Already done in Mode A; verified.)
+- [x] T-6: Write `src/frontend/src/pages/Login.tsx` with MUI form; calls POST /api/auth/login/.
+- [x] T-7: Write `src/frontend/src/api/auth.ts` with `login`, `logout`, `me` typed calls.
+- [x] T-8: Write `src/frontend/src/context/AuthContext.tsx` providing current user and role.
+- [x] T-9: Update `src/frontend/src/App.tsx` with React Router routes; guard by `AuthContext`.
 - [ ] T-10: Run all gate commands locally (`ruff`, `mypy`, `pytest --cov`, `bandit`, `pip-audit`, `detect-secrets`); confirm each exits 0.
 - [ ] T-11: Verify `python3 scripts/check_feature_size.py size FEAT-006` exits 0.
 

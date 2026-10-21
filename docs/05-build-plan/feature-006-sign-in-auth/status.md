@@ -23,15 +23,15 @@ validation: Pass
 Tracks the build-phase progress of FEAT-006. Updated by the builder agent during Phase 6.
 
 ## Branch And PR
-- Branch: <set by scripts/create-feature-branch.sh>
-- Base commit: <set by script>
-- Started: <set by script>
-- PR: <draft PR link>
+- Branch: feature/FEAT-006-sign-in-auth
+- Base commit: 065a921
+- Started: 2026-10-18
+- PR: https://github.com/Mohanasunder/aplx-ams/pull/17
 
 ## Progress
-- State: Not started
-- Assigned agents: builder
-- Last update: 2026-10-17
+- State: In review
+- Assigned agents: builder, documentation-writer
+- Last update: 2026-10-19
 
 ## Blockers
 None.

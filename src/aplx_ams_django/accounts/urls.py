@@ -1,18 +1,22 @@
 """
-FEAT-005 accounts URL configuration — STUB (Mode A: tests first).
+FEAT-005 accounts URL configuration (Mode B).
+FEAT-006 auth URL configuration (Mode A stubs).
 
-Registers user account endpoints at:
+User account endpoints (registered at api/accounts/):
   users/                         -> UserViewSet (list, create)
   users/{pk}/                    -> UserViewSet (retrieve, partial_update)
   users/{pk}/deactivate/         -> UserViewSet.deactivate (custom action)
 
-All views return 501 in Mode A; logic added in Mode B.
+Auth endpoints (exported as auth_urlpatterns, registered at api/ in root urls.py):
+  auth/login/                    -> LoginView (POST)
+  auth/logout/                   -> LogoutView (POST)
+  auth/me/                       -> MeView (GET)
 """
 
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from aplx_ams_django.accounts.views import UserViewSet
+from aplx_ams_django.accounts.views import LoginView, LogoutView, MeView, UserViewSet
 
 router = DefaultRouter()
 router.register("users", UserViewSet, basename="user")
@@ -24,4 +28,11 @@ urlpatterns = [
         UserViewSet.as_view({"post": "deactivate"}),
         name="user-deactivate",
     ),
+]
+
+# Auth URL patterns: mounted at api/ in root urls.py to resolve to /api/auth/...
+auth_urlpatterns = [
+    path("auth/login/", LoginView.as_view(), name="auth-login"),
+    path("auth/logout/", LogoutView.as_view(), name="auth-logout"),
+    path("auth/me/", MeView.as_view(), name="auth-me"),
 ]

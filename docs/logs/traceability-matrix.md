@@ -30,7 +30,7 @@ API-001 contract update (Phase 6, 2026-10-18): API-001 v0.2 Approved 2026-10-18 
 | REQ S-18 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-002 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-19 | EPC E-4; BRF-001 G-3 | API-001 v0.2, DBD-001 v0.1, BED-001, UIS-001, PRM-001, TST-001 | FEAT-003 | #15 (https://github.com/Mohanasunder/aplx-ams/pull/15) | test_contract_models.py (11), test_contract_api.py (7), ContractSetup.test.tsx (4) | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18); TESTS Approved v0.1 (2026-10-18, Mohanasunder, Architect / tech lead); PRD FEAT-003 Approved 2026-10-18 by Mohanasunder (Architect / tech lead); PR #15 approved for merge |
 | REQ S-20 | EPC E-5; BRF-001 G-4 | API-001 v0.2, DBD-001 v0.1, UIS-001 v0.1, PRM-001 v0.1, BED-001, TST-001 | FEAT-005 | #16 (https://github.com/Mohanasunder/aplx-ams/pull/16); commit 1684e9f; approved 2026-10-19 | test_models.py (13), test_api.py (16), UserManagement.test.tsx (6) | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17, v0.2 per SCR S-9 2026-10-18); ACC/TASKS/STATUS Approved v0.1 (2026-10-18); TESTS Approved v0.3 (SCR S-10, 2026-10-18, Mohanasunder, Tech lead); Gates overridden 2026-10-18: scope DEC-078 (8 out-of-plan Django boilerplate + tooling files); pip-audit DEC-079 (pre-existing vulnerabilities); DEC-080 (native HTML UIS deviation); DEC-081 (locked-test partial-application deviations); DEC-082 (App.tsx review wire); PRD FEAT-005 Approved 2026-10-18 by Mohanasunder (Architect / tech lead, Deep review); PR Approved 2026-10-19 by Mohanasunder (Architect / tech lead, Deep review); awaiting merge |
-| REQ S-21 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-006 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
+| REQ S-21 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-006 | - | test_auth_api.py (17), Login.test.tsx (13) | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18); TESTS Approved v0.1 (2026-10-19, Mohanasunder, Architect / tech lead); Mode A complete (backend commit: 9ececb7, frontend commit: 8bd2f25); Mode B in progress |
 | REQ S-22 | EPC E-5; BRF-001 G-4 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-007 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-23 | EPC E-5; BRF-001 G-3 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-032 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
 | REQ S-24 | EPC E-2; BRF-001 G-1 | API-001, BED-001, UIS-001, PRM-001, TST-001 | FEAT-010 | - | - | REQ Approved (v0.3); Design Approved (2026-10-17); Plan Approved (2026-10-17); ACC/TASKS/STATUS Approved v0.1 (2026-10-18) |
@@ -193,6 +193,25 @@ Traceability chain: REQ-001 v0.3 § S-20 → API-001 v0.2, DBD-001 v0.1, UIS-001
 
 Build status: PR Approved (feature/FEAT-005-user-accounts → master; approved 2026-10-19 by Mohanasunder, Architect / tech lead, Deep review; final commit: 1684e9f; 35 tests pass: 13 model, 16 API, 6 frontend; gate overrides DEC-078, DEC-079; accepted deviations DEC-080, DEC-081, DEC-082; SCRs S-9, S-10; awaiting merge).
 
+### FEAT-006 Test Set (Approved v0.1, 2026-10-19)
+
+Traceability chain: REQ-001 v0.3 § S-21 → API-001 v0.2, DBD-001 v0.1, UIS-001 v0.1, PRM-001 v0.1 → FEAT-006-ACC → FEAT-006-TESTS
+
+| Link | Detail |
+|---|---|
+| REQ-001 v0.3 § S-21 → FEAT-006-TESTS | All 4 acceptance criteria (AC-1 to AC-4) mapped to tests across 2 layers (backend + frontend); 30 tests total |
+| API-001 v0.2 → FEAT-006-TESTS | Auth endpoints (`/api/auth/login/`, `/api/auth/logout/`, `/api/auth/me/`) and contract surface drive backend tests; 3 dedicated contract tests |
+| DBD-001 v0.1 → FEAT-006-TESTS | `locked_until` and `failed_login_count` fields on the `User` model (established in FEAT-005) drive lockout tests (AC-4) |
+| UIS-001 v0.1 → FEAT-006-TESTS | Login page layout (heading, autocomplete attributes, button, alert ARIA role) drives frontend tests (AC-1, AC-2, AC-3) |
+| PRM-001 v0.1 → FEAT-006-TESTS | Auth endpoints accessible without a session; unauthenticated `/api/auth/me/` → 401 (contract test) |
+| FEAT-005-TESTS → FEAT-006-TESTS | `test_ac1_deactivated_account_refused_on_login` closes the AC-3 sign-in gap documented in FEAT-005-TESTS |
+| FEAT-006-ACC v0.1 → FEAT-006-TESTS | AC-1: 9 tests; AC-2: 5 tests; AC-3: 8 tests; AC-4: 5 tests; 3 additional contract tests |
+| FEAT-006-TESTS v0.1 (Approved) | Approver: Mohanasunder (Architect / tech lead), 2026-10-19; branch: feature/FEAT-006-sign-in-auth; backend test commit: 9ececb7; frontend test commit: 8bd2f25 |
+| Test files (locked) | `src/aplx_ams_django/accounts/tests/test_auth_api.py` (17 tests — backend); `src/frontend/src/pages/Login.test.tsx` (13 tests — frontend) |
+| Red run | Backend: 16/17 FAILED, 1 intentionally green (`test_ac3_custom_validator_accepts_abcdefg1` — positive-path, Django default behavior); Frontend: 13/13 FAILED. Failures are behavioral, not syntax/setup. |
+
+Build status: Mode A complete; Mode B (implementation) in progress. Test files locked at commits 9ececb7 (backend) and 8bd2f25 (frontend). SCR S-13 (plan v0.3, adds `react-router-dom` to New Packages); DEC-084 (2026-10-19, `useNavigate` from `react-router-dom` approved for Mode B).
+
 ### Contract Update: SCR S-6 / ADR A-18 / API-001 v0.2 (Approved 2026-10-18)
 
 All three artifacts approved 2026-10-18 by Mohanasunder on branch `feature/FEAT-001-frontend-scaffold`.
@@ -266,10 +285,10 @@ None. All 33 in-scope stories (REQ S-1 to S-33, Priority: Must / Should / Could)
 | REQ S-20 AC-2 | FEAT-005 | Approved — awaiting merge | yes | none | - | - |
 | REQ S-20 AC-3 | FEAT-005 | Approved — awaiting merge | yes | none | - | - |
 | REQ S-20 AC-4 | FEAT-005 | Approved — awaiting merge | yes | none | - | - |
-| REQ S-21 AC-1 | FEAT-006 | Not started | no | none | - | - |
-| REQ S-21 AC-2 | FEAT-006 | Not started | no | none | - | - |
-| REQ S-21 AC-3 | FEAT-006 | Not started | no | none | - | - |
-| REQ S-21 AC-4 | FEAT-006 | Not started | no | none | - | - |
+| REQ S-21 AC-1 | FEAT-006 | In progress | yes | none | - | - |
+| REQ S-21 AC-2 | FEAT-006 | In progress | yes | none | - | - |
+| REQ S-21 AC-3 | FEAT-006 | In progress | yes | none | - | - |
+| REQ S-21 AC-4 | FEAT-006 | In progress | yes | none | - | - |
 | REQ S-22 AC-1 | FEAT-007 | Not started | no | none | - | - |
 | REQ S-22 AC-2 | FEAT-007 | Not started | no | none | - | - |
 | REQ S-22 AC-3 | FEAT-007 | Not started | no | none | - | - |
@@ -348,7 +367,7 @@ None. All 33 in-scope stories (REQ S-1 to S-33, Priority: Must / Should / Could)
 | REQ S-9 AC-4 | FEAT-019 | Not started | no | none | - | - |
 ```
 
-Note: FEAT-005 (REQ S-20) now shows "Approved — awaiting merge" with test set present. All other stories unchanged from 2026-10-18 run. Total: 131 criteria across 33 stories.
+Note: FEAT-005 (REQ S-20) shows "Approved — awaiting merge" with test set present. FEAT-006 (REQ S-21) now shows "In progress | yes" — FEAT-006-TESTS v0.1 Approved 2026-10-19 by Mohanasunder; Mode A complete; Mode B in progress. All other stories unchanged from 2026-10-19 run. Total: 131 criteria across 33 stories.
 
 ## `scripts/traceability.py check --phase 5` Output (re-run 2026-10-19, via `py -3`)
 
