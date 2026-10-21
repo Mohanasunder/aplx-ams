@@ -1171,7 +1171,7 @@ Not applicable — no architecture or contract artifact changes.
 FEAT-036 plan.md v0.2 (Implementation Steps T-2, T-4) and acceptance.md v0.1 (AC-4, Test Scenarios) use the incorrect role label `l2_l3_support_engineer`. The canonical role enum value in API-001 v0.2 § F-5 and `src/frontend/src/api/auth.ts` is `l2l3_support`. This discrepancy was identified during Phase 6 entry phase-intake as Gap 1 (Blocker). Mohanasunder approved the correction via the phase-intake gap resolution (2026-10-21).
 
 ### Changed Artifact
-- FEAT-036 plan.md v0.2 → v0.3 (docs/05-build-plan/feature-036-appshell-nav/plan.md)
+- FEAT-036 v0.2 → v0.3 (docs/05-build-plan/feature-036-appshell-nav/plan.md)
 - FEAT-036-ACC v0.1 → v0.2 (docs/05-build-plan/feature-036-appshell-nav/acceptance.md)
 
 ### Reason
@@ -1190,6 +1190,45 @@ Not applicable — no architecture or contract artifact changes. Role enum value
 ### Traceability Links
 - Upstream: FEAT-036 plan.md v0.2; FEAT-036-ACC v0.1; API-001 v0.2 § F-5; src/frontend/src/api/auth.ts
 - Downstream: FEAT-036 plan.md v0.3; FEAT-036-ACC v0.2; FEAT-036 Mode A tests (AppShell.test.tsx)
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
+
+## SCR S-18: FEAT-001-TESTS.md — update TST-001 AC-1 test (App.test.tsx) for FEAT-036 AppShell changes
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
+
+### Summary
+FEAT-001-TESTS.md v0.1 locked `src/frontend/src/App.test.tsx` with TST-001 AC-1 asserting `screen.getByText('APLX AMS')` on the App root. FEAT-036 removes `<nav>APLX AMS</nav>` from App.tsx and replaces it with AppShell (which renders 'APLX AMS' only for authenticated users). The old assertion would fail after FEAT-036 Mode B. FEAT-001-TESTS.md v0.1 was Rejected (Mohanasunder, Tech lead, 2026-10-21) to unlock App.test.tsx. The FEAT-036 frontend-builder updated App.test.tsx in Mode A (commit aeb8323) to assert the Login page renders for unauthenticated users. FEAT-001-TESTS.md v0.2 was created, validated (Pass), and approved (Mohanasunder, Tech lead, 2026-10-21).
+
+### Changed Artifact
+- FEAT-001-TESTS v0.1 → v0.2 (docs/06-build/FEAT-001-TESTS.md)
+
+### Reason
+TST-001 AC-1 in App.test.tsx was correct for FEAT-001 (the nav element was always in the DOM). FEAT-036 removes that element and replaces it with AppShell. The test must be updated to assert meaningful behavior that remains valid after FEAT-036: Login renders for unauthenticated users at the default route.
+
+### Impact
+- FEAT-001-TESTS.md only — no API, DB, or UI contracts change
+- App.test.tsx updated: TST-001 AC-1 now asserts Login page renders for unauthenticated users (me() mocked to 401)
+- Test passes in both current state (Login via `path="*"` catch-all) and FEAT-036 Mode B (Login after AuthProvider 401 redirect)
+
+### scr_status: Approved
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes. The unlock was approved by Mohanasunder (Tech lead) per the Phase 6 test-unlock process.
+
+### Traceability Links
+- Upstream: FEAT-001-TESTS.md v0.1; FEAT-036 plan.md v0.3; SCR S-17; src/frontend/src/App.test.tsx (aeb8323)
+- Downstream: FEAT-001-TESTS.md v0.2; AppShell FEAT-036 Mode B; Phase 7 regression suite
 
 ### Quality Checklist
 - [x] Every section is filled, or marked "Not applicable - <reason>"

@@ -82,7 +82,7 @@ export function AuthProvider({
     return () => {
       mounted = false;
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // run once on mount; navigate is stable in React Router v7
 
   // Signs the user out: POST /api/auth/logout/, clears context, redirects.
   const signOut = async (): Promise<void> => {

@@ -50,7 +50,7 @@ Not applicable for v0.2 update — the updated TST-001 AC-1 test is GREEN in the
 - STD-001 AC-1, STD-001 AC-2, TST-001 AC-2: CI-gate-only; red run evidence from FEAT-001 Mode B CI job.
 
 ## Test Commit
-v0.2 commit: on branch `feature/FEAT-036-appshell-nav` (FEAT-036 Mode A commit)
+v0.2 commit: `aeb8323` on branch `feature/FEAT-036-appshell-nav` (FEAT-036 Mode A)
 v0.1 commit: `670019bd4e3b2ba5a69b206880b69971efed6618` on branch `feature/FEAT-001-frontend-scaffold`
 
 ## Assumptions

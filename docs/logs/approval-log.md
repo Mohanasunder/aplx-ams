@@ -271,3 +271,4 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-21 13:05 | FEAT-036-ACC | 0.2 | Approve | Mohanasunder | Tech lead | Pass | - | SCR S-17 role name correction applied |
 | 2026-10-21 13:26 | FEAT-036-TESTS | 0.1 | Approve | Mohanasunder | Tech lead | Pass | - | All 9 tests correctly express AC-1 through AC-4. AC-4 link-count assertion noted; Mode B builder must use react-router-dom Link for nav items. |
 | 2026-10-21 13:26 | FEAT-001-TESTS | 0.2 | Approve | Mohanasunder | Tech lead | Pass | - | TST-001 AC-1 correctly updated to test Login-renders-for-unauthenticated-users. me() mock included for FEAT-036 AuthProvider compatibility. |
+| 2026-10-21 13:44 | SCR S-18 | 0.1 | Approve | Mohanasunder | Tech lead | n/a | - | - |
