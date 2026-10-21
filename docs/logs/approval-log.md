@@ -291,3 +291,4 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-21 18:50 | SCR S-25 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | No comments |
 | 2026-10-21 18:51 | FEAT-010 | 0.5 | Approve | Mohanasunder | Architect / tech lead | Pass | - | SCR S-25 applied: added App.tsx to Frontend source files; Size Check 14->15. |
 | 2026-10-21 19:55 | SCR S-26 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | Format fix only |
+| 2026-10-21 20:30 | SCR S-27 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | Retroactive documentation of Wave 30 addition for FEAT-037 |

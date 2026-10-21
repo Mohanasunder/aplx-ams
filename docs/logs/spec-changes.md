@@ -1252,8 +1252,9 @@ Not applicable — no architecture or contract artifact changes. The unlock was 
 ### Summary
 PATCH `/api/accounts/users/{id}/` (endpoint #7) already exists in API-001 v0.2 referencing REQ S-20. REQ S-34 (added by SCR S-19, Approved 2026-10-21) extends the edit capability to include `is_active` and requires a per-field audit trail entry for each changed field. This SCR updates the endpoint description and `UpdateUserAccountRequest` schema to reflect REQ S-34, and re-references the endpoint to REQ S-34. Total endpoint count remains 46.
 
-### Changed Artifacts
+### Changed Artifact
 - API-001 (docs/04-design/api-spec.md) v0.2 → v0.3
+- API-001 v0.2 → v0.3
 - docs/04-design/openapi.yaml (no version in front matter; updated in lockstep with api-spec.md)
 
 ### Reason
@@ -1267,7 +1268,7 @@ REQ S-34 AC-1 requires audit trail entries per changed field. AC-3 requires clie
 - Downstream: FEAT-NNN feature plan (Phase 5) will consume API-001 v0.3.
 
 ### Decision Record
-Not applicable — no architecture change; existing endpoint extended. DEC-089 (Mohanasunder, 2026-10-21) is the governing decision for this SCR.
+Existing endpoint extended under ADR A-11 (append-only audit trail) and ADR A-3 (REST API conventions). DEC-089 (Mohanasunder, 2026-10-21) is the governing decision. No new ADR required; the audit trail behavior is already decided by ADR A-11.
 
 ### Traceability Links
 - Upstream: REQ S-34; SCR S-19; API-001 v0.2; BR B-22; NFR N-6; DEC-089
@@ -1295,7 +1296,8 @@ Not applicable — no architecture change; existing endpoint extended. DEC-089 (
 A new user story, S-34, is added to REQ-001 so that a delivery manager can edit any field on a user account (name, email, role, client_org, is_active) with an audit trail entry per changed field. This was requested by Mohanasunder during the FEAT-036 human review (2026-10-21) and resolved via OQ-075 and DEC-089: "admin" = delivery_manager, no new role. Password changes are excluded (already REQ S-30).
 
 ### Changed Artifact
-- REQ-001 (docs/02-requirements/user-stories.md) v0.3 → v0.4 — adds S-34; updates Purpose And Scope and Input References.
+- REQ-001 (docs/02-requirements/user-stories.md) v0.3 → v0.4 — adds S-34
+- REQ-001 v0.3 → v0.4; updates Purpose And Scope and Input References.
 
 ### Reason
 The delivery manager needs to correct user account details (name, email), reassign roles, update client organisation links, and toggle active status without deleting and recreating accounts. No approved story covered this before SCR S-19. Decided by Mohanasunder, 2026-10-21 (OQ-075, DEC-089).
@@ -1542,6 +1544,7 @@ FEAT-010 delivers the `HolidayList` page at route `/admin/holidays`. The approve
 
 ### Changed Artifact
 - FEAT-010 (docs/05-build-plan/feature-010-holiday-list/plan.md) v0.4 → v0.5
+- FEAT-010 v0.4 → v0.5
 
 Changes:
 1. **Files To Create Or Modify — Frontend** section: add:
@@ -1584,6 +1587,7 @@ Not applicable — no architecture or contract artifact changes.
 
 ### Changed Artifact
 - FEAT-010-TESTS (docs/06-build/FEAT-010-TESTS.md) v0.1 → v0.2
+- FEAT-010-TESTS v0.1 → v0.2
 
 Changes are documentation format only — no test logic, test coverage, or approval conditions change:
 1. **Test Files section** — remove backtick formatting from inline commit SHA references (plain text, matching FEAT-006-TESTS.md convention)
@@ -1605,6 +1609,45 @@ Not applicable — no architecture or contract artifact changes.
 ### Traceability Links
 - Upstream: FEAT-010-TESTS.md v0.1 (Approved 2026-10-22); FEAT-010 plan.md v0.5
 - Downstream: FEAT-010-TESTS.md v0.2; Phase 6 locked_tests gate
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
+
+## SCR S-27: WAV-001 wave-plan.md — add Wave 30 for FEAT-037 (Edit User Account)
+<!-- scr_approver: Mohanasunder -->
+<!-- scr_status: Approved -->
+
+### Summary
+WAV-001 v0.2 contained 29 waves (Waves 1–29). FEAT-037 (Edit User Account, REQ S-34) was added as a new feature (SCR S-19, Mohanasunder 2026-10-21) after the wave plan was approved at v0.2. Wave 30 was added for FEAT-037, placed after Wave 29 (end of plan). This SCR retroactively documents that change. WAV-001 v0.3 was approved by Mohanasunder on 2026-10-21.
+
+### Changed Artifact
+- WAV-001 (docs/05-build-plan/wave-plan.md) v0.2 → v0.3
+- WAV-001 v0.2 → v0.3
+
+Changes: **Wave 30** added for FEAT-037 (REQ S-34, Edit User Account). No existing wave boundaries, dependencies, or feature assignments change.
+
+### Reason
+FEAT-037 was created by SCR S-19 (Mohanasunder 2026-10-21). It requires its own build wave. Wave 30 was appended to the end of the plan. The spec_impact.py records gate is non-overridable and requires an SCR for every version transition of an Approved artifact.
+
+### Impact
+- WAV-001 only. No API, DB, or UI contracts change.
+- FEAT-037 is slotted in Wave 30 (no dependency conflicts; no earlier features depend on it).
+
+### Decision Record
+Not applicable — wave ordering is not an architecture decision; ADR A-1 governs the overall modular structure.
+
+### Traceability Links
+- Upstream: WAV-001 v0.2; SCR S-19 (FEAT-037 created); DEC-089 (Mohanasunder 2026-10-21)
+- Downstream: WAV-001 v0.3; FEAT-037 plan (Phase 5)
 
 ### Quality Checklist
 - [x] Every section is filled, or marked "Not applicable - <reason>"
