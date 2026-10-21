@@ -1664,6 +1664,8 @@ Not applicable — wave ordering is not an architecture decision; ADR A-1 govern
 ---
 
 ## SCR S-28: Glossary fix — FEAT-003-TESTS.md removes avoided term 'issue'
+<!-- scr_status: Approved -->
+<!-- scr_approver: Mohanasunder -->
 
 **Raised by:** FEAT-010 automated gate sweep (`glossary_check.py check`), 2026-10-22.
 **Approver:** Mohanasunder (Tech lead — owner of FEAT-003-TESTS artifact).

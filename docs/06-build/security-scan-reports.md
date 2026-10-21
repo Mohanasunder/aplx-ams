@@ -563,3 +563,112 @@ None.
 
 - Upstream: FEAT-036 plan.md v0.3; FEAT-036-TESTS v0.1; automated-gates.md; `.secrets.baseline`
 - Downstream: PR FEAT-036 human review
+
+---
+
+## SSR FEAT-010: S-24 Delivery Manager Maintains the Company Holiday List
+
+<!-- ssr_status: Draft -->
+<!-- ssr_author: security-scanner -->
+<!-- ssr_date: 2026-10-22 -->
+<!-- ssr_verdict: Clean -->
+
+### Input References
+
+- FEAT-010 plan.md v0.5 (Approved, branch `feature/FEAT-010-holiday-list`, HEAD `8648fe5`)
+- FEAT-010-TESTS v0.2 (Approved, commit `7982c92`)
+- `.ai/standards/automated-gates.md`
+- `.secrets.baseline` (committed at `027f2f8`, `generated_at: 2026-10-21T19:02:16Z`)
+- `requirements.txt` (unchanged from FEAT-036 merge; no new packages in FEAT-010)
+
+### Purpose And Scope
+
+This report covers the SAST, dependency, and secrets scans for FEAT-010 (S-24: Delivery Manager Maintains the Company Holiday List) on branch `feature/FEAT-010-holiday-list`. Files in scope:
+
+- `src/aplx_ams_django/sla/` — all Python source files (models.py, serializers.py, services.py, dal.py, views.py, urls.py, apps.py, migrations/, tests/)
+- `src/frontend/src/pages/HolidayList.tsx` (new)
+- `src/frontend/src/api/holidays.ts` (new)
+- `src/aplx_ams_django/urls.py` (modified)
+- `src/aplx_ams_django/settings/base.py` (modified: INSTALLED_APPS entry for sla)
+- `src/frontend/src/App.tsx` (modified: holiday-list route added)
+
+Does not cover: infrastructure-as-code (Phase 8), runtime penetration testing, or artifacts outside the feature scope.
+
+### Scan Tools And Scope
+
+| Tool | Version | Command | Exit Code | Scope |
+| --- | --- | --- | --- | --- |
+| bandit | 1.9.4 | `bandit -r src/ -ll` | 0 | All Python source under `src/` (3,966 lines) |
+| pip-audit | 2.10.1 | `pip-audit -r requirements.txt` | 0 | All packages in `requirements.txt` |
+| detect-secrets | 1.5.0 | `detect-secrets scan --baseline .secrets.baseline` | 0 | Repository-wide, against committed baseline |
+
+Python runtime: 3.12.9
+
+### Findings
+
+#### Automated Scan Findings
+
+| Tool | Rule / Finding | Severity | File | Line | Notes |
+| --- | --- | --- | --- | --- | --- |
+| bandit | No issues identified at or above MEDIUM (`-ll` threshold) | — | — | — | 171 LOW findings total across `src/`; all in test files; below configured threshold |
+| pip-audit | No known vulnerabilities found | — | — | — | All pinned packages clean; no new packages added by FEAT-010 |
+| detect-secrets | No new secrets beyond committed baseline | — | — | — | Baseline includes three FEAT-010 entries (test fixture passwords); see Secrets Check section |
+
+#### Low-Severity Bandit Findings in New SLA Test Files (below -ll gate threshold — informational only)
+
+| Rule | Severity | Confidence | File | Line(s) | Notes |
+| --- | --- | --- | --- | --- | --- |
+| B106:hardcoded_password_funcarg | Low | Medium | `src/aplx_ams_django/sla/tests/test_holiday_api.py` | 49 | `password="Password1A"` in test fixture helper `_create_user()`; test credential only, baselined in detect-secrets |
+| B106:hardcoded_password_funcarg | Low | Medium | `src/aplx_ams_django/sla/tests/test_holiday_list.py` | 34 | `password="Password1A"` in test fixture helper `_create_dm()`; test credential only, baselined in detect-secrets |
+| B110:try_except_pass | Low | High | `src/aplx_ams_django/sla/tests/conftest.py` | 84 | `except Exception: pass` in database teardown cleanup; standard pytest teardown pattern; consistent with pre-existing usage in other conftest files |
+| B101:assert_used | Low | High | `src/aplx_ams_django/sla/tests/test_holiday_api.py` | 84, 118, 125, 151, 175, 202, 235, 264, 296, 318, 335, 352 | `assert` in test assertions; standard pytest pattern; pre-existing across all feature test files |
+| B101:assert_used | Low | High | `src/aplx_ams_django/sla/tests/test_holiday_list.py` | 75, 78, 119, 160, 198 | `assert` in test assertions; standard pytest pattern; consistent with prior features |
+
+All 20 LOW findings in `src/aplx_ams_django/sla/` are confined to test files. No LOW findings appear in production source (models.py, serializers.py, services.py, dal.py, views.py, urls.py, apps.py, migrations/).
+
+### Secrets Check
+
+`detect-secrets scan --baseline .secrets.baseline` exited 0. No new secrets detected beyond the committed baseline.
+
+The committed `.secrets.baseline` (commit `027f2f8`, `generated_at: 2026-10-21T19:02:16Z`) was updated on this branch to include three new entries introduced by FEAT-010:
+
+1. **`create_test_users.py` line 13** — Secret Keyword. A test fixture password (`"Password1A"`) used in a development-only script for seeding test users. Not a production credential. Baselined and acknowledged.
+2. **`src\aplx_ams_django\sla\tests\test_holiday_api.py` line 49** — Secret Keyword. `password="Password1A"` in the `_create_user()` test fixture helper. Used only in pytest to authenticate test API clients. Not a production credential. Baselined and acknowledged.
+3. **`src\aplx_ams_django\sla\tests\test_holiday_list.py` line 34** — Secret Keyword. `password="Password1A"` in the `_create_dm()` test fixture helper. Used only in pytest to authenticate the delivery manager test client. Not a production credential. Baselined and acknowledged.
+
+This pattern (test fixture passwords acknowledged in `.secrets.baseline`) is consistent with prior features: SSR FEAT-006 (test_auth_api.py lines 170, 187; test_models.py line 89) and SSR FEAT-036.
+
+No credentials, tokens, or API keys appear in any FEAT-010 production source file (`HolidayList.tsx`, `holidays.ts`, `sla/views.py`, `sla/services.py`, `sla/dal.py`, `sla/models.py`, `sla/serializers.py`).
+
+### Verdict
+
+**Clean**
+
+All three non-overridable gate commands exited 0:
+- `bandit -r src/ -ll`: PASS — exit 0, 0 MEDIUM findings, 0 HIGH findings
+- `pip-audit -r requirements.txt`: PASS — exit 0, no known vulnerabilities, no new packages
+- `detect-secrets scan --baseline .secrets.baseline`: PASS — exit 0, no new secrets beyond acknowledged baseline
+
+No MEDIUM or HIGH SAST findings. No secrets committed beyond the acknowledged test-fixture passwords in the baseline. No dependency vulnerabilities. No Blockers.
+
+### Assumptions
+
+- A-SEC-010-01: The three Secret Keyword detections in `.secrets.baseline` for FEAT-010 (`create_test_users.py` line 13, `test_holiday_api.py` line 49, `test_holiday_list.py` line 34) are test fixture passwords (`"Password1A"`), not real credentials. The same password string appears across multiple test fixture helpers — it is a non-privileged test account password used only in pytest and local seeding scripts, consistent with the pattern acknowledged in SSR FEAT-006.
+
+### Open Questions
+
+None.
+
+### Traceability Links
+
+- Upstream: FEAT-010 plan.md v0.5; FEAT-010-TESTS v0.2; automated-gates.md; `.secrets.baseline` commit `027f2f8`
+- Downstream: PR FEAT-010 human review
+
+### Quality Checklist
+
+- [x] Every configured scan was run (bandit, pip-audit, detect-secrets — all three non-overridable security gates)
+- [x] Failures reported, not hidden (no gate failures; all exit 0)
+- [x] Every section is filled, or marked "Not applicable — reason"
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
