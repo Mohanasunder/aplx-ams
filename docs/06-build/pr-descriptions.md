@@ -9,7 +9,7 @@ status: Draft
 author_agent: documentation-writer
 approver: Human developer reviewer
 date: 2026-10-18
-validation: Pass with warnings
+validation: Fail
 ---
 # Phase 6 PR Descriptions
 
