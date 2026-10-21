@@ -5,7 +5,7 @@ phase: 6
 version: 0.1
 template: feature-test-set
 template_version: 1.0
-status: Draft
+status: Approved
 author_agent: documentation-writer
 approver: Mohanasunder
 default_approver: Tech lead
@@ -156,9 +156,10 @@ FAILED FEAT-010 empty state: shows empty state message when no holidays — Unab
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approver | Pending |
-| Role | Pending |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Tech lead |
+| Version | 0.1 |
 | Conditions | None |
-| Comments | None |
-| Timestamp | Pending |
+| Comments | No comments |
+| Timestamp | 2026-10-21 18:36 UTC |
