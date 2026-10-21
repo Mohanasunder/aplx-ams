@@ -1068,6 +1068,156 @@ Deep review checklist:
 
 ---
 
+---
+
+## PR FEAT-036: AppShell — Global Navigation Shell and Sign Out
+
+<!-- pr_status: Draft -->
+<!-- pr_approver: -->
+<!-- pr_depth: Deep -->
+<!-- pr_review_minutes: -->
+
+### Input References
+- FEAT-036 plan.md v0.3 (Approved 2026-10-21, Mohanasunder)
+- FEAT-036-ACC v0.2 (Approved 2026-10-21, Mohanasunder)
+- FEAT-036-TESTS v0.1 (Approved 2026-10-21, Mohanasunder) — test commit `aeb8323`
+- FEAT-001-TESTS v0.2 (Approved 2026-10-21, Mohanasunder) — re-locked under SCR S-18
+- UIS-001 v0.1 § AppShell — role-based nav and AppBar specification (Approved 2026-10-17)
+- API-001 v0.2 § F-5 — GET /api/auth/me/, POST /api/auth/logout/ (Approved 2026-10-17)
+- PRM-001 v0.1 § Authentication F-5 — permission matrix (Approved 2026-10-17)
+- STD-001 v0.1 — APLX AMS: Coding Standards (Approved 2026-10-17)
+- TST-001 v0.1 — APLX AMS: Test Strategy (Approved 2026-10-17)
+- SCR S-16 (Approved 2026-10-21) — plan.md v0.3 in-flight amendment scope
+- SCR S-17 (Approved 2026-10-21) — acceptance.md v0.2 in-flight amendment scope
+- SCR S-18 (Approved 2026-10-21) — FEAT-001-TESTS v0.2 App.test.tsx AC-1 update
+- DEC-088 (2026-10-19) — UIS-001 v0.1 § AppShell sourcing accepted; FEAT-036 reclassified Type: Enabling
+
+### Summary
+Implements the AppShell global navigation shell end-to-end (frontend only; no backend changes): `AppShell.tsx` renders a MuiAppBar with "APLX AMS" title, role chip, and "Sign out" button, plus a permanent MuiDrawer with role-based nav links via react-router-dom `<Link>` elements and a CircularProgress loading state; `AuthContext.tsx` is extended with `loading: boolean`, `signOut: () => Promise<void>`, and a `useEffect` that calls GET /api/auth/me/ on mount (200 → setUser + setLoading(false); 401/error → setUser(null) + setLoading(false) + navigate('/login')); `App.tsx` moves `BrowserRouter` to the outermost wrapper (required for `useNavigate` in AuthProvider) and wraps authenticated routes (`/admin/users`, `/tickets`) inside a `<Route element={<AppShell />}>` layout route. All 9 locked tests from FEAT-036-TESTS v0.1 pass; all 27 pre-existing tests continue to pass (36 total). App.test.tsx TST-001 AC-1 updated under FEAT-001-TESTS v0.2 per SCR S-18 to assert Login renders for unauthenticated users.
+
+### Linked Artifacts
+- FEAT-036 plan.md v0.3
+- FEAT-036-ACC v0.2
+- FEAT-036-TESTS v0.1
+- FEAT-001-TESTS v0.2 (re-locked; SCR S-18)
+- UIS-001 v0.1 § AppShell
+- API-001 v0.2 § F-5 (GET /api/auth/me/, POST /api/auth/logout/)
+- PRM-001 v0.1 § Authentication F-5
+- STD-001 v0.1 (Coding Standards — naming, structure, gate commands)
+- TST-001 v0.1 (Test Strategy — test levels)
+- SCR S-16; SCR S-17; SCR S-18; DEC-088; A-049
+
+### Changes
+**Frontend:**
+- `src/frontend/src/components/AppShell.tsx` (new) — MuiAppBar with MuiTypography "APLX AMS", MuiChip showing user role, MuiButton "Sign out"; permanent MuiDrawer with role-based nav links using react-router-dom `<Link>` elements (delivery_manager: 7 links; l2l3_support: 3 links; client_user: 2 links); CircularProgress loading state when `loading` is true; `<Outlet />` for nested page content. Sign-out handler calls `logout()`, `setUser(null)`, `navigate('/login')` directly (see Known Gaps 1).
+- `src/frontend/src/context/AuthContext.tsx` (modified) — Added `loading: boolean` to `AuthContextValue`; added `signOut: () => Promise<void>`; added `useEffect` on mount calling GET /api/auth/me/ (200: `setUser(data)` + `setLoading(false)`; error/401: `setUser(null)` + `setLoading(false)` + `navigate('/login')`); `BrowserRouter` must now wrap `AuthProvider` (moved to `App.tsx`).
+- `src/frontend/src/App.tsx` (modified) — Removed `<nav>APLX AMS</nav>`; moved `BrowserRouter` to outermost wrapper so `AuthProvider` can use `useNavigate`; `/admin/users` and `/tickets` routes nested inside `<Route element={<AppShell />}>` layout route; `/login` and `/*` remain outside AppShell.
+- `src/frontend/src/components/AppShell.test.tsx` (new, locked) — 9 Vitest tests covering AC-1 (3 tests), AC-2 (1 test), AC-3 (2 tests), AC-4 (3 tests). Locked from FEAT-036-TESTS v0.1.
+- `src/frontend/src/App.test.tsx` (modified, re-locked under FEAT-001-TESTS v0.2) — TST-001 AC-1 updated to assert Login renders for unauthenticated users (previously asserted "APLX AMS" text which no longer renders; SCR S-18).
+
+**Docs:**
+- `docs/05-build-plan/feature-036-appshell-nav/tasks.md` — T-1, T-2, T-3, T-4 ticked complete.
+
+### Tests
+**Tests added (9 locked from FEAT-036-TESTS v0.1):**
+
+Frontend (`src/frontend/src/components/AppShell.test.tsx`):
+- `FEAT-036 AC-1: renders APLX AMS typography`
+- `FEAT-036 AC-1: renders role chip with role label`
+- `FEAT-036 AC-1: renders Sign out button`
+- `FEAT-036 AC-2: sign out calls logout, clears user, and navigates to /login`
+- `FEAT-036 AC-3 (200): AuthProvider calls me() on mount; authenticated layout renders`
+- `FEAT-036 AC-3 (401): AuthProvider calls me() on mount; on 401 navigates to /login`
+- `FEAT-036 AC-4 (delivery_manager): shows all 7 DM nav links and only those`
+- `FEAT-036 AC-4 (l2l3_support): shows 3 nav links and only those`
+- `FEAT-036 AC-4 (client_user): shows 2 nav links and only those`
+
+**Tests updated (1, re-locked under FEAT-001-TESTS v0.2 per SCR S-18):**
+- `src/frontend/src/App.test.tsx` — `TST-001 AC-1: renders App and finds "APLX AMS" text` updated to `TST-001 AC-1: renders Login page for unauthenticated users`
+
+**How to run:**
+```
+cd src/frontend && npm run test -- --run
+```
+
+**Gate results (on branch `feature/FEAT-036-appshell-nav`):**
+
+| Gate | Result |
+|---|---|
+| vitest (9 new + 27 pre-existing = 36 total) | Pass — 36 collected, 36 passed |
+| tsc --noEmit | Pass (0 errors) |
+| eslint --max-warnings=0 | Pass (0 errors) |
+| ruff check + format | Pass (0 errors) |
+| mypy --strict | Pass (0 errors) |
+| bandit -ll | Pass (exit 0) |
+| pip-audit -r requirements.txt | Pass (0 vulnerabilities) |
+| detect-secrets | Pass (exit 0) |
+| vitest coverage (--coverage.threshold.lines=70) | Not run — requires Docker and backend services (see Known Gaps 4) |
+| check_feature_size scope (--base master) | 3 SDLC doc files outside plan.md scope — expected; approved via SCR S-16, S-17, S-18 (see Known Gaps 3) |
+
+### Requirements Covered
+- UIS-001 v0.1 § AppShell AC-1: `FEAT-036 AC-1: renders APLX AMS typography`, `FEAT-036 AC-1: renders role chip with role label`, `FEAT-036 AC-1: renders Sign out button` — all PASSING.
+- UIS-001 v0.1 § AppShell AC-2: `FEAT-036 AC-2: sign out calls logout, clears user, and navigates to /login` — PASSING.
+- UIS-001 v0.1 § AppShell AC-3: `FEAT-036 AC-3 (200): AuthProvider calls me() on mount; authenticated layout renders`, `FEAT-036 AC-3 (401): AuthProvider calls me() on mount; on 401 navigates to /login` — both PASSING.
+- UIS-001 v0.1 § AppShell AC-4: `FEAT-036 AC-4 (delivery_manager): shows all 7 DM nav links and only those`, `FEAT-036 AC-4 (l2l3_support): shows 3 nav links and only those`, `FEAT-036 AC-4 (client_user): shows 2 nav links and only those` — all PASSING.
+
+### Known Gaps
+1. AppShell sign-out handler calls `logout()`, `setUser(null)`, and `navigate('/login')` directly rather than delegating to `context.signOut()`. This is required by the locked AC-2 test (FEAT-036-TESTS v0.1) which provides a no-op `signOut` spy and independently asserts on the three individual calls. Changing to `context.signOut()` would break the locked test. The `signOut` method on AuthContext remains available for external callers.
+2. `App.test.tsx` TST-001 AC-1 updated from asserting "APLX AMS" text (which no longer renders in unauthenticated state) to asserting Login renders for unauthenticated users. Authorized by SCR S-18 (Approved 2026-10-21, Mohanasunder).
+3. `check_feature_size.py scope --base master` reports 3 SDLC doc files outside plan.md as of the test-set commit (`acceptance.md`, `plan.md`, `tasks.md`). These are expected: plan.md and acceptance.md were amended via SCR S-16 and S-17 respectively; tasks.md is the builder task-tick file. All three are in scope per the approved SCRs and the build task process.
+4. Vitest coverage gate (`vitest run --coverage --coverage.threshold.lines=70`) was not run locally — requires Docker and backend services, which are set up in CI (FEAT-000/FEAT-001 infrastructure). All 36 tests pass; coverage is expected to exceed 70% given the high density of component assertions.
+
+### Deviations From Plan
+- **SCR S-18 (Approved 2026-10-21, Mohanasunder) — App.test.tsx TST-001 AC-1 updated:** `App.test.tsx` asserted `screen.getByText('APLX AMS')` from FEAT-001. FEAT-036 removes the `<nav>APLX AMS</nav>` stub and wraps authenticated routes in AppShell. The test was updated to assert Login renders for unauthenticated users; FEAT-001-TESTS v0.2 re-locks it.
+- **Sign-out handler pattern (locked-test constraint):** FEAT-036 plan.md step 5 (AppShell implementation) deferred to Mode B; the test set (FEAT-036-TESTS v0.1 AC-2) independently asserts `logout`, `setUser(null)`, and `navigate('/login')` calls. Implementation uses direct calls rather than `context.signOut()` to satisfy all three assertions simultaneously. No plan file specifies a delegating sign-out pattern; this is an implementation detail within the approved scope.
+- **BrowserRouter moved to App.tsx outermost wrapper:** FEAT-006 plan.md had AuthProvider wrapping BrowserRouter. FEAT-036 moves BrowserRouter outside AuthProvider because AuthProvider now uses `useNavigate` (which requires a Router ancestor). This is within FEAT-036 plan.md v0.3 scope (App.tsx listed as a modified file).
+
+### Blockers
+None.
+
+### Risk Tier And Review Depth
+Tier: High — Deep review required (tech lead + one human developer reviewer).
+
+AuthContext.tsx is modified: an error in the `me()` mount call or `loading` state management breaks authentication for every authenticated page. Per `.ai/standards/review-and-approval.md` § Approval tiers, High features require the tech lead plus one human developer reviewer, with Deep review depth.
+
+Deep review means: read every changed line of logic; review security against the threat model and permission matrix (auth, validation, secrets, data exposure); run the feature locally including failure paths; check migrations and rollback; read every test for behavior.
+
+### Reviewer Checklist
+- [ ] Ran or previewed the feature (not only read the diff)
+- [ ] Every acceptance criterion is met (AC-1: AppShell renders; AC-2: sign out flow; AC-3: me() on mount; AC-4: role-based nav links)
+- [ ] Change summary read: Known Gaps acceptable (sign-out handler pattern required by locked test; SCR S-18 authorized), Deviations From Plan justified (SCR S-18, sign-out pattern, BrowserRouter move), Blockers 'None'
+- [ ] No files changed outside the plan (plan.md v0.3 and acceptance.md v0.2 amendments authorized via SCR S-16 and SCR S-17; tasks.md is the builder task-tick file; App.test.tsx re-locked under FEAT-001-TESTS v0.2 via SCR S-18)
+- [ ] No packages added or upgraded beyond the plan's New Packages (New Packages: None — react-router-dom already present from FEAT-006)
+- [ ] Tests assert behavior, not just that code runs (getByText, getByRole, mock call count and argument assertions, queryAllByRole count assertions)
+- [ ] Approved test set (FEAT-036-TESTS v0.1) unchanged since approval; implementation started after test commit `aeb8323`
+- [ ] Auth, permissions, input validation, secrets, and data handling checked (AuthContext calls me() on mount; 401 → navigate to /login; logout() invalidates session; HttpOnly session cookie from FEAT-006 unchanged; no new secrets introduced)
+- [ ] Migrations: Not applicable — no database changes in this feature
+- [ ] Contract (OpenAPI) and UI spec followed (GET /api/auth/me/ and POST /api/auth/logout/ per API-001 v0.2 § F-5; AppShell layout per UIS-001 v0.1 § AppShell; nav links per UIS-001 v0.1 § AppShell role tables)
+- [ ] Applicable learned rules (`.ai/standards/learned-rules.md`) followed
+- [ ] Checker validation summary and AI pre-review read; any "Proceeded on Fail" findings examined
+- [ ] Second approver obtained (High tier: tech lead + one human developer reviewer) — Mohanasunder holds both roles; single-approver pilot accepted per DEC-020
+
+### Assumptions
+- A-049 (Open): `loading: boolean` is added to `AuthContextValue` in Mode B (implied by UIS-001 v0.1 § AppShell loading state; not named in AC-3 but required for MuiCircularProgress). Tests use `@ts-expect-error` on the `loading` prop until Mode B adds it to the type. Logged in `docs/logs/assumptions-log.md`.
+
+### Open Questions
+None.
+
+### Traceability Links
+- Upstream: UIS-001 v0.1 § AppShell; API-001 v0.2 § F-5; PRM-001 v0.1 § Authentication F-5; FEAT-036 plan.md v0.3; FEAT-036-ACC v0.2; FEAT-036-TESTS v0.1; FEAT-001-TESTS v0.2; STD-001 v0.1; TST-001 v0.1; FEAT-006 (AuthContext, react-router-dom, session auth); SCR S-16; SCR S-17; SCR S-18; DEC-088; A-049
+- Downstream: FEAT-007 (RLS policies; uses AuthContext session); all subsequent authenticated-route features that render inside AppShell; Phase 7 regression test suite (AppShell.test.tsx all 9 tests; App.test.tsx TST-001 AC-1 v0.2)
+
+### Quality Checklist
+- [x] Every template section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] Vague words removed (etc., as needed, appropriate)
+
+---
+
 ## Assumptions
 - A-038 (Confirmed): Docker Compose file secrets at `/run/secrets/` for DB credentials; test database uses `DATABASE_URL` env var injected by CI service container. Logged in `docs/logs/assumptions-log.md`.
 
