@@ -484,3 +484,80 @@ All 3 detect-secrets findings are pre-existing baseline entries (`test_auth_api.
 ### Traceability Links
 - Upstream: FEAT-006 plan.md v0.4; FEAT-006-TESTS.md v0.1; automated-gates.md; `.secrets.baseline` commit `c662986`
 - Downstream: FEAT-006 PR human review
+
+## SSR FEAT-036: AppShell — Global Navigation Shell and Sign Out
+
+<!-- ssr_status: Draft -->
+<!-- ssr_author: security-scanner -->
+<!-- ssr_date: 2026-10-21 -->
+<!-- ssr_verdict: Clean -->
+
+### Input References
+
+- FEAT-036 plan.md v0.3 (Approved 2026-10-21, Mohanasunder)
+- FEAT-036-TESTS.md v0.1 (Approved 2026-10-21)
+- `.ai/standards/automated-gates.md`
+- `.secrets.baseline` (committed; updated on branch `feature/FEAT-036-appshell-nav`)
+- `requirements.txt` (unchanged from FEAT-006 merge)
+
+### Purpose And Scope
+
+FEAT-036 is frontend-only. No Python source files are added or modified. Files in scope:
+
+- `src/frontend/src/components/AppShell.tsx` (new)
+- `src/frontend/src/context/AuthContext.tsx` (modified: loading state, signOut, me() on mount)
+- `src/frontend/src/App.tsx` (modified: BrowserRouter moved, AppShell layout route added)
+- `src/frontend/src/components/AppShell.test.tsx` (new, locked)
+- `src/frontend/src/App.test.tsx` (modified, locked under FEAT-001-TESTS v0.2)
+- `.secrets.baseline` (generated_at timestamp updated by detect-secrets scan run)
+
+Does not cover: infrastructure-as-code (Phase 8), runtime penetration testing, or backend code (no backend changes in this feature).
+
+### Scan Tools And Scope
+
+| Tool | Version | Command | Exit Code | Result |
+| --- | --- | --- | --- | --- |
+| bandit | 1.9.4 | `python -m bandit -r src/aplx_ams_django/ -ll -q` | 0 | **Pass** — No MEDIUM/HIGH findings; no new Python files; low-severity B101 findings unchanged from prior SSRs |
+| pip-audit | 2.10.1 | `python -m pip_audit -r requirements.txt` | 0 | **Pass** — No known vulnerabilities; no new backend dependencies added |
+| detect-secrets | 1.5.0 | `python -m detect_secrets scan --baseline .secrets.baseline` | 0 | **Pass** — No new secrets detected beyond committed baseline |
+
+### Findings
+
+#### Automated Scan Findings
+
+| Tool | Finding | Severity | Notes |
+| --- | --- | --- | --- |
+| bandit | No issues at or above MEDIUM | — | FEAT-036 adds no Python files; pre-existing B101 LOW findings unchanged; below -ll threshold |
+| pip-audit | No known vulnerabilities | — | No new packages added; requirements.txt unchanged |
+| detect-secrets | No new secrets beyond baseline | — | All baseline findings are pre-existing (CI credentials, design docs); no new credential-adjacent code in TypeScript files |
+
+#### Advisory Finding
+
+| Finding | Severity | File | Detail |
+| --- | --- | --- | --- |
+| A-1: `.secrets.baseline` generated_at timestamp updated | Advisory | `.secrets.baseline` | The file's `generated_at` field was updated by detect-secrets when the scan ran on this branch. The `results` section is unchanged — no new secrets added or removed. This is the same pattern as SSR FEAT-035 A-SEC-035-01. Not a plan deviation requiring an SCR; the human reviewer should record a DEC if accepted (per AIR FEAT-036 F-2). |
+
+### Secrets Check
+
+`python -m detect_secrets scan --baseline .secrets.baseline` exited 0. No new secrets detected. No credentials, tokens, or API keys appear in any FEAT-036 TypeScript source file. The `signOut()` function in AuthContext.tsx and AppShell.tsx calls API endpoints (`/api/auth/logout/`) via the existing `api/auth.ts` module; no secrets are constructed or interpolated inline.
+
+The `.secrets.baseline` modification on this branch is limited to the `generated_at` timestamp (standard detect-secrets behavior when a scan is run locally). The `results` section is functionally identical to the baseline committed on `master`.
+
+### Verdict
+
+**Clean**
+
+All three non-overridable gate commands exited 0. No MEDIUM or HIGH SAST findings. No new secrets detected. No vulnerable dependencies. No Python changes to scan. One Advisory finding (A-1: `.secrets.baseline` timestamp update) is consistent with prior SSR patterns and does not constitute a new secret or a policy violation. No Blockers.
+
+### Assumptions
+
+- A-SEC-036-01: The `.secrets.baseline` `generated_at` timestamp update is standard detect-secrets behavior when run locally. The `results` section is unchanged from the committed baseline. Consistent with A-SEC-035-01 in SSR FEAT-035.
+
+### Open Questions
+
+None.
+
+### Traceability Links
+
+- Upstream: FEAT-036 plan.md v0.3; FEAT-036-TESTS v0.1; automated-gates.md; `.secrets.baseline`
+- Downstream: PR FEAT-036 human review
