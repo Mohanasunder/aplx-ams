@@ -47,6 +47,7 @@ Tier: **Standard**. Approver required: **Tech lead** (Mohanasunder), per `.ai/st
 | REQ-024 AC-3 | `src/aplx_ams_django/sla/tests/test_holiday_api.py` | `test_ac3_client_user_cannot_add_holiday` | Backend | `POST /api/holidays/` as client_user returns HTTP 403 Forbidden |
 | REQ-024 AC-3 | `src/aplx_ams_django/sla/tests/test_holiday_api.py` | `test_ac3_l1_cannot_remove_holiday` | Backend | `DELETE /api/holidays/{id}/` as l1_support_engineer returns HTTP 403 Forbidden |
 | REQ-024 AC-3 | `src/aplx_ams_django/sla/tests/test_holiday_api.py` | `test_ac3_l2_l3_cannot_remove_holiday` | Backend | `DELETE /api/holidays/{id}/` as l2_l3_support_engineer returns HTTP 403 Forbidden |
+| REQ-024 AC-3 | `src/aplx_ams_django/sla/tests/test_holiday_api.py` | `test_ac3_client_user_cannot_remove_holiday` | Backend | client_user DELETE /api/holidays/{id}/ → 403 Forbidden (404 in Mode A — URL not registered) |
 | REQ-024 AC-1 | `src/aplx_ams_django/sla/tests/test_holiday_api.py` | `test_ac3_all_roles_can_list_holidays_dm` | Backend | `GET /api/holidays/` as delivery_manager returns HTTP 200 OK (all authenticated users can read) |
 | REQ-024 AC-1 | `src/aplx_ams_django/sla/tests/test_holiday_api.py` | `test_ac3_all_roles_can_list_holidays_l1` | Backend | `GET /api/holidays/` as l1_support_engineer returns HTTP 200 OK (all authenticated users can read) |
 | REQ-024 AC-3 | `src/aplx_ams_django/sla/tests/test_holiday_api.py` | `test_ac3_unauthenticated_get_is_rejected` | Backend | `GET /api/holidays/` unauthenticated returns HTTP 401 or 403 |
@@ -59,11 +60,13 @@ Tier: **Standard**. Approver required: **Tech lead** (Mohanasunder), per `.ai/st
 
 **Coverage gaps:**
 - AC-4 has no frontend test. AC-4 is a backend DAL/time-computation concern (`as_of` parameter semantics on `get_holidays_in_range`); there is no UI control for time-based holiday queries in UIS-001 § REQ S-24.
-- client_user cannot DELETE (AC-3): no backend test for `client_user DELETE /api/holidays/{id}/` is present. The three builders did not include this case. It is a gap against AC-3 ("client user ... cannot ... remove"). Logged below.
+- client_user cannot DELETE (AC-3): Resolved by commit `2659028` — `test_ac3_client_user_cannot_remove_holiday` added to `test_holiday_api.py`.
 
 ## Test Files
 - `src/aplx_ams_django/sla/tests/test_holiday_list.py` — database DAL tests (AC-1, AC-2, AC-4, schema constraint); commit `fa86dbe`; locked once this artifact is Approved
-- `src/aplx_ams_django/sla/tests/test_holiday_api.py` — backend API tests (AC-1, AC-2, AC-3); commit `c0a609c`; locked once this artifact is Approved
+- `src/aplx_ams_django/sla/tests/conftest.py` — pytest fixtures: SQLite test-DB switch + sla app registry injection; commit `fa86dbe`; locked once this artifact is Approved
+- `src/aplx_ams_django/sla/tests/__init__.py` — Python package marker; commit `fa86dbe`; locked once this artifact is Approved
+- `src/aplx_ams_django/sla/tests/test_holiday_api.py` — backend API tests (AC-1, AC-2, AC-3); commit `2659028`; locked once this artifact is Approved
 - `src/frontend/src/pages/HolidayList.test.tsx` — frontend component tests (AC-1, AC-2, AC-3, empty state); commit `6020049`; locked once this artifact is Approved
 
 ## Stubs Created
@@ -73,7 +76,7 @@ Tier: **Standard**. Approver required: **Tech lead** (Mohanasunder), per `.ai/st
 | `src/aplx_ams_django/sla/__init__.py` | Empty package marker |
 | `src/aplx_ams_django/sla/apps.py` | `SlaConfig(AppConfig)` — stub |
 | `src/aplx_ams_django/sla/migrations/__init__.py` | Empty package marker |
-| `src/aplx_ams_django/sla/models.py` | `HolidayEntry(models.Model)` — stub with no fields beyond `id` |
+| `src/aplx_ams_django/sla/models.py` | `HolidayEntry(models.Model)` — full schema per DBD-001 v0.1 (holiday_date DateField, added_at DateTimeField, added_by FK→User, removed_at DateTimeField nullable, removed_by FK→User nullable, chk_removed_consistent CheckConstraint); no custom business-logic methods; Mode B adds no model changes. |
 | `src/aplx_ams_django/sla/migrations/0001_initial.py` | Stub migration — creates table with `id` only |
 | `src/aplx_ams_django/sla/serializers.py` | `HolidayEntrySerializer` — empty `Meta.fields` |
 | `src/aplx_ams_django/sla/services.py` | `add_holiday()`, `remove_holiday()`, `is_holiday()` — raise `NotImplementedError` |
@@ -92,10 +95,11 @@ FAILED test_ac2_removed_holiday_excluded_from_range — NotImplementedError: get
 FAILED test_ac4_holiday_not_visible_before_addition_time — NotImplementedError: get_holidays_in_range not implemented
 FAILED test_ac4_holiday_visible_after_addition_time — NotImplementedError: get_holidays_in_range not implemented
 PASSED test_schema_removed_at_and_removed_by_must_be_set_together — SQLite does not enforce CHECK constraints; will fail on PostgreSQL CI
+  # PASSED — expected on SQLite (CHECK constraints not enforced; see Assumptions); this test verifies the migration declares the constraint; PostgreSQL enforcement is validated by CI.
 ```
 All failures are for missing behavior (dal stub raises NotImplementedError), not syntax or import errors.
 
-**Backend API tests** — Command: `pytest src/aplx_ams_django/sla/tests/test_holiday_api.py -v` — Date: 2026-10-21 — Branch: `feature/FEAT-010-holiday-list` — Commit: `c0a609c`
+**Backend API tests** — Command: `pytest src/aplx_ams_django/sla/tests/test_holiday_api.py -v` — Date: 2026-10-21 — Branch: `feature/FEAT-010-holiday-list` — Commit: `2659028`
 ```
 FAILED test_ac1_dm_can_add_holiday — AssertionError: 404 != 201 (sla URLs not registered in root urls.py)
 FAILED test_ac2_dm_can_remove_holiday — AssertionError: 404 != 204 (sla URLs not registered)
@@ -104,6 +108,7 @@ FAILED test_ac3_l2_l3_cannot_add_holiday — AssertionError: 404 != 403 (sla URL
 FAILED test_ac3_client_user_cannot_add_holiday — AssertionError: 404 != 403 (sla URLs not registered)
 FAILED test_ac3_l1_cannot_remove_holiday — AssertionError: 404 != 403 (sla URLs not registered)
 FAILED test_ac3_l2_l3_cannot_remove_holiday — AssertionError: 404 != 403 (sla URLs not registered)
+FAILED test_ac3_client_user_cannot_remove_holiday — AssertionError: 404 != 403 (sla URLs not registered)
 FAILED test_ac3_all_roles_can_list_holidays_dm — AssertionError: 404 != 200 (sla URLs not registered)
 FAILED test_ac3_all_roles_can_list_holidays_l1 — AssertionError: 404 != 200 (sla URLs not registered)
 FAILED test_ac3_unauthenticated_get_is_rejected — AssertionError: 404 not in (401, 403) (sla URLs not registered)
@@ -122,7 +127,7 @@ FAILED FEAT-010 empty state: shows empty state message when no holidays — Unab
 
 ## Test Commit
 - Database tests: `fa86dbe` — `FEAT-010: tests (database)` — branch `feature/FEAT-010-holiday-list` — 2026-10-21
-- Backend API tests: `c0a609c` — `FEAT-010: tests (backend)` — branch `feature/FEAT-010-holiday-list` — 2026-10-21
+- Backend API tests: `2659028` — `FEAT-010: tests (backend) — add client_user DELETE test for AC-3` — branch `feature/FEAT-010-holiday-list` — 2026-10-21
 - Frontend tests: `6020049` — `FEAT-010: tests (frontend)` — branch `feature/FEAT-010-holiday-list` — 2026-10-21
 
 ## Assumptions
