@@ -2,7 +2,7 @@
 id: FEAT-036-ACC
 title: "FEAT-036: AppShell - Global Navigation Shell and Sign Out - Acceptance Criteria"
 phase: 5
-version: 0.1
+version: 0.2
 template: feature-acceptance
 template_version: 1.1
 status: Approved
@@ -25,13 +25,13 @@ Covers the 4 acceptance criteria for FEAT-036. Criteria are derived from UIS-001
 UIS-001 v0.1 § AppShell AC-1: Given a user is authenticated, when any authenticated route renders, then the AppShell is visible with MuiTypography text "APLX AMS", a MuiChip showing the user's role label, and a MuiButton labelled "Sign out".
 UIS-001 v0.1 § AppShell AC-2: Given a user is on an authenticated page, when the user clicks "Sign out", then the browser calls POST /api/auth/logout/, AuthContext user is cleared to null, and the browser navigates to /login.
 UIS-001 v0.1 § AppShell AC-3: Given a user loads an authenticated route, when AuthProvider mounts, then it calls GET /api/auth/me/; if the response is 200 the user is set in AuthContext and the authenticated layout renders; if the response is 401 the browser navigates to /login.
-UIS-001 v0.1 § AppShell AC-4: Given the user has role delivery_manager, l2_l3_support_engineer, or client_user, when the MuiDrawer nav renders, then it shows exactly the links defined in UIS-001 v0.1 § AppShell for that role (delivery_manager: Tickets, User accounts, Client organizations, Holiday list, Live dashboard, Monthly client report, Security events; l2_l3_support_engineer: Tickets, Live dashboard, Monthly client report; client_user: Tickets, Monthly client report) and no others.
+UIS-001 v0.1 § AppShell AC-4: Given the user has role delivery_manager, l2l3_support, or client_user, when the MuiDrawer nav renders, then it shows exactly the links defined in UIS-001 v0.1 § AppShell for that role (delivery_manager: Tickets, User accounts, Client organizations, Holiday list, Live dashboard, Monthly client report, Security events; l2l3_support: Tickets, Live dashboard, Monthly client report; client_user: Tickets, Monthly client report) and no others.
 
 ## Test Scenarios
 UIS-001 v0.1 § AppShell AC-1: Render AppShell with a mocked authenticated user; assert "APLX AMS" text, role chip text matching the user's role, and "Sign out" button are all present in the rendered output.
 UIS-001 v0.1 § AppShell AC-2: Render AppShell with POST /api/auth/logout/ mocked to return 200; simulate click on "Sign out"; assert the logout endpoint was called once, AuthContext user is null, and useNavigate was called with "/login".
 UIS-001 v0.1 § AppShell AC-3 (200 path): Mount AuthProvider with GET /api/auth/me/ returning `{"role":"delivery_manager","org":"Applexus"}`; assert AuthContext user is set and the authenticated layout renders. (401 path): Mount AuthProvider with GET /api/auth/me/ returning 401; assert useNavigate is called with "/login".
-UIS-001 v0.1 § AppShell AC-4: For each role, mount AppShell with the role set in AuthContext; assert the nav drawer contains exactly the links specified in UIS-001 v0.1 § AppShell for that role, verified by link text.
+UIS-001 v0.1 § AppShell AC-4: For each role (delivery_manager, l2l3_support, client_user), mount AppShell with the role set in AuthContext; assert the nav drawer contains exactly the links specified in UIS-001 v0.1 § AppShell for that role, verified by link text.
 
 ## Assumptions
 - A-048: These criteria are spec-derived from UIS-001 v0.1 § AppShell and API-001 v0.2 § F-5 because the AppShell was not assigned to any REQ story. Logged in docs/logs/assumptions-log.md.
@@ -63,3 +63,11 @@ UIS-001 v0.1 § AppShell AC-4: For each role, mount AppShell with the role set i
 | Conditions | None |
 | Comments | None |
 | Timestamp | 2026-10-21 11:52 UTC |
+
+| Decision | Pending |
+| Approver | Pending |
+| Role | Pending |
+| Version | 0.2 |
+| Conditions | None |
+| Comments | SCR S-17: correct l2_l3_support_engineer → l2l3_support in AC-4 and Test Scenarios |
+| Timestamp | Pending |

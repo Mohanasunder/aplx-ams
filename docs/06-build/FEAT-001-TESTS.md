@@ -5,7 +5,7 @@ phase: 6
 version: 0.1
 template: feature-test-set
 template_version: 1.0
-status: Approved
+status: Rejected
 author_agent: documentation-writer
 approver: Mohanasunder
 date: 2026-10-18
@@ -82,10 +82,10 @@ None.
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Approve |
-| Approver | Mohanasunder |
-| Role | Tech lead |
+| Decision | Approve; Reject |
+| Approver | Mohanasunder; Mohanasunder |
+| Role | Tech lead; Tech lead |
 | Version | 0.1 |
-| Conditions | None |
-| Comments | None |
-| Timestamp | 2026-10-17 21:01 UTC |
+| Conditions | None; None |
+| Comments | None; TST-001 AC-1 (App.test.tsx) must be updated: FEAT-036 removes the nav element that satisfied this test and replaces it with AppShell. The FEAT-036 frontend-builder will update App.test.tsx in Mode A to assert AppShell renders 'APLX AMS' for authenticated users. FEAT-001-TESTS.md v0.2 will be created and approved before Mode B implementation. |
+| Timestamp | 2026-10-17 21:01 UTC; 2026-10-21 12:56 UTC |

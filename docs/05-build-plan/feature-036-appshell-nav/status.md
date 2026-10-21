@@ -20,13 +20,13 @@ validation: Pass
 Tracks the build-phase progress of FEAT-036. Updated by the builder agent during Phase 6.
 
 ## Branch And PR
-- Branch: Pending — feature/FEAT-036-appshell-nav (set when scripts/create-feature-branch.sh runs)
-- Base commit: Pending — set when branch is created from master after FEAT-006 merges
-- Started: Pending — set when Phase 6 begins
+- Branch: feature/FEAT-036-appshell-nav
+- Base commit: a09fc6c
+- Started: 2026-10-21
 - PR: Pending — draft PR link added when branch is created
 
 ## Progress
-- State: Not started
+- State: In progress
 - Assigned agents: Pending — assigned in Phase 6
 - Last update: 2026-10-19
 

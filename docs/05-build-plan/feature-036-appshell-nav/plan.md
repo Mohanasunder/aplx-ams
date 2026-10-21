@@ -2,7 +2,7 @@
 id: FEAT-036
 title: "FEAT-036: AppShell - Global Navigation Shell and Sign Out"
 phase: 5
-version: 0.1
+version: 0.3
 template: feature-plan
 template_version: 1.6
 status: Approved
@@ -44,7 +44,6 @@ Implement the AppShell component (MuiAppBar, MuiDrawer, role badge chip, sign-ou
 - PRM-001 v0.1 § Authentication (F-5)
 - src/frontend/src/context/AuthContext.tsx
 - src/frontend/src/App.tsx
-- src/frontend/src/components/AppShell.tsx
 
 ## Files To Create Or Modify
 
@@ -73,15 +72,15 @@ This feature touches AuthContext.tsx (session restore on mount and sign-out flow
 
 ## Implementation Steps
 1. Update `src/frontend/src/context/AuthContext.tsx`: add a `useEffect` that calls GET /api/auth/me/ on mount; on 200 set user in state; on 401 navigate to /login; expose `signOut()` that calls POST /api/auth/logout/, clears user state, and navigates to /login. Add `signOut` to the context value type.
-2. Create `src/frontend/src/components/AppShell.tsx`: render MuiAppBar + MuiToolbar containing MuiTypography "APLX AMS", MuiChip showing the role label from AuthContext, and MuiButton "Sign out" calling `signOut()`. Render MuiDrawer (variant="permanent") with nav links filtered by role per UIS-001 v0.1 § AppShell (delivery_manager: Tickets / User accounts / Client organizations / Holiday list / Live dashboard / Monthly client report / Security events; l2_l3_support_engineer: Tickets / Live dashboard / Monthly client report; client_user: Tickets / Monthly client report). Show MuiCircularProgress centered while GET /api/auth/me/ resolves on mount (loading state from AuthContext).
+2. Create `src/frontend/src/components/AppShell.tsx`: render MuiAppBar + MuiToolbar containing MuiTypography "APLX AMS", MuiChip showing the role label from AuthContext, and MuiButton "Sign out" calling `signOut()`. Render MuiDrawer (variant="permanent") with nav links filtered by role per UIS-001 v0.1 § AppShell (delivery_manager: Tickets / User accounts / Client organizations / Holiday list / Live dashboard / Monthly client report / Security events; l2l3_support: Tickets / Live dashboard / Monthly client report; client_user: Tickets / Monthly client report). Show MuiCircularProgress centered while GET /api/auth/me/ resolves on mount (loading state from AuthContext).
 3. Update `src/frontend/src/App.tsx`: wrap authenticated routes in `<AppShell>` as a layout route; keep the /login route outside AppShell. Remove any inline nav elements that duplicate AppShell.
-4. Write `src/frontend/src/components/AppShell.test.tsx`: one test per acceptance criterion (render check for AC-1, sign-out mock for AC-2, me() mount call and 401 redirect for AC-3, role-based link set for each role for AC-4).
+4. Write `src/frontend/src/components/AppShell.test.tsx`: one test per acceptance criterion (render check for AC-1, sign-out mock for AC-2, me() mount call and 401 redirect for AC-3, role-based link set for each role — delivery_manager, l2l3_support, client_user — for AC-4).
 
 ## Test Plan
 - UIS-001 v0.1 § AppShell AC-1: Render AppShell in a test environment with an authenticated user; assert MuiTypography "APLX AMS", MuiChip with role label, and MuiButton "Sign out" are visible.
 - UIS-001 v0.1 § AppShell AC-2: Mount AppShell with a mocked auth API; click "Sign out"; assert POST /api/auth/logout/ is called, AuthContext user is null, and the router navigates to /login.
 - UIS-001 v0.1 § AppShell AC-3: Mount AuthProvider with GET /api/auth/me/ mocked to return 200 `{"role":"delivery_manager","org":"Applexus"}`; assert user is set and the authenticated layout renders. Then mount with me() returning 401; assert navigation to /login.
-- UIS-001 v0.1 § AppShell AC-4: Mount AppShell for each of the three roles (delivery_manager, l2_l3_support_engineer, client_user); assert exactly the nav links defined in UIS-001 v0.1 § AppShell are present and no others.
+- UIS-001 v0.1 § AppShell AC-4: Mount AppShell for each of the three roles (delivery_manager, l2l3_support, client_user); assert exactly the nav links defined in UIS-001 v0.1 § AppShell are present and no others.
 
 ## Size Check
 | Metric | Count | Limit |
@@ -136,3 +135,11 @@ Open design decisions: None
 | Conditions | None |
 | Comments | None |
 | Timestamp | 2026-10-21 11:52 UTC |
+
+| Decision | Pending |
+| Approver | Pending |
+| Role | Pending |
+| Version | 0.3 |
+| Conditions | None |
+| Comments | SCR S-16 (v0.2): remove AppShell.tsx from Context Pack. SCR S-17 (v0.3): correct l2_l3_support_engineer → l2l3_support in Implementation Steps T-2, T-4, and Test Plan AC-4. |
+| Timestamp | Pending |

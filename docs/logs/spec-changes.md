@@ -1124,3 +1124,82 @@ Not applicable — no architecture or contract artifact changes; DEC-088 records
 - [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
 - [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
 - [x] Impact covers every artifact and feature that cites the changed artifact
+
+## SCR S-16: FEAT-036 plan.md — remove AppShell.tsx from Context Pack (file is created by this feature, not an existing file)
+<!-- scr_status: Pending approval -->
+<!-- scr_approver: -->
+
+### Summary
+FEAT-036 plan.md v0.1 lists `src/frontend/src/components/AppShell.tsx` in the Context Pack section. The Context Pack provides EXISTING files for the builder to read; AppShell.tsx is a NEW file to be created by this feature. Including it causes `context_pack.py check` to fail with "file not found" and `context_pack.py render` to emit UNRESOLVED. Removing it from the Context Pack fixes the check without affecting builder context (the builder creates this file from scratch using the UIS-001 spec already in the pack).
+
+### Changed Artifact
+- FEAT-036 v0.1 → v0.2
+
+### Reason
+Plan gap: a file-to-be-created was incorrectly listed in the Context Pack. The Context Pack should list only existing files (AuthContext.tsx, App.tsx) and spec sections. AppShell.tsx has no content to read for context because it does not yet exist.
+
+### Impact
+- FEAT-036 plan.md only — no API, DB, or UI contracts change
+- Builder context is unaffected: UIS-001 § AppShell, AuthContext.tsx, and App.tsx provide all necessary context
+- context_pack.py check will pass after this fix
+
+### scr_status: Pending approval
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes.
+
+### Traceability Links
+- Upstream: FEAT-036 plan.md v0.1; context_pack.py check failure
+- Downstream: FEAT-036 plan.md v0.2; context_pack.py check gate
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+
+## SCR S-17: FEAT-036 plan.md and acceptance.md — correct role name l2_l3_support_engineer → l2l3_support
+<!-- scr_status: Pending approval -->
+<!-- scr_approver: -->
+
+### Summary
+FEAT-036 plan.md v0.2 (Implementation Steps T-2, T-4) and acceptance.md v0.1 (AC-4, Test Scenarios) use the incorrect role label `l2_l3_support_engineer`. The canonical role enum value in API-001 v0.2 § F-5 and `src/frontend/src/api/auth.ts` is `l2l3_support`. This discrepancy was identified during Phase 6 entry phase-intake as Gap 1 (Blocker). Mohanasunder approved the correction via the phase-intake gap resolution (2026-10-21).
+
+### Changed Artifact
+- FEAT-036 plan.md v0.2 → v0.3 (docs/05-build-plan/feature-036-appshell-nav/plan.md)
+- FEAT-036-ACC v0.1 → v0.2 (docs/05-build-plan/feature-036-appshell-nav/acceptance.md)
+
+### Reason
+The plan and acceptance criteria reference `l2_l3_support_engineer` which is not a valid value in the `UserRole` type defined in `api/auth.ts`. The canonical DB enum values (API-001 v0.2 § F-5) are `l1_support`, `l2l3_support`, `delivery_manager`, `client_user`. Using the wrong value would cause the builder to write code and tests that use an undefined role, failing at runtime and in the type checker.
+
+### Impact
+- FEAT-036 plan.md and FEAT-036-ACC only — no API, DB, or UI contracts change
+- The three-role nav link list (delivery_manager, l2l3_support, client_user) is unchanged; only the label corrected
+- Builder and test assertions must use `l2l3_support` (matching api/auth.ts UserRole type)
+
+### scr_status: Pending approval
+
+### Decision Record
+Not applicable — no architecture or contract artifact changes. Role enum values are defined by API-001 v0.2 § F-5 (Approved 2026-10-17); this SCR corrects a copy error in the plan.
+
+### Traceability Links
+- Upstream: FEAT-036 plan.md v0.2; FEAT-036-ACC v0.1; API-001 v0.2 § F-5; src/frontend/src/api/auth.ts
+- Downstream: FEAT-036 plan.md v0.3; FEAT-036-ACC v0.2; FEAT-036 Mode A tests (AppShell.test.tsx)
+
+### Quality Checklist
+- [x] Every section is filled, or marked "Not applicable - <reason>"
+- [x] Inputs referenced are Approved artifacts at the stated versions
+- [x] Nothing invented: no requirements, systems, users, endpoints, or libraries without a source
+- [x] Assumptions and open questions are logged and linked
+- [x] Traceability links are present upstream and downstream
+- [x] Terminology follows .ai/standards/glossary.md
+- [x] All wording is precise and unambiguous
+- [x] Every changed artifact is listed as 'ID vOLD -> vNEW'
+- [x] An architecture or contract change cites its new or superseding ADR A-N under Decision Record (Not applicable)
+- [x] Impact covers every artifact and feature that cites the changed artifact
+- [x] Impact covers every artifact and feature that cites the changed artifact
