@@ -1299,7 +1299,7 @@ Implements REQ S-24 end-to-end: Django `sla` app (`HolidayEntry` model with `hol
 - `src/aplx_ams_django/sla/__init__.py` — Django app package init.
 - `src/aplx_ams_django/sla/apps.py` — `SlaConfig` app config class.
 - `src/aplx_ams_django/sla/migrations/__init__.py` — migrations package init.
-- `src/aplx_ams_django/sla/settings/base.py` — adds `aplx_ams_django.sla` to `INSTALLED_APPS`.
+- `src/aplx_ams_django/settings/base.py` — adds `aplx_ams_django.sla` to `INSTALLED_APPS`.
 
 **Backend (feature logic):**
 - `src/aplx_ams_django/sla/dal.py` — `get_holidays_in_range(start, end, *, as_of=None)`: returns active `HolidayEntry` queryset for the given date range where the entry was added on or before `as_of` and not yet removed (or removed after `as_of`); implements AC-4 partial-day semantics. `get_holiday_by_id(id)`: fetch by PK.
@@ -1369,7 +1369,7 @@ cd src/frontend && npm run test -- --run HolidayList.test
 | bandit -r src/ -ll | Pass (exit 0) |
 | pip-audit -r requirements.txt | Pass (0 known vulnerabilities; DEC-090) |
 | detect-secrets scan | Pass (.secrets.baseline updated for 3 new test files with test passwords; see Deviations From Plan) |
-| check_feature_size scope (--base master) | 6 justified deviations; all 10 backend source files and 3 frontend source files are within plan scope (scope gate is overridable; see Deviations From Plan) |
+| check_feature_size scope (--base master) | Exit non-zero (6 justified file deviations); all 10 backend source files and 3 frontend source files are within plan scope; `pyproject.toml` and `.secrets.baseline` deviations pre-approved (`pyproject.toml` per DEC-090; `.secrets.baseline` initialized in FEAT-000); see Deviations From Plan |
 | check_feature_size packages --base master | Pass (0 unapproved packages) |
 | check_feature_size size FEAT-010 | Pass |
 | spec_impact.py records | Pass (38 recorded, 0 unrecorded) |
@@ -1387,6 +1387,16 @@ cd src/frontend && npm run test -- --run HolidayList.test
 
 ### Known Gaps
 1. AC-4 has no frontend test. AC-4 is a backend DAL/time-computation concern (the `as_of` parameter semantics on `get_holidays_in_range`); there is no UI control for time-based holiday queries in UIS-001 § REQ S-24. The partial-day semantics are fully verified at the database layer by `test_ac4_holiday_not_visible_before_addition_time` and `test_ac4_holiday_visible_after_addition_time` (both PASSING). Noted in FEAT-010-TESTS v0.2 § Coverage gaps.
+
+### AI Pre-Review Findings
+All 4 Major findings from the AI pre-review (AIR FEAT-010) were fixed before merging.
+
+| Finding | Category | Description | Resolution |
+|---|---|---|---|
+| AIR F-1 | api-contract-field-mismatch | `holidays.ts` used `date` field instead of `holiday_date` (mismatch with API-001 v0.3 and DBD-001 `sla_holidayentry`) | Fixed in commit `70ba412`: renamed `HolidayEntry.date` → `holiday_date` and `CreateHolidayPayload.date` → `holiday_date` in `src/frontend/src/api/holidays.ts` |
+| AIR F-2 | invented-field | `description` field present in TypeScript types and `HolidayList.tsx` but absent from API-001 v0.3 and DBD-001 | Fixed in commit `70ba412`: removed `description` field from `holidays.ts` types and `HolidayList.tsx` component |
+| AIR F-3 | missing-context-provider | `/admin/holidays` route in `App.tsx` rendered `HolidayList` without `UserContext.Provider`, causing context read failure at runtime | Fixed in commit `70ba412`: added `HolidayListRoute` wrapper with `UserContext.Provider` using `useAuth()` for the `/admin/holidays` route in `src/frontend/src/App.tsx` |
+| AIR F-4 | missing-input-validation | `views.py` `create()` and `destroy()` did not handle `IntegrityError` on duplicate `holiday_date`, violating LRN L-1 | Fixed in commit `8ff6200`: added `IntegrityError` handler returning HTTP 409 to both `create()` and `destroy()` in `src/aplx_ams_django/sla/views.py` |
 
 ### Deviations From Plan
 1. **DEC-090 (human-approved):** `.ai/standards/automated-gates.md` updated to scope pip-audit to `requirements.txt` (`pip-audit -r requirements.txt`) to avoid false positives from Claude Code system packages. This is a non-overridable gate command change; approved by Mohanasunder. Outside FEAT-010 plan.md file scope.
