@@ -26,7 +26,7 @@ Tracks the build-phase progress of FEAT-010. Updated by the builder agent during
 - Branch: feature/FEAT-010-holiday-list
 - Base commit: c2d2894
 - Started: 2026-10-21
-- PR: <draft PR link>
+- PR: https://github.com/Mohanasunder/aplx-ams/pull/20 (draft)
 
 ## Progress
 - State: In review
