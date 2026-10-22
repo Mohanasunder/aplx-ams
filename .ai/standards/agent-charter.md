@@ -178,7 +178,7 @@ Source: DOD-001 v0.1 (Approved).
 | Unit tests with coverage (TypeScript, 70% gate) | `vitest run --coverage --coverage.threshold.lines=70` | yes |
 | E2E tests (separate CI job) | `playwright test` | yes |
 | SAST | `bandit -r src/ -ll` | yes (non-overridable) |
-| Dependency scan | `pip-audit` | yes (non-overridable) |
+| Dependency scan | `pip-audit -r requirements.txt` | yes (non-overridable) |
 | Secrets scan | `detect-secrets scan` | yes (non-overridable) |
 | Migration check (apply and reverse on a scratch DB) | `python manage.py migrate --run-syncdb` then `python manage.py migrate <app> zero` (finalized in FEAT-000) | yes |
 | Locked tests unchanged | `python3 scripts/locked_tests.py check` | yes (non-overridable) |

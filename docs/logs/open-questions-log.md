@@ -155,3 +155,18 @@ OQ-075: Should a user account edit capability be added to release 1, and if so w
 **Answer (Mohanasunder, 2026-10-21):** (1) Delivery manager and admin role users. (2) All fields. (3) Yes, audit trail required for each field change. (4) New story alongside REQ S-20.
 
 **OQ-075a answered (Mohanasunder, 2026-10-21):** "Admin" = delivery_manager. No new role needed. Delivery managers can edit all fields on any user account. DEC-089 records this decision.
+
+---
+
+OQ-076: FEAT-010 plan.md § Tests names only `test_holiday_list.py`. The database-builder committed that file covering DB-layer tests for AC-1, AC-2, AC-4 and explicitly deferred AC-3 (permission) tests to the API layer. The existing file has no marked section for API tests; the backend-builder created `test_holiday_api.py` as an additional test file. Should plan.md be updated via an SCR to list `test_holiday_api.py` in the Tests section?
+
+**Raised by:** backend-builder (FEAT-010 Mode A, 2026-10-21)
+**Status:** Open
+**Assigned to:** Mohanasunder (Architect / tech lead)
+**Priority:** Low
+
+**Question:** The database-builder's `test_holiday_list.py` covers DB-layer tests only and explicitly states "AC-3 (permission enforcement) is tested at the API layer, not here." The plan.md § Tests section lists only `test_holiday_list.py`. The backend-builder has created `src/aplx_ams_django/sla/tests/test_holiday_api.py` (9 API-layer tests covering AC-1, AC-2, AC-3). Should an SCR update FEAT-010 plan.md v0.3 to add this file to the Tests section and increment the version?
+
+**Impact if not resolved:** The test file exists in the branch but is not listed in the plan. The size check's Test Files count will differ from the plan's count. The file is not locked by the approved test set until a FEAT-010-TESTS approval references it.
+
+**Proposed resolution:** Raise SCR to add `test_holiday_api.py` to plan.md § Tests. The tech lead approves the SCR and the plan increment. Until resolved, the file is present but not approved as part of the test set.

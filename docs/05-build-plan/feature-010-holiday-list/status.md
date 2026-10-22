@@ -23,15 +23,15 @@ validation: Pass
 Tracks the build-phase progress of FEAT-010. Updated by the builder agent during Phase 6.
 
 ## Branch And PR
-- Branch: <set by scripts/create-feature-branch.sh>
-- Base commit: <set by script>
-- Started: <set by script>
-- PR: <draft PR link>
+- Branch: feature/FEAT-010-holiday-list
+- Base commit: c2d2894
+- Started: 2026-10-21
+- PR: https://github.com/Mohanasunder/aplx-ams/pull/20 (draft)
 
 ## Progress
-- State: Not started
+- State: In review
 - Assigned agents: builder
-- Last update: 2026-10-17
+- Last update: 2026-10-22
 
 ## Blockers
 None.

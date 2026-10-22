@@ -11,4 +11,6 @@ urlpatterns = [
     path("api/accounts/", include("aplx_ams_django.accounts.urls")),
     # FEAT-006: auth endpoints at /api/auth/login/, /api/auth/logout/, /api/auth/me/
     path("api/", include((auth_urlpatterns, "auth"))),
+    # FEAT-010: company holiday list endpoints at /api/holidays/
+    path("api/holidays/", include("aplx_ams_django.sla.urls")),
 ]

@@ -3,7 +3,7 @@ id: FEAT-010
 id_prefix: FEAT
 title: "FEAT-010: S-24: Delivery Manager Maintains the Company Holiday List"
 phase: 5
-version: 0.2
+version: 0.5
 template: feature-plan
 template_version: 1.6
 status: Approved
@@ -26,6 +26,9 @@ validation: Pass
 - UIS-001 v0.1 — APLX AMS: UI Specification (Approved 2026-10-17)
 - PRM-001 v0.1 — APLX AMS: Permission Matrix (Approved 2026-10-17)
 - SCR S-22 (Approved 2026-10-21) — adds Django boilerplate files and test file to Files To Create Or Modify; corrects Size Check limit
+- SCR S-23 (Approved 2026-10-21) — adds conftest.py to Tests file list
+- SCR S-24 (Approved 2026-10-21) — adds test_holiday_api.py and HolidayList.test.tsx to Tests file list; closes OQ-076
+- SCR S-25 (Approved 2026-10-22) — adds App.tsx to Frontend source files; Size Check 14→15
 
 ## Purpose And Scope
 Implements REQ S-24: S-24: Delivery Manager Maintains the Company Holiday List. Delivers end-to-end behavior (data, API, UI) for 4 acceptance criteria.
@@ -74,10 +77,14 @@ Deliver all 4 acceptance criteria of REQ S-24 end-to-end: backend models, migrat
 **Frontend (source files)**
 - `src/frontend/src/pages/HolidayList.tsx`
 - `src/frontend/src/api/holidays.ts`
+- `src/frontend/src/App.tsx` (modify — add `/admin/holidays` route for HolidayList; protected by DM role guard)
 
 **Tests**
 - `src/aplx_ams_django/sla/tests/__init__.py`
-- `src/aplx_ams_django/sla/tests/test_holiday_list.py` (new — pytest tests for AC-1 through AC-4)
+- `src/aplx_ams_django/sla/tests/conftest.py` (new — pytest fixtures: SQLite switch + sla app registry injection)
+- `src/aplx_ams_django/sla/tests/test_holiday_list.py` (new — pytest DB/DAL tests for AC-1, AC-2, AC-4)
+- `src/aplx_ams_django/sla/tests/test_holiday_api.py` (new — pytest API tests for AC-1, AC-2, AC-3)
+- `src/frontend/src/pages/HolidayList.test.tsx` (new — Vitest component tests for AC-3 permission guard and DM controls)
 
 ## New Packages
 - None
@@ -112,7 +119,7 @@ See acceptance.md for the full Given/When/Then text of each criterion above.
 | Metric | Count | Limit |
 |---|---|---|
 | Acceptance criteria | 4 | 4 |
-| Source files (non-test) | 14 | 30 |
+| Source files (non-test) | 15 | 30 |
 | Test files | 2 | — |
 
 Expected test runtime: 4 minutes
@@ -152,10 +159,10 @@ None.
 ## Approval Record
 | Field | Value |
 | --- | --- |
-| Decision | Approve; Approve |
-| Approver | Mohanasunder; Mohanasunder |
-| Role | Architect / tech lead; Architect / tech lead |
-| Version | 0.2 |
-| Conditions | None; None |
-| Comments | SCR S-22 applied: added Django boilerplate files (sla/__init__.py, sla/apps.py, sla/migrations/__init__.py, settings/base.py) and test files (tests/__init__.py, tests/test_holiday_list.py); corrected Size Check source-file count to 14 and limit to 30.; SCR S-22 applied: added Django boilerplate files and test file entries; corrected Size Check count to 14 and limit to 30. |
-| Timestamp | 2026-10-21 UTC; 2026-10-21 17:34 UTC |
+| Decision | Approve |
+| Approver | Mohanasunder |
+| Role | Architect / tech lead |
+| Version | 0.5 |
+| Conditions | None |
+| Comments | SCR S-25 applied: added App.tsx to Frontend source files; Size Check 14->15. |
+| Timestamp | 2026-10-21 18:51 UTC |
