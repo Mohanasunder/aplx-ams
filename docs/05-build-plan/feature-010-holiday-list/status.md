@@ -29,7 +29,7 @@ Tracks the build-phase progress of FEAT-010. Updated by the builder agent during
 - PR: https://github.com/Mohanasunder/aplx-ams/pull/20 (draft)
 
 ## Progress
-- State: In review
+- State: Merged
 - Assigned agents: builder
 - Last update: 2026-10-22
 
