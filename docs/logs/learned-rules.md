@@ -116,8 +116,9 @@ Not applicable - the rule is fully specified from the observed evidence; no gaps
 - [x] Evidence shows the category in at least learned_rule_threshold features
 
 ## LRN L-2: api-contract-field-mismatch
+<!-- lrn_approver: Mohanasunder -->
 
-<!-- lrn_status: Draft -->
+<!-- lrn_status: Approved -->
 <!-- lrn_date: 2026-10-22 -->
 <!-- lrn_category: api-contract-field-mismatch -->
 
