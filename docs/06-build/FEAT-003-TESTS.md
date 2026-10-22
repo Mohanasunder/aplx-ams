@@ -2,7 +2,7 @@
 id: FEAT-003-TESTS
 title: "FEAT-003: S-19 — Delivery Manager Sets Up a Client Organization Contract: Test Set"
 phase: 6
-version: 0.1
+version: 0.2
 template: feature-test-set
 template_version: 1.0
 status: Approved
@@ -102,7 +102,7 @@ Date: 2026-10-18. Branch: `feature/FEAT-003-contract-setup`.
 **Existing tests**: All FEAT-002 tests remained green across all three commits, confirming no regression.
 
 ## Test Commit
-Last builder test commit: `b4b18a1` (FEAT-003: fix ruff formatting in test files, 2026-10-18). This commit updated `8b8914d` (the original test set commit) with a formatting-only fix: removed one extra blank line after imports in `test_contract_api.py` (ruff I001) and applied `ruff format` to `test_api.py` (pre-existing FEAT-002 issue). Authorized by Mohanasunder (DEC-073). No test logic was changed.
+Last builder test commit: `b4b18a1` (FEAT-003: fix ruff formatting in test files, 2026-10-18). This commit updated `8b8914d` (the original test set commit) with a formatting-only fix: removed one extra blank line after imports in `test_contract_api.py` (ruff I001) and applied `ruff format` to `test_api.py` (pre-existing FEAT-002 formatting problem). Authorized by Mohanasunder (DEC-073). No test logic was changed.
 
 ## Assumptions
 None beyond those logged in `docs/logs/assumptions-log.md`.
@@ -136,3 +136,6 @@ None.
 | Conditions | None |
 | Comments | Tests cover all 4 ACs including constraint edge cases and role-based refusal. |
 | Timestamp | 2026-10-18 12:58 UTC |
+
+## SCR S-28 Record
+Version 0.2 (2026-10-22): SCR S-28 — glossary compliance fix; line 105 replaced avoided term with 'formatting problem' (GLO-001). No test logic changed.

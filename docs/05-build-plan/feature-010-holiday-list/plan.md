@@ -3,7 +3,7 @@ id: FEAT-010
 id_prefix: FEAT
 title: "FEAT-010: S-24: Delivery Manager Maintains the Company Holiday List"
 phase: 5
-version: 0.1
+version: 0.5
 template: feature-plan
 template_version: 1.6
 status: Approved
@@ -18,13 +18,17 @@ validation: Pass
 
 ## Input References
 - PIB-005 v0.1 — Phase 5 Build Planning Input Brief (Approved 2026-10-17)
-- REQ-001 v0.3 — APLX AMS: User Stories (Approved 2026-10-17) § S-24
-- API-001 v0.2 — APLX AMS: API Specification (Approved 2026-10-17)
+- REQ-001 v0.4 — APLX AMS: User Stories (Approved 2026-10-17) § S-24
+- API-001 v0.3 — APLX AMS: API Specification (Approved 2026-10-17)
 - DBD-001 v0.1 — APLX AMS: Database Design (Approved 2026-10-17)
 - STD-001 v0.1 — APLX AMS: Coding Standards (Approved 2026-10-17)
 - BED-001 v0.1 — APLX AMS: Backend Design (Approved 2026-10-17)
 - UIS-001 v0.1 — APLX AMS: UI Specification (Approved 2026-10-17)
 - PRM-001 v0.1 — APLX AMS: Permission Matrix (Approved 2026-10-17)
+- SCR S-22 (Approved 2026-10-21) — adds Django boilerplate files and test file to Files To Create Or Modify; corrects Size Check limit
+- SCR S-23 (Approved 2026-10-21) — adds conftest.py to Tests file list
+- SCR S-24 (Approved 2026-10-21) — adds test_holiday_api.py and HolidayList.test.tsx to Tests file list; closes OQ-076
+- SCR S-25 (Approved 2026-10-22) — adds App.tsx to Frontend source files; Size Check 14→15
 
 ## Purpose And Scope
 Implements REQ S-24: S-24: Delivery Manager Maintains the Company Holiday List. Delivers end-to-end behavior (data, API, UI) for 4 acceptance criteria.
@@ -39,20 +43,28 @@ Deliver all 4 acceptance criteria of REQ S-24 end-to-end: backend models, migrat
 - Depends on: FEAT-006
 
 ## Inputs And Contracts
-- REQ-001 v0.3 § S-24 — acceptance criteria (copied verbatim into acceptance.md)
-- API-001 v0.2 — endpoint contracts for this feature
+- REQ-001 v0.4 § S-24 — acceptance criteria (copied verbatim into acceptance.md)
+- API-001 v0.3 — endpoint contracts for this feature
 - DBD-001 v0.1 — table definitions and migration order
 - PRM-001 v0.1 — role-based permission matrix
 
 ## Context Pack
-- REQ-001 v0.3 § S-24
-- API-001 v0.2 § Company holiday list (SLA timers — F-2 support)
+- REQ-001 v0.4 § S-24
+- API-001 v0.3 § Company holiday list (SLA timers — F-2 support)
 - DBD-001 v0.1 § Module: sla
 - STD-001 v0.1 § Naming And Structure
 - PRM-001 v0.1 § Company holiday list (F-2 support)
 - UIS-001 v0.1 § REQ S-24 — Delivery manager maintains the company holiday list
 
 ## Files To Create Or Modify
+
+**Django app boilerplate (create)**
+- `src/aplx_ams_django/sla/__init__.py`
+- `src/aplx_ams_django/sla/apps.py`
+- `src/aplx_ams_django/sla/migrations/__init__.py`
+- `src/aplx_ams_django/settings/base.py` (modify — add `'aplx_ams_django.sla'` to INSTALLED_APPS)
+
+**Backend (source files)**
 - `src/aplx_ams_django/sla/models.py`
 - `src/aplx_ams_django/sla/migrations/0001_initial.py`
 - `src/aplx_ams_django/sla/serializers.py`
@@ -61,8 +73,18 @@ Deliver all 4 acceptance criteria of REQ S-24 end-to-end: backend models, migrat
 - `src/aplx_ams_django/sla/views.py`
 - `src/aplx_ams_django/sla/urls.py`
 - `src/aplx_ams_django/urls.py`
+
+**Frontend (source files)**
 - `src/frontend/src/pages/HolidayList.tsx`
 - `src/frontend/src/api/holidays.ts`
+- `src/frontend/src/App.tsx` (modify — add `/admin/holidays` route for HolidayList; protected by DM role guard)
+
+**Tests**
+- `src/aplx_ams_django/sla/tests/__init__.py`
+- `src/aplx_ams_django/sla/tests/conftest.py` (new — pytest fixtures: SQLite switch + sla app registry injection)
+- `src/aplx_ams_django/sla/tests/test_holiday_list.py` (new — pytest DB/DAL tests for AC-1, AC-2, AC-4)
+- `src/aplx_ams_django/sla/tests/test_holiday_api.py` (new — pytest API tests for AC-1, AC-2, AC-3)
+- `src/frontend/src/pages/HolidayList.test.tsx` (new — Vitest component tests for AC-3 permission guard and DM controls)
 
 ## New Packages
 - None
@@ -97,7 +119,8 @@ See acceptance.md for the full Given/When/Then text of each criterion above.
 | Metric | Count | Limit |
 |---|---|---|
 | Acceptance criteria | 4 | 4 |
-| Source files (non-test) | 10 | 10 |
+| Source files (non-test) | 15 | 30 |
+| Test files | 2 | — |
 
 Expected test runtime: 4 minutes
 Open design decisions: None
@@ -121,7 +144,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: PIB-005 v0.1; REQ-001 v0.3 § S-24; API-001 v0.2; DBD-001 v0.1; STD-001 v0.1; BED-001 v0.1; UIS-001 v0.1
+- Upstream: PIB-005 v0.1; REQ-001 v0.4 § S-24; API-001 v0.3; DBD-001 v0.1; STD-001 v0.1; BED-001 v0.1; UIS-001 v0.1
 - Downstream: FEAT-010-TASKS; FEAT-010-ACC; FEAT-010-STATUS; Phase 6 PR
 
 ## Quality Checklist
@@ -139,7 +162,7 @@ None.
 | Decision | Approve |
 | Approver | Mohanasunder |
 | Role | Architect / tech lead |
-| Version | 0.1 |
+| Version | 0.5 |
 | Conditions | None |
-| Comments | Phase 5 validation passed (VAL-023). |
-| Timestamp | 2026-10-17 16:50 UTC |
+| Comments | SCR S-25 applied: added App.tsx to Frontend source files; Size Check 14->15. |
+| Timestamp | 2026-10-21 18:51 UTC |

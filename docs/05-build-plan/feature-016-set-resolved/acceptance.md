@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-016: S-6: Support Engineer Sets a Ticket to Resolved â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-6
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-6
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-016 (REQ S-6). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-6.
+Covers the 4 acceptance criteria for FEAT-016 (REQ S-6). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-6.
 
 ## Acceptance Criteria
 REQ-006 AC-1 REQ S-6 AC-1: Given a P2 ticket raised at 10:00 IST Monday, assigned to an L2/L3 support engineer, when they set it to Resolved at 15:00 IST Monday, then the resolution clock stops at 5 business hours and the resolution target (9 business hours) is met (BR B-5).
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-6; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-6; PIB-005 v0.1
 - Downstream: FEAT-016-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

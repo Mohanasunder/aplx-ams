@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-030: S-25: Support Engineer Changes or Deletes Their Own Effort Entry â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-25
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-25
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-030 (REQ S-25). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-25.
+Covers the 4 acceptance criteria for FEAT-030 (REQ S-25). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-25.
 
 ## Acceptance Criteria
 REQ-025 AC-1 REQ S-25 AC-1: Given support engineer X recorded an effort entry of 1.5 hours dated 2026-11-02, when X changes it to 2 hours on 2026-11-20, then the change is saved and the audit trail holds old value 1.5, new value 2, user X and the time (BR B-15, BR B-22).
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-25; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-25; PIB-005 v0.1
 - Downstream: FEAT-030-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

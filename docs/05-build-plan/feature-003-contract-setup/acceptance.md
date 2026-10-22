@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-003: S-19: Delivery Manager Sets Up a Client Organization Contract â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-19
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-19
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-003 (REQ S-19). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-19.
+Covers the 4 acceptance criteria for FEAT-003 (REQ S-19). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-19.
 
 ## Acceptance Criteria
 REQ-019 AC-1 REQ S-19 AC-1: Given client organization A with no active contract, when the delivery manager creates an active hours bank contract of 100 contracted hours, then organization A's hours bank balance shows 100 hours.
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-19; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-19; PIB-005 v0.1
 - Downstream: FEAT-003-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

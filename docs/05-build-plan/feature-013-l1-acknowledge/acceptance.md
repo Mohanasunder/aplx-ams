@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-013: S-3: L1 Support Engineer Acknowledges a New Ticket â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-3
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-3
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-013 (REQ S-3). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-3.
+Covers the 4 acceptance criteria for FEAT-013 (REQ S-3). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-3.
 
 ## Acceptance Criteria
 REQ-003 AC-1 REQ S-3 AC-1: Given a P2 ticket raised at 10:00 IST, when an L1 support engineer acknowledges it at 12:00 IST the same business day, then the response clock stops at 2 business hours and the response target is met (BR B-4).
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-3; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-3; PIB-005 v0.1
 - Downstream: FEAT-013-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

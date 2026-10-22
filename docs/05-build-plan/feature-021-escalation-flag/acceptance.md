@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-021: S-11: Ticket Is Flagged for Escalation at L1 Target â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-11
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-11
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-021 (REQ S-11). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-11.
+Covers the 4 acceptance criteria for FEAT-021 (REQ S-11). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-11.
 
 ## Acceptance Criteria
 REQ-011 AC-1 REQ S-11 AC-1: Given a P1 ticket still with L1, when its resolution elapsed time reaches 2 business hours (50% of 4), then the ticket shows the escalation flag.
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-11; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-11; PIB-005 v0.1
 - Downstream: FEAT-021-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

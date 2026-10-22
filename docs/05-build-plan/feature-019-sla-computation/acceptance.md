@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-019: S-9: SLA Timers Count Business Hours Against the Standard SLA â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-9
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-9
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-019 (REQ S-9). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-9.
+Covers the 4 acceptance criteria for FEAT-019 (REQ S-9). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-9.
 
 ## Acceptance Criteria
 REQ-009 AC-1 REQ S-9 AC-1: Given a P1 ticket raised at 17:30 IST on Friday, when the next business day starts, then the response target falls due at 09:30 IST on Monday (0.5 business hours on Friday and 0.5 on Monday).
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-9; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-9; PIB-005 v0.1
 - Downstream: FEAT-019-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

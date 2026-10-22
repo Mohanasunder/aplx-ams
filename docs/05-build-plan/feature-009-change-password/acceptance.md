@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-009: S-31: User Changes Their Own Password â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-31
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-31
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-009 (REQ S-31). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-31.
+Covers the 4 acceptance criteria for FEAT-009 (REQ S-31). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-31.
 
 ## Acceptance Criteria
 REQ-031 AC-1 REQ S-31 AC-1: Given signed-in user X (an internal user or a client user), when X enters their current password and changes their own password to "Cdefghi3", then X's next sign-in succeeds with "Cdefghi3" and X's previous password is refused (BR B-23).
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-31; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-31; PIB-005 v0.1
 - Downstream: FEAT-009-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

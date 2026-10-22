@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-008: S-30: Delivery Manager Sets a Temporary Password â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-30
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-30
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-008 (REQ S-30). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-30.
+Covers the 4 acceptance criteria for FEAT-008 (REQ S-30). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-30.
 
 ## Acceptance Criteria
 REQ-030 AC-1 REQ S-30 AC-1: Given the delivery manager creates a user account with temporary password "Abcdefg1", when the account is saved, then the user signs in with that user account and "Abcdefg1" and is not asked to change the password (BR B-23).
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-30; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-30; PIB-005 v0.1
 - Downstream: FEAT-008-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

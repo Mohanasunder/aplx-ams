@@ -18,7 +18,7 @@ validation: Pass
 ## Input References
 - PIB-005 v0.1 — Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 - BKL-001 v0.3 — APLX AMS: Backlog (Approved 2026-10-17) — 33 stories BL-1 to BL-33
-- REQ-001 v0.3 — APLX AMS: User Stories (Approved 2026-10-17) — S-1 to S-33
+- REQ-001 v0.4 — APLX AMS: User Stories (Approved 2026-10-17) — S-1 to S-33
 - API-001 v0.1 — APLX AMS: API Specification (Approved 2026-10-17)
 - DBD-001 v0.1 — APLX AMS: Database Design (Approved 2026-10-17)
 - STD-001 v0.1 — APLX AMS: Coding Standards (Approved 2026-10-17)
@@ -134,7 +134,7 @@ All 36 features (FEAT-000 through FEAT-035) target Release 1, go-live 2027-01-17
 None. All Phase 1–4 open questions are answered (PIB-005 v0.1 § Open Questions). A-014 to A-022 are confirmed.
 
 ## Traceability Links
-- Upstream: PIB-005 v0.1; BKL-001 v0.3; REQ-001 v0.3; API-001 v0.1; DBD-001 v0.1; STD-001 v0.1; BED-001 v0.1
+- Upstream: PIB-005 v0.1; BKL-001 v0.3; REQ-001 v0.4; API-001 v0.1; DBD-001 v0.1; STD-001 v0.1; BED-001 v0.1
 - Downstream: FEAT-000 through FEAT-035 plan.md, acceptance.md, tasks.md, status.md; Phase 6 PRs
 
 ## Quality Checklist

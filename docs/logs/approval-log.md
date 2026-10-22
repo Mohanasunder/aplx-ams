@@ -280,3 +280,17 @@ Append-only record of human approval decisions (written only by scripts/log_appr
 | 2026-10-21 16:43 | FEAT-037-ACC | 0.1 | Approve | Mohanasunder | Architect / tech lead | Pass | - | FEAT-037 acceptance criteria AC-1 through AC-4 approved as written. |
 | 2026-10-21 16:43 | WAV-001 | 0.3 | Approve | Mohanasunder | Architect / tech lead | Pass | - | WAV-001 v0.3 approved: Wave 30 added for FEAT-037 (Edit User Account). |
 | 2026-10-21 16:52 | PRD FEAT-036 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | [review depth: Deep, tier High] [review: 15 min] |
+| 2026-10-21 17:21 | SCR S-21 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | - |
+| 2026-10-21 17:33 | SCR S-22 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | - |
+| 2026-10-21 17:34 | FEAT-010 | 0.2 | Approve | Mohanasunder | Architect / tech lead | Pass | - | SCR S-22 applied: added Django boilerplate files and test file entries; corrected Size Check count to 14 and limit to 30. |
+| 2026-10-21 17:54 | SCR S-23 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | - |
+| 2026-10-21 17:54 | FEAT-010 | 0.3 | Approve | Mohanasunder | Architect / tech lead | Pass | - | SCR S-23 applied: conftest.py added to Tests file list. |
+| 2026-10-21 18:04 | SCR S-24 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | - |
+| 2026-10-21 18:05 | FEAT-010 | 0.4 | Approve | Mohanasunder | Architect / tech lead | Pass | - | SCR S-24 applied: added test_holiday_api.py and HolidayList.test.tsx to Tests list; OQ-076 closed. |
+| 2026-10-21 18:36 | FEAT-010-TESTS | 0.1 | Approve | Mohanasunder | Tech lead | Pass | - | No comments |
+| 2026-10-21 18:50 | SCR S-25 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | No comments |
+| 2026-10-21 18:51 | FEAT-010 | 0.5 | Approve | Mohanasunder | Architect / tech lead | Pass | - | SCR S-25 applied: added App.tsx to Frontend source files; Size Check 14->15. |
+| 2026-10-21 19:55 | SCR S-26 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | Format fix only |
+| 2026-10-21 20:30 | SCR S-27 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | Retroactive documentation of Wave 30 addition for FEAT-037 |
+| 2026-10-21 21:55 | SCR S-28 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | GLO-001 compliance fix: general technical use of avoided term replaced with 'formatting problem'. No test logic changed. |
+| 2026-10-22 14:08 | PRD FEAT-010 | 0.1 | Approve | Mohanasunder | Architect / tech lead | n/a | - | [review depth: Standard, tier Standard] [review: 20 min] |

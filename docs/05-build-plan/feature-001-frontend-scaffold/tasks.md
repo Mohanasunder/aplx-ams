@@ -1,4 +1,4 @@
-﻿---
+---
 id: FEAT-001-TASKS
 id_prefix: FEAT
 title: "FEAT-001: Frontend Scaffold â€” React 18, Nginx, and Frontend CI Gates â€” Tasks"

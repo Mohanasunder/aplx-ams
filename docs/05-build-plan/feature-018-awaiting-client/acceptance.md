@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-018: S-8: Support Engineer Marks a Ticket as Awaiting Client â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-8
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-8
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-018 (REQ S-8). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-8.
+Covers the 4 acceptance criteria for FEAT-018 (REQ S-8). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-8.
 
 ## Acceptance Criteria
 REQ-008 AC-1 REQ S-8 AC-1: Given a P3 ticket with its resolution clock running at 2 business hours, when the assigned support engineer sets awaiting client and clears it 4 business hours later, then the resolution elapsed time is still 2 business hours at the moment it is cleared.
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-8; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-8; PIB-005 v0.1
 - Downstream: FEAT-018-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

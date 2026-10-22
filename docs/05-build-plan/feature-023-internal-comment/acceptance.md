@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-023: S-29: Internal User Adds a Comment on a Ticket â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-29
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-29
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-023 (REQ S-29). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-29.
+Covers the 4 acceptance criteria for FEAT-023 (REQ S-29). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-29.
 
 ## Acceptance Criteria
 REQ-029 AC-1 REQ S-29 AC-1: Given a ticket of client organization A, when a support engineer or the delivery manager adds a comment on it, then the comment is saved on the ticket with the user and the time, and client users of organization A viewing the ticket see it (BR B-6).
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-29; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-29; PIB-005 v0.1
 - Downstream: FEAT-023-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist

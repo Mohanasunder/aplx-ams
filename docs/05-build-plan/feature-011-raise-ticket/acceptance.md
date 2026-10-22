@@ -17,11 +17,11 @@ validation: Pass
 # FEAT-011: S-1: Client User Raises a Ticket in the Portal â€” Acceptance Criteria
 
 ## Input References
-- REQ-001 v0.3 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-1
+- REQ-001 v0.4 â€” APLX AMS: User Stories (Approved 2026-10-17) Â§ S-1
 - PIB-005 v0.1 â€” Phase 5 Build Planning Input Brief (Approved 2026-10-17)
 
 ## Purpose And Scope
-Covers the 4 acceptance criteria for FEAT-011 (REQ S-1). Criteria are copied verbatim from REQ-001 v0.3 Â§ S-1.
+Covers the 4 acceptance criteria for FEAT-011 (REQ S-1). Criteria are copied verbatim from REQ-001 v0.4 Â§ S-1.
 
 ## Acceptance Criteria
 REQ-001 AC-1 REQ S-1 AC-1: Given a signed-in client user of client organization A, when they raise a ticket with a type (incident or service request), one of organization A's SAP applications, a priority P1 to P4 and a description, then the ticket is created with the raise time, the response and resolution targets of that priority (BR B-1), and appears in the L1 queue.
@@ -42,7 +42,7 @@ None beyond those logged in docs/logs/assumptions-log.md.
 None.
 
 ## Traceability Links
-- Upstream: REQ-001 v0.3 Â§ S-1; PIB-005 v0.1
+- Upstream: REQ-001 v0.4 Â§ S-1; PIB-005 v0.1
 - Downstream: FEAT-011-TASKS (builder task list); Phase 6 test set (created in Phase 6)
 
 ## Quality Checklist
