@@ -12,6 +12,7 @@ from __future__ import annotations
 
 from typing import ClassVar
 
+from django.db import IntegrityError
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
@@ -65,6 +66,11 @@ class HolidayEntryViewSet(viewsets.GenericViewSet):
             entry = add_holiday(holiday_date=holiday_date, added_by=request.user)
         except ValueError as exc:
             return Response({"detail": str(exc)}, status=status.HTTP_409_CONFLICT)
+        except IntegrityError:
+            return Response(
+                {"detail": "A database constraint was violated."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         out_serializer = self.get_serializer(entry)
         return Response(out_serializer.data, status=status.HTTP_201_CREATED)
@@ -82,5 +88,11 @@ class HolidayEntryViewSet(viewsets.GenericViewSet):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        remove_holiday(entry=entry, removed_by=request.user)
+        try:
+            remove_holiday(entry=entry, removed_by=request.user)
+        except IntegrityError:
+            return Response(
+                {"detail": "A database constraint was violated."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         return Response(status=status.HTTP_204_NO_CONTENT)
