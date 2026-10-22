@@ -33,7 +33,6 @@ export default function HolidayList(): React.JSX.Element {
   const [holidays, setHolidays] = useState<HolidayEntry[]>([]);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [newDate, setNewDate] = useState('');
-  const [newDescription, setNewDescription] = useState('');
 
   const role = ctx?.role;
 
@@ -58,11 +57,10 @@ export default function HolidayList(): React.JSX.Element {
 
   const handleAdd = async () => {
     if (!newDate) return;
-    const created = await addHoliday({ date: newDate, description: newDescription });
+    const created = await addHoliday({ holiday_date: newDate });
     setHolidays((prev) => [...prev, created]);
     setShowAddDialog(false);
     setNewDate('');
-    setNewDescription('');
   };
 
   const handleRemove = async (id: number) => {
@@ -91,8 +89,7 @@ export default function HolidayList(): React.JSX.Element {
           <tbody>
             {holidays.map((h) => (
               <tr key={h.id}>
-                <td>{h.date}</td>
-                <td>{h.description}</td>
+                <td>{h.holiday_date}</td>
                 <td>
                   <button
                     type="button"
@@ -119,15 +116,6 @@ export default function HolidayList(): React.JSX.Element {
               type="date"
               value={newDate}
               onChange={(e) => setNewDate(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="holiday-description">Description</label>
-            <input
-              id="holiday-description"
-              type="text"
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
             />
           </div>
           <button type="button" onClick={handleAdd}>

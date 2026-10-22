@@ -14,16 +14,14 @@
 /** A single holiday entry returned by GET /api/holidays/ or POST /api/holidays/. */
 export interface HolidayEntry {
   id: number;
-  /** ISO 8601 date string, e.g. "2027-01-26". */
-  date: string;
-  description: string;
+  /** ISO 8601 date string, e.g. "2027-01-26". Maps to DBD-001 sla_holidayentry.holiday_date. */
+  holiday_date: string;
 }
 
 /** Payload for POST /api/holidays/ (API-001 v0.3). */
 export interface CreateHolidayPayload {
-  /** ISO 8601 date string, e.g. "2027-01-26". */
-  date: string;
-  description: string;
+  /** ISO 8601 date string, e.g. "2027-01-26". Maps to DBD-001 sla_holidayentry.holiday_date. */
+  holiday_date: string;
 }
 
 // ── API base path (API-001 v0.3) ──────────────────────────────────────────────
