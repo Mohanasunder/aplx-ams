@@ -1249,10 +1249,10 @@ None.
 
 ## PR FEAT-010: S-24: Delivery Manager Maintains the Company Holiday List
 
-<!-- pr_status: Draft -->
-<!-- pr_approver: -->
+<!-- pr_status: Approved -->
+<!-- pr_approver: Mohanasunder -->
 <!-- pr_depth: Standard -->
-<!-- pr_review_minutes: -->
+<!-- pr_review_minutes: 20 -->
 
 ### Input References
 - FEAT-010 plan.md v0.5 (Approved, Mohanasunder)
